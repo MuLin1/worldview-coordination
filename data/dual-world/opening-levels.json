@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "quickLevels": [1, 5, 10, 15, 20, 30, 45, 50, 60],
+  "bands": []
+}
