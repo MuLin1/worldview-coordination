@@ -1,4 +1,8 @@
-﻿﻿﻿import './five-world-mvu.js';
+﻿﻿import './five-world-mvu.js';
+import {
+  consumeReproductionRequests,
+  settlePendingBirths,
+} from './five-world-event-bridge.js';
 
 /**
  * 变量映射：
@@ -3402,12 +3406,19 @@
             // 五世界状态仅由脚本推进。旧式年历不猜测转换；新格式日期错误会写入
             // 生殖系统.最后错误，并停止本轮周期与妊娠推进。
             DNFFiveWorldMvu.ensureFiveWorldState(statData);
+
+            // 先消费待处理受孕请求，使本回合新妊娠能被后续日期推进
+            consumeReproductionRequests(statData);
+
             const fiveWorldDate = statData?.世界信息?.日期
                 || statData?.世界信息?.当前日期
                 || statData?.世界信息?.年历
                 || '';
             if (fiveWorldDate) {
                 const fiveWorldResult = DNFFiveWorldMvu.advanceMvuState(statData, fiveWorldDate);
+                if (!fiveWorldResult.error) {
+                    settlePendingBirths(statData);
+                }
                 if (fiveWorldResult.error) {
                     console.error(`[五世界状态] ${fiveWorldResult.error}`);
                 }

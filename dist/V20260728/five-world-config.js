@@ -2,6 +2,9 @@ const freezeEntries = entries => Object.freeze(Object.fromEntries(
   entries.map(([id, value]) => [id, Object.freeze(value)]),
 ));
 
+/** Only these two worlds are active in the current worldbook. */
+export const WORLDBOOK_WORLD_IDS = Object.freeze(['vielsaen', 'modern']);
+
 export const WORLD_REGISTRY = Object.freeze({
   corridor: Object.freeze({ label: '创世回廊', prefix: 'C', exclusiveState: null }),
   sao: Object.freeze({ label: '刀剑神域', prefix: 'S', exclusiveState: null }),

@@ -1,5 +1,5 @@
 import { WORLD_REGISTRY } from './five-world-config.js';
-import { createRootState, advanceState } from './five-world-runtime.js';
+import { createRootState, advanceState, normalizePhysiologyProfile } from './five-world-runtime.js';
 
 const LABEL_TO_ID = Object.freeze(Object.fromEntries(
   Object.entries(WORLD_REGISTRY).map(([id, world]) => [world.label, id]),
@@ -51,6 +51,9 @@ export function ensureFiveWorldState(statData, requestedWorldId) {
   mergeMissing(statData, defaults);
   statData.世界状态.当前世界 = worldId;
   linkExplicitProfiles(statData);
+  for (const profile of Object.values(statData.角色档案 || {})) {
+    normalizePhysiologyProfile(profile);
+  }
   statData.生殖系统.最后错误 ??= '';
   return statData;
 }

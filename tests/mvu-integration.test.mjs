@@ -83,3 +83,36 @@ test('MVU advancement reports invalid dates instead of guessing', () => {
   assert.equal(statData.角色档案.player.自然周期.当前阶段, '活跃期');
   assert.equal(statData.生殖系统.最后错误, '');
 });
+test('MVU fills canonical physiology fields without overwriting legacy data', () => {
+  const statData = {
+    世界信息: { 自定义: '保留' },
+    人物: {
+      生理档案: {
+        ...structuredClone(profile),
+        自然周期: {
+          ...structuredClone(profile.自然周期),
+          周期起始日期: 'V2026年7月1日',
+        },
+      },
+    },
+    生殖系统: { 结算账本: [{ 事件ID: 'keep-result', status: '未受孕' }] },
+  };
+  ensureFiveWorldState(statData, 'vielsaen');
+  assert.equal(statData.世界信息.自定义, '保留');
+  assert.equal(statData.人物.生理档案.自然周期.周期开始日期, 'V2026年7月1日');
+  assert.deepEqual(statData.生殖系统.结算账本, [{ 事件ID: 'keep-result', status: '未受孕' }]);
+  assert.deepEqual(statData.生殖系统.待处理请求, []);
+  assert.deepEqual(statData.生殖系统.事件结果, []);
+});
+
+test('world switching preserves both exclusive states', () => {
+  const statData = {};
+  ensureFiveWorldState(statData, 'vielsaen');
+  statData.世界状态.维尔萨恩.圣地.状态 = '受威胁';
+  switchWorld(statData, 'modern');
+  statData.世界状态.现代都市.主线.阶段 = 3;
+  switchWorld(statData, 'vielsaen');
+  assert.equal(statData.世界状态.维尔萨恩.圣地.状态, '受威胁');
+  assert.equal(statData.世界状态.现代都市.主线.阶段, 3);
+});
+

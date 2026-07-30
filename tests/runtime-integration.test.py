@@ -40,6 +40,22 @@ class RuntimeIntegrationTests(unittest.TestCase):
         self.assertIn("DNFFiveWorldMvu.advanceMvuState", calculator)
         self.assertIn("renderPhysiologySummary", status)
         self.assertIn("renderPhysiologySummary(friendData.生理档案)", mobile)
+        self.assertIn("consumeReproductionRequests(statData)", calculator)
+        self.assertIn("settlePendingBirths(statData)", calculator)
+        self.assertLess(
+            calculator.index("consumeReproductionRequests(statData)"),
+            calculator.index("advanceMvuState(statData, fiveWorldDate)"),
+        )
+        self.assertLess(
+            calculator.index("advanceMvuState(statData, fiveWorldDate)"),
+            calculator.index("settlePendingBirths(statData)"),
+        )
+
+    def test_runtime_imports_event_bridge(self):
+        calculator = (DIST / "helper-calculator.js").read_text(encoding="utf-8")
+        self.assertIn("from './five-world-event-bridge.js'", calculator)
+        self.assertIn("consumeReproductionRequests", calculator)
+        self.assertIn("settlePendingBirths", calculator)
 
     def test_new_maps_replace_old_files(self):
         for name in ("amber_sword_worldmap.html", "amber_sword_mapdata.js", "dragon_map.html", "dragon_mapdata.js"):

@@ -97,6 +97,7 @@ export function createPhysiologyProfile(input = {}) {
       是否启用: Boolean(cycleEnabled && adult && ['可妊娠', '双向'].includes(capability)),
       配置ID: classificationId,
       周期起始日期: cycleStartDate,
+      周期开始日期: cycleStartDate,
       当前阶段: '',
       周期序号: 0,
       抑制状态: '无',
@@ -119,6 +120,20 @@ export function createPhysiologyProfile(input = {}) {
     异能档案: {},
   };
 }
+
+export function normalizePhysiologyProfile(profile) {
+  if (!profile || typeof profile !== 'object') return profile;
+  // Fill canonical 周期开始日期 from legacy 周期起始日期
+  if (!profile.自然周期?.周期开始日期 && profile.自然周期?.周期起始日期) {
+    profile.自然周期.周期开始日期 = profile.自然周期.周期起始日期;
+  }
+  if (!profile.自然周期?.周期起始日期 && profile.自然周期?.周期开始日期) {
+    profile.自然周期.周期起始日期 = profile.自然周期.周期开始日期;
+  }
+  return profile;
+}
+
+export const AI_WRITABLE_REPRODUCTION_FIELDS = Object.freeze(['生殖系统.待处理请求']);
 
 export function createRootState({ worldId, profiles = {} } = {}) {
   requireWorld(worldId);
@@ -146,6 +161,8 @@ export function createRootState({ worldId, profiles = {} } = {}) {
       结算账本: [],
       待生育事件: [],
       生育记录: [],
+      待处理请求: [],
+      事件结果: [],
     },
     角色档案: Object.fromEntries(
       Object.entries(profiles).map(([id, profile]) => [id, clone(profile)]),
@@ -159,7 +176,7 @@ function cyclePhase(profile, currentDate, worldId) {
   const cycle = profile.自然周期;
   if (!cycle?.是否启用 || cycle.抑制状态 === '抑制' || !cycle.周期起始日期) return null;
   const config = requireSpecies(profile);
-  const start = parseWorldDate(cycle.周期起始日期, worldId);
+  const start = parseWorldDate(cycle.周期开始日期 || cycle.周期起始日期, worldId);
   if (start.epochDay > currentDate.epochDay) return { phase: '未开始', sequence: 0 };
 
   const length = Math.max(1, averageInt(config.cycleDays) + cycle.个体偏移天数);

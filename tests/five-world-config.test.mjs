@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import {
+  WORLDBOOK_WORLD_IDS,
   WORLD_REGISTRY,
   NORMAL_SPECIES,
   MYTHIC_SPECIES,
@@ -64,4 +65,13 @@ test('all replacement bonds are original, adult, classified, and rebalanced', ()
     assert.equal(ids.has(character.id), false);
     ids.add(character.id);
   }
+});
+
+test('WORLDBOOK_WORLD_IDS activates only vielsaen and modern', () => {
+  assert.deepEqual(WORLDBOOK_WORLD_IDS, ['vielsaen', 'modern']);
+  assert.ok('corridor' in WORLD_REGISTRY);
+  assert.ok('sao' in WORLD_REGISTRY);
+  assert.ok('jiuzhou' in WORLD_REGISTRY);
+  assert.ok('vielsaen' in WORLD_REGISTRY);
+  assert.ok('modern' in WORLD_REGISTRY);
 });
