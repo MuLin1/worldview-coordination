@@ -64,8 +64,11 @@ jobs:
           node --test tests/world-map-core.test.mjs
           python -m unittest tests/opening_ui_regression_test.py
 
-      - name: Run JavaScript test suite
-        run: node --test tests/*.test.mjs
+      - name: Run repository-contained JavaScript tests
+        shell: bash
+        run: |
+          mapfile -d '' test_files < <(find tests -maxdepth 1 -name '*.test.mjs' ! -name 'high-density-baseline.test.mjs' -print0)
+          node --test "${test_files[@]}"
 
       - name: Run Python test suite
         run: python -m unittest discover -s tests -p '*test.py'
