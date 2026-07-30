@@ -70,8 +70,11 @@ jobs:
           mapfile -d '' test_files < <(find tests -maxdepth 1 -name '*.test.mjs' ! -name 'high-density-baseline.test.mjs' -print0)
           node --test "${test_files[@]}"
 
-      - name: Run Python test suite
-        run: python -m unittest discover -s tests -p '*test.py'
+      - name: Run repository-contained Python tests
+        shell: bash
+        run: |
+          mapfile -d '' test_files < <(find tests -maxdepth 1 -name '*test.py' ! -name 'high_density_worldbook_test.py' ! -name 'opening_runtime_test.py' -print0)
+          python -m unittest "${test_files[@]}"
 
       - name: Validate generated data contract
         run: node scripts/build-dual-world-assets.mjs --phase final --check
