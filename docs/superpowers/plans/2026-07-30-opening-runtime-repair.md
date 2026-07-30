@@ -4,13 +4,13 @@
 
 **Goal:** Make the Tavern opening loader mount Vue reliably and resolve all startup resources from the current repository.
 
-**Architecture:** Keep the existing fetch-and-`document.write` loader. Establish one CDN base in the loader, then make the page consistently resolve URLs through `document.baseURI` and imported five-world configuration.
+**Architecture:** Keep the existing fetch-and-`document.write` loader. Resolve the current `main` SHA at runtime, establish an immutable CDN base from that SHA, then make the page consistently resolve URLs through `document.baseURI` and imported five-world configuration.
 
 **Tech Stack:** JSON regex configuration, HTML, Vue 3 global build, ES modules, Python unittest, Playwright browser verification.
 
 ## Global Constraints
 
-- Do not change the `@main` dynamic-refresh behavior.
+- Do not hardcode a commit SHA; resolve the current `main` SHA on every load.
 - Do not modify unrelated dirty files.
 - Apply only root-cause fixes identified by the browser reproduction.
 
@@ -36,10 +36,11 @@
 
 **Interfaces:**
 - Consumes: fetched `build.html` text.
-- Produces: an injected CDN `<base>` before `document.write`.
+- Produces: a dynamically resolved commit URL and injected CDN `<base>` before `document.write`.
 
-- [ ] **Step 1: Inject the current `dist/V20260728/` CDN base into `<head>`**
-- [ ] **Step 2: Re-run the focused test**
+- [ ] **Step 1: Resolve the current `main` SHA with the GitHub commits API**
+- [ ] **Step 2: Inject that commit's `dist/V20260728/` CDN base into `<head>`**
+- [ ] **Step 3: Re-run the focused test**
 
 ### Task 3: Repair opening-page initialization
 
