@@ -2,8 +2,647 @@
   "schemaVersion": 1,
   "worldId": "vielsaen",
   "title": "维尔萨恩 · 艾沃兰大陆",
-  "layers": [],
-  "regions": [],
-  "nodes": [],
-  "edges": []
+  "layers": [
+    {"id": "surface", "name": "地表", "order": 1},
+    {"id": "hidden", "name": "隐藏领域", "order": 2, "defaultVisible": false}
+  ],
+  "regions": [
+    {"id": "valkain", "name": "瓦尔凯恩帝国", "capital": "铁冠城", "x": 30, "y": 30},
+    {"id": "serantia", "name": "瑟兰提亚海盟", "capital": "潮门港", "x": 15, "y": 62},
+    {"id": "bresia", "name": "布雷西亚王国", "capital": "白槲城", "x": 43, "y": 70},
+    {"id": "oseran", "name": "奥瑟兰学邦", "capital": "星塔城", "x": 58, "y": 24},
+    {"id": "kardros", "name": "卡德罗斯山国", "capital": "炉脊堡", "x": 77, "y": 40},
+    {"id": "visalin", "name": "维萨林城邦联盟", "capital": "七桥城", "x": 72, "y": 72}
+  ],
+  "nodes": [
+    {
+      "id": "V-G100", "slug": "valkain-iron-crown", "name": "铁冠城", "type": "capital", "regionId": "valkain", "layerId": "surface",
+      "x": 30, "y": 30, "recommendedLevel": [1, 60], "spawnable": true,
+      "summary": "瓦尔凯恩帝国的行政、军需与魔法工业中枢。铁冠城以其永不熄灭的锻炉和帝国图书馆闻名。",
+      "facilities": ["旅店", "工坊", "跨境办事处", "帝国训练场", "魔法物品交易所"],
+      "factionIds": ["valkain-court"], "characterIds": [], "questIds": [],
+      "riskTags": ["政治审查"], "stateKey": ""
+    },
+    {
+      "id": "V-G101", "slug": "serantia-tide-gate", "name": "潮门港", "type": "capital", "regionId": "serantia", "layerId": "surface",
+      "x": 15, "y": 62, "recommendedLevel": [1, 60], "spawnable": true,
+      "summary": "瑟兰提亚海盟的首府与最大港口，掌控艾沃兰西海岸的贸易命脉。",
+      "facilities": ["旅店", "造船厂", "海贸交易所", "水手公会", "海洋神殿"],
+      "factionIds": ["serantia-council"], "characterIds": [], "questIds": [],
+      "riskTags": ["海盗威胁"], "stateKey": ""
+    },
+    {
+      "id": "V-G102", "slug": "bresia-white-oak", "name": "白槲城", "type": "capital", "regionId": "bresia", "layerId": "surface",
+      "x": 43, "y": 70, "recommendedLevel": [1, 60], "spawnable": true,
+      "summary": "布雷西亚王国的王都，以千年白槲神木和骑士学院著称。",
+      "facilities": ["旅店", "骑士学院", "粮仓交易所", "大圣堂", "军械库"],
+      "factionIds": ["bresia-crown"], "characterIds": [], "questIds": [],
+      "riskTags": ["王位继承动荡"], "stateKey": ""
+    },
+    {
+      "id": "V-G103", "slug": "oseran-star-spire", "name": "星塔城", "type": "capital", "regionId": "oseran", "layerId": "surface",
+      "x": 58, "y": 24, "recommendedLevel": [1, 60], "spawnable": true,
+      "summary": "奥瑟兰学邦的核心，高耸的星塔是大陆魔法研究的最高学府。",
+      "facilities": ["旅店", "魔法学院", "公共图书馆", "炼金实验室", "医疗院"],
+      "factionIds": ["oseran-scholarum"], "characterIds": [], "questIds": [],
+      "riskTags": ["学术禁忌"], "stateKey": ""
+    },
+    {
+      "id": "V-G104", "slug": "kardros-forge-spine", "name": "炉脊堡", "type": "capital", "regionId": "kardros", "layerId": "surface",
+      "x": 77, "y": 40, "recommendedLevel": [1, 60], "spawnable": true,
+      "summary": "卡德罗斯山国的要塞首都，建在火山矿脉之上，以锻冶和防御工事闻名。",
+      "facilities": ["旅店", "熔岩锻炉", "矿脉交易所", "山地训练场", "构型工坊"],
+      "factionIds": ["kardros-forge-lords"], "characterIds": [], "questIds": [],
+      "riskTags": ["火山活动"], "stateKey": ""
+    },
+    {
+      "id": "V-G105", "slug": "visalin-seven-bridges", "name": "七桥城", "type": "capital", "regionId": "visalin", "layerId": "surface",
+      "x": 72, "y": 72, "recommendedLevel": [1, 60], "spawnable": true,
+      "summary": "维萨林城邦联盟的枢纽，七座大桥连接各城区，是情报与贸易的十字路口。",
+      "facilities": ["旅店", "信使公会", "商业交易所", "情报屋", "多国文化中心"],
+      "factionIds": ["visalin-league"], "characterIds": [], "questIds": [],
+      "riskTags": ["间谍活动"], "stateKey": ""
+    },
+    {
+      "id": "V-G106", "slug": "valkain-east-garrison", "name": "东卫城", "type": "city", "regionId": "valkain", "layerId": "surface",
+      "x": 35, "y": 28, "recommendedLevel": [5, 60], "spawnable": true,
+      "summary": "帝国东部边境的军事重镇，驻扎着帝国第一军团。",
+      "facilities": ["旅店", "军营", "边境检查站", "武器铺"],
+      "factionIds": ["valkain-court"], "characterIds": [], "questIds": [],
+      "riskTags": ["边境摩擦"], "stateKey": ""
+    },
+    {
+      "id": "V-G107", "slug": "valkain-south-mine", "name": "南矿镇", "type": "city", "regionId": "valkain", "layerId": "surface",
+      "x": 28, "y": 35, "recommendedLevel": [3, 50], "spawnable": false,
+      "summary": "帝国南部矿区的管理城镇，出产优质铁矿和魔力水晶。",
+      "facilities": ["旅店", "矿工公会", "冶炼厂"],
+      "factionIds": ["valkain-court"], "characterIds": [], "questIds": [],
+      "riskTags": ["矿难"], "stateKey": ""
+    },
+    {
+      "id": "V-G108", "slug": "serantia-north-port", "name": "北帆港", "type": "port", "regionId": "serantia", "layerId": "surface",
+      "x": 12, "y": 55, "recommendedLevel": [3, 55], "spawnable": true,
+      "summary": "海盟北部的深水港，通往北方冰海的最后一站。",
+      "facilities": ["旅店", "码头", "渔贸市场", "灯塔"],
+      "factionIds": ["serantia-council"], "characterIds": [], "questIds": [],
+      "riskTags": ["风暴", "冰山"], "stateKey": ""
+    },
+    {
+      "id": "V-G109", "slug": "serantia-island-post", "name": "凯斯特前哨", "type": "port", "regionId": "serantia", "layerId": "surface",
+      "x": 20, "y": 68, "recommendedLevel": [8, 55], "spawnable": false,
+      "summary": "凯斯特群岛上的海盟前哨站，监视外海航路与海盗活动。",
+      "facilities": ["旅店", "船坞", "瞭望塔", "补给站"],
+      "factionIds": ["serantia-council"], "characterIds": [], "questIds": [],
+      "riskTags": ["海盗", "海怪"], "stateKey": "serantia.pirate_activity"
+    },
+    {
+      "id": "V-G110", "slug": "bresia-east-gate", "name": "东篱镇", "type": "city", "regionId": "bresia", "layerId": "surface",
+      "x": 48, "y": 68, "recommendedLevel": [3, 50], "spawnable": true,
+      "summary": "布雷西亚东部边境的农业城镇，粮仓和骑兵训练基地。",
+      "facilities": ["旅店", "马厩", "谷仓", "边境哨所"],
+      "factionIds": ["bresia-crown"], "characterIds": [], "questIds": [],
+      "riskTags": ["魔兽出没"], "stateKey": ""
+    },
+    {
+      "id": "V-G111", "slug": "bresia-west-wood", "name": "西林城", "type": "city", "regionId": "bresia", "layerId": "surface",
+      "x": 38, "y": 73, "recommendedLevel": [5, 50], "spawnable": false,
+      "summary": "布雷西亚西部林区的木材和药材集散地。",
+      "facilities": ["旅店", "伐木场", "药材市场", "猎人公会"],
+      "factionIds": ["bresia-crown"], "characterIds": [], "questIds": [],
+      "riskTags": ["密林迷路"], "stateKey": ""
+    },
+    {
+      "id": "V-G112", "slug": "oseran-south-academy", "name": "南苑学城", "type": "city", "regionId": "oseran", "layerId": "surface",
+      "x": 55, "y": 30, "recommendedLevel": [5, 60], "spawnable": true,
+      "summary": "奥瑟兰的第二大学城，专注于应用魔法和工程学。",
+      "facilities": ["旅店", "工程学院", "实验田", "魔法工坊"],
+      "factionIds": ["oseran-scholarum"], "characterIds": [], "questIds": [],
+      "riskTags": ["实验事故"], "stateKey": ""
+    },
+    {
+      "id": "V-G113", "slug": "oseran-north-tower", "name": "北望塔", "type": "city", "regionId": "oseran", "layerId": "surface",
+      "x": 60, "y": 18, "recommendedLevel": [10, 60], "spawnable": false,
+      "summary": "奥瑟兰北境的天文观测与预警塔，监视北方荒原的魔力异动。",
+      "facilities": ["旅店", "天文台", "警戒塔", "传送阵"],
+      "factionIds": ["oseran-scholarum"], "characterIds": [], "questIds": [],
+      "riskTags": ["魔力风暴"], "stateKey": ""
+    },
+    {
+      "id": "V-G114", "slug": "kardros-west-mine", "name": "西脉堡", "type": "city", "regionId": "kardros", "layerId": "surface",
+      "x": 72, "y": 38, "recommendedLevel": [5, 55], "spawnable": true,
+      "summary": "卡德罗斯西部的矿脉要塞，盛产稀有的构型材料。",
+      "facilities": ["旅店", "矿场", "锻造厂", "材料交易所"],
+      "factionIds": ["kardros-forge-lords"], "characterIds": [], "questIds": [],
+      "riskTags": ["矿坑坍塌"], "stateKey": ""
+    },
+    {
+      "id": "V-G115", "slug": "kardros-east-pass", "name": "东隧堡", "type": "city", "regionId": "kardros", "layerId": "surface",
+      "x": 82, "y": 42, "recommendedLevel": [8, 55], "spawnable": false,
+      "summary": "卡德罗斯东部山脉隧道的入口要塞，控制通往东方的唯一陆路。",
+      "facilities": ["旅店", "隧道入口", "关卡", "修理站"],
+      "factionIds": ["kardros-forge-lords"], "characterIds": [], "questIds": [],
+      "riskTags": ["山崩", "暗影生物"], "stateKey": "kardros.east_pass_blocked"
+    },
+    {
+      "id": "V-G116", "slug": "visalin-north-merchant", "name": "北商区", "type": "city", "regionId": "visalin", "layerId": "surface",
+      "x": 70, "y": 67, "recommendedLevel": [3, 55], "spawnable": true,
+      "summary": "维萨林北部商业中心，各国商队和使节的聚集地。",
+      "facilities": ["旅店", "商队驿站", "使节馆", "拍卖行"],
+      "factionIds": ["visalin-league"], "characterIds": [], "questIds": [],
+      "riskTags": ["商业欺诈"], "stateKey": ""
+    },
+    {
+      "id": "V-G117", "slug": "visalin-south-dock", "name": "南码头", "type": "port", "regionId": "visalin", "layerId": "surface",
+      "x": 74, "y": 77, "recommendedLevel": [3, 50], "spawnable": false,
+      "summary": "维萨林南部的河运码头，连接内陆水道和南部海域。",
+      "facilities": ["旅店", "码头", "仓库区", "海关"],
+      "factionIds": ["visalin-league"], "characterIds": [], "questIds": [],
+      "riskTags": ["走私"], "stateKey": ""
+    },
+    {
+      "id": "V-G118", "slug": "valkain-border-gate", "name": "铁门关", "type": "settlement", "regionId": "valkain", "layerId": "surface",
+      "x": 33, "y": 38, "recommendedLevel": [5, 50], "spawnable": false,
+      "summary": "帝国南部边境的关隘，控制通往中立地带的通道。",
+      "facilities": ["关卡", "驿站"],
+      "factionIds": ["valkain-court"], "characterIds": [], "questIds": [],
+      "riskTags": ["通行限制"], "stateKey": ""
+    },
+    {
+      "id": "V-G119", "slug": "serantia-light-house", "name": "望海灯塔村", "type": "settlement", "regionId": "serantia", "layerId": "surface",
+      "x": 10, "y": 70, "recommendedLevel": [1, 40], "spawnable": true,
+      "summary": "瑟兰提亚海岸的灯塔村落，引航员和渔民的宁静家园。",
+      "facilities": ["旅店", "灯塔", "小型船坞"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["暴风潮"], "stateKey": ""
+    },
+    {
+      "id": "V-G120", "slug": "bresia-river-village", "name": "清流村", "type": "settlement", "regionId": "bresia", "layerId": "surface",
+      "x": 41, "y": 64, "recommendedLevel": [1, 35], "spawnable": true,
+      "summary": "布雷西亚北部河畔的宁静农庄，以优质小麦和乳制品闻名。",
+      "facilities": ["旅店", "磨坊", "牧场"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["洪水"], "stateKey": ""
+    },
+    {
+      "id": "V-G121", "slug": "oseran-herb-hamlet", "name": "药草村", "type": "settlement", "regionId": "oseran", "layerId": "surface",
+      "x": 62, "y": 22, "recommendedLevel": [1, 40], "spawnable": true,
+      "summary": "奥瑟兰北部的草药种植村落，为魔法学院提供稀有药材。",
+      "facilities": ["旅店", "药草园", "蒸馏坊"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["毒草"], "stateKey": ""
+    },
+    {
+      "id": "V-G122", "slug": "kardros-high-village", "name": "高岭村", "type": "settlement", "regionId": "kardros", "layerId": "surface",
+      "x": 79, "y": 35, "recommendedLevel": [3, 45], "spawnable": false,
+      "summary": "卡德罗斯高山上的牧羊村落，以山羊毛织品和岩蜂蜜闻名。",
+      "facilities": ["旅店", "牧场", "岩蜜采集场"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["雪崩"], "stateKey": ""
+    },
+    {
+      "id": "V-G123", "slug": "visalin-bridge-hamlet", "name": "桥头村", "type": "settlement", "regionId": "visalin", "layerId": "surface",
+      "x": 69, "y": 74, "recommendedLevel": [1, 35], "spawnable": true,
+      "summary": "维萨林东北部桥头的小村落，过路商旅的休息站。",
+      "facilities": ["旅店", "驿站", "铁匠铺"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["商路盗贼"], "stateKey": ""
+    },
+    {
+      "id": "V-G124", "slug": "valkain-relay", "name": "帝国中央驿站", "type": "gate", "regionId": "valkain", "layerId": "surface",
+      "x": 31, "y": 33, "recommendedLevel": [1, 60], "spawnable": false,
+      "summary": "瓦尔凯恩帝国官方驿站网络的中心枢纽。",
+      "facilities": ["驿站", "马厩", "通讯塔"],
+      "factionIds": ["valkain-court"], "characterIds": [], "questIds": [],
+      "riskTags": [], "stateKey": ""
+    },
+    {
+      "id": "V-G125", "slug": "serantia-relay", "name": "海风驿站", "type": "gate", "regionId": "serantia", "layerId": "surface",
+      "x": 17, "y": 60, "recommendedLevel": [1, 55], "spawnable": false,
+      "summary": "连接潮门港与内陆的驿站，商旅必经之路。",
+      "facilities": ["驿站", "仓库"],
+      "factionIds": ["serantia-council"], "characterIds": [], "questIds": [],
+      "riskTags": [], "stateKey": ""
+    },
+    {
+      "id": "V-G126", "slug": "bresia-relay", "name": "白槲大道驿站", "type": "gate", "regionId": "bresia", "layerId": "surface",
+      "x": 45, "y": 66, "recommendedLevel": [1, 50], "spawnable": false,
+      "summary": "贯穿布雷西亚的主干道中心驿站。",
+      "facilities": ["驿站", "马厩", "补给站"],
+      "factionIds": ["bresia-crown"], "characterIds": [], "questIds": [],
+      "riskTags": [], "stateKey": ""
+    },
+    {
+      "id": "V-G127", "slug": "oseran-relay", "name": "星径驿站", "type": "gate", "regionId": "oseran", "layerId": "surface",
+      "x": 56, "y": 27, "recommendedLevel": [1, 60], "spawnable": false,
+      "summary": "沿星塔古道而建的学术交流驿站。",
+      "facilities": ["驿站", "图书交换站"],
+      "factionIds": ["oseran-scholarum"], "characterIds": [], "questIds": [],
+      "riskTags": [], "stateKey": ""
+    },
+    {
+      "id": "V-G128", "slug": "kardros-relay", "name": "山脉驿站", "type": "gate", "regionId": "kardros", "layerId": "surface",
+      "x": 75, "y": 43, "recommendedLevel": [3, 55], "spawnable": false,
+      "summary": "卡德罗斯山脉中段的交通中转站。",
+      "facilities": ["驿站", "暖炉休息室", "设备维修"],
+      "factionIds": ["kardros-forge-lords"], "characterIds": [], "questIds": [],
+      "riskTags": ["暴风雪"], "stateKey": ""
+    },
+    {
+      "id": "V-G129", "slug": "visalin-relay", "name": "七桥驿站", "type": "gate", "regionId": "visalin", "layerId": "surface",
+      "x": 73, "y": 70, "recommendedLevel": [1, 55], "spawnable": false,
+      "summary": "维萨林城邦联盟的中央交通枢纽。",
+      "facilities": ["驿站", "多国货币兑换", "行李转运"],
+      "factionIds": ["visalin-league"], "characterIds": [], "questIds": [],
+      "riskTags": [], "stateKey": ""
+    },
+    {
+      "id": "V-G130", "slug": "granville-valley", "name": "格兰维尔河谷", "type": "wilderness", "regionId": "bresia", "layerId": "surface",
+      "x": 38, "y": 56, "recommendedLevel": [3, 45], "spawnable": false,
+      "summary": "横跨布雷西亚与瓦尔凯恩之间的肥沃河谷，盛产药材和野味。",
+      "facilities": ["营地"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["魔兽领地"], "stateKey": ""
+    },
+    {
+      "id": "V-G131", "slug": "serantia-coral-reef", "name": "珊瑚浅海", "type": "wilderness", "regionId": "serantia", "layerId": "surface",
+      "x": 8, "y": 65, "recommendedLevel": [5, 50], "spawnable": false,
+      "summary": "瑟兰提亚近海的珊瑚礁区，水下采集者的宝库。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["暗礁", "有毒生物"], "stateKey": ""
+    },
+    {
+      "id": "V-G132", "slug": "oseran-magic-wild", "name": "魔素荒原", "type": "wilderness", "regionId": "oseran", "layerId": "surface",
+      "x": 64, "y": 20, "recommendedLevel": [15, 60], "spawnable": false,
+      "summary": "奥瑟兰北部的高浓度魔素荒原，草木变异、野兽魔力化。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["魔力辐射", "变异生物"], "stateKey": "oseran.magic_wild_active"
+    },
+    {
+      "id": "V-G133", "slug": "kardros-peak-field", "name": "冰峰原野", "type": "wilderness", "regionId": "kardros", "layerId": "surface",
+      "x": 80, "y": 37, "recommendedLevel": [10, 60], "spawnable": false,
+      "summary": "卡德罗斯最高的山峰地带，永久冰封，传说有远古龙巢。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["极寒", "雪怪"], "stateKey": ""
+    },
+    {
+      "id": "V-G134", "slug": "visalin-marsh", "name": "南沼湿地", "type": "wilderness", "regionId": "visalin", "layerId": "surface",
+      "x": 75, "y": 75, "recommendedLevel": [5, 45], "spawnable": false,
+      "summary": "维萨林南部的沼泽湿地，稀有沼泽药草和两栖生物栖息地。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["瘴气", "泥沼陷阱"], "stateKey": ""
+    },
+    {
+      "id": "V-G135", "slug": "valkain-steel-forest", "name": "钢铁林地", "type": "wilderness", "regionId": "valkain", "layerId": "surface",
+      "x": 25, "y": 27, "recommendedLevel": [8, 55], "spawnable": false,
+      "summary": "帝国西部的特殊林地，树木因富含铁质而呈现金属色泽。",
+      "facilities": ["采集营地"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["铁锈毒雾", "机关兽"], "stateKey": ""
+    },
+    {
+      "id": "V-G136", "slug": "central-plains", "name": "中央大平原", "type": "wilderness", "regionId": "valkain", "layerId": "surface",
+      "x": 42, "y": 48, "recommendedLevel": [1, 60], "spawnable": false,
+      "summary": "艾沃兰大陆中部的广阔草原，六国商路交汇的必经之地。",
+      "facilities": ["商队营地", "补给站"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["草原狼群", "盗匪"], "stateKey": ""
+    },
+    {
+      "id": "V-G137", "slug": "serantia-storm-coast", "name": "风暴海岸", "type": "wilderness", "regionId": "serantia", "layerId": "surface",
+      "x": 5, "y": 58, "recommendedLevel": [12, 60], "spawnable": false,
+      "summary": "瑟兰提亚西部的外海悬崖海岸，常年遭受风暴袭击。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["雷暴", "悬崖崩塌"], "stateKey": ""
+    },
+    {
+      "id": "V-G138", "slug": "bresia-south-forest", "name": "南疆密林", "type": "wilderness", "regionId": "bresia", "layerId": "surface",
+      "x": 40, "y": 76, "recommendedLevel": [8, 55], "spawnable": false,
+      "summary": "布雷西亚南境的大片原始森林，古木参天、精灵传说之地。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["迷失", "古树守卫"], "stateKey": ""
+    },
+    {
+      "id": "V-G139", "slug": "oseran-lake-district", "name": "镜湖区", "type": "wilderness", "regionId": "oseran", "layerId": "surface",
+      "x": 54, "y": 32, "recommendedLevel": [1, 45], "spawnable": true,
+      "summary": "奥瑟兰南部的湖泊群，风景如画，是冥想和低级魔法练习的理想场所。",
+      "facilities": ["湖畔旅店", "冥想亭"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["水怪传说"], "stateKey": ""
+    },
+    {
+      "id": "V-G140", "slug": "kardros-lava-field", "name": "熔岩原", "type": "wilderness", "regionId": "kardros", "layerId": "surface",
+      "x": 78, "y": 45, "recommendedLevel": [15, 60], "spawnable": false,
+      "summary": "卡德罗斯的活火山区，熔岩河流和硫磺喷口遍布。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["火山喷发", "熔岩生物"], "stateKey": ""
+    },
+    {
+      "id": "V-G141", "slug": "visalin-river-delta", "name": "三角洲", "type": "wilderness", "regionId": "visalin", "layerId": "surface",
+      "x": 76, "y": 70, "recommendedLevel": [1, 40], "spawnable": false,
+      "summary": "维萨林东部河流入海口的肥沃三角洲。",
+      "facilities": ["渔村", "渡口"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["洪水", "鳄鱼"], "stateKey": ""
+    },
+    {
+      "id": "V-G142", "slug": "valkain-ruin-forge", "name": "远古锻炉遗迹", "type": "dungeon", "regionId": "valkain", "layerId": "surface",
+      "x": 27, "y": 32, "recommendedLevel": [12, 55], "spawnable": false,
+      "summary": "帝国腹地发现的古代巨型锻炉，据信是神话时代的造物。",
+      "facilities": [],
+      "factionIds": ["valkain-court"], "characterIds": [], "questIds": [],
+      "riskTags": ["高温陷阱", "构装体守卫"], "stateKey": ""
+    },
+    {
+      "id": "V-G143", "slug": "serantia-sunken-city", "name": "沉没之都", "type": "dungeon", "regionId": "serantia", "layerId": "surface",
+      "x": 13, "y": 67, "recommendedLevel": [15, 60], "spawnable": false,
+      "summary": "瑟兰提亚海域下沉没的古代城市遗迹。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["水压陷阱", "深海生物"], "stateKey": ""
+    },
+    {
+      "id": "V-G144", "slug": "bresia-catacomb", "name": "王陵地宫", "type": "dungeon", "regionId": "bresia", "layerId": "surface",
+      "x": 44, "y": 72, "recommendedLevel": [10, 55], "spawnable": false,
+      "summary": "布雷西亚历代国王的地下陵墓群，机关重重。",
+      "facilities": [],
+      "factionIds": ["bresia-crown"], "characterIds": [], "questIds": [],
+      "riskTags": ["亡灵", "机关陷阱"], "stateKey": ""
+    },
+    {
+      "id": "V-G145", "slug": "oseran-forbidden-library", "name": "禁书库", "type": "dungeon", "regionId": "oseran", "layerId": "surface",
+      "x": 57, "y": 26, "recommendedLevel": [18, 60], "spawnable": false,
+      "summary": "奥瑟兰魔法学院地下的封印书库，存放着被禁止的禁忌知识。",
+      "facilities": [],
+      "factionIds": ["oseran-scholarum"], "characterIds": [], "questIds": [],
+      "riskTags": ["魔法陷阱", "知识污染"], "stateKey": "oseran.forbidden_library_sealed"
+    },
+    {
+      "id": "V-G146", "slug": "kardros-deep-tunnel", "name": "深渊隧道", "type": "dungeon", "regionId": "kardros", "layerId": "surface",
+      "x": 81, "y": 44, "recommendedLevel": [20, 60], "spawnable": false,
+      "summary": "卡德罗斯山脉深处通向地底的古老隧道网络。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["暗影生物", "塌方"], "stateKey": ""
+    },
+    {
+      "id": "V-G147", "slug": "visalin-underground-market", "name": "地下黑市", "type": "dungeon", "regionId": "visalin", "layerId": "surface",
+      "x": 71, "y": 73, "recommendedLevel": [8, 50], "spawnable": false,
+      "summary": "维萨林地下深处的秘密交易市场，出售各种非法和稀有物品。",
+      "facilities": ["黑市商人", "情报贩子"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["犯罪", "暗杀"], "stateKey": ""
+    },
+    {
+      "id": "V-G148", "slug": "central-ruin-tower", "name": "中央废塔", "type": "dungeon", "regionId": "valkain", "layerId": "surface",
+      "x": 44, "y": 50, "recommendedLevel": [8, 55], "spawnable": false,
+      "summary": "中央大平原上的古代魔法塔遗迹，曾是跨大陆传送网络的一部分。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["不稳定传送门", "魔力溢出"], "stateKey": ""
+    },
+    {
+      "id": "V-G149", "slug": "serantia-sea-cave", "name": "海妖洞窟", "type": "dungeon", "regionId": "serantia", "layerId": "surface",
+      "x": 16, "y": 65, "recommendedLevel": [10, 55], "spawnable": false,
+      "summary": "瑟兰提亚海岸的深邃海蚀洞，传说有海妖居住。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["潮汐陷阱", "海妖歌声"], "stateKey": ""
+    },
+    {
+      "id": "V-G150", "slug": "oseran-void-lab", "name": "虚空实验室", "type": "dungeon", "regionId": "oseran", "layerId": "surface",
+      "x": 59, "y": 22, "recommendedLevel": [25, 60], "spawnable": false,
+      "summary": "奥瑟兰废弃的跨位面研究设施，如今被未知存在占据。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["虚空侵蚀", "异界生物"], "stateKey": "oseran.void_lab_sealed"
+    },
+    {
+      "id": "V-G151", "slug": "kardros-dragon-bone", "name": "龙骨窟", "type": "dungeon", "regionId": "kardros", "layerId": "surface",
+      "x": 76, "y": 42, "recommendedLevel": [22, 60], "spawnable": false,
+      "summary": "卡德罗斯山中发现的远古巨龙骸骨洞窟，龙骨仍散发魔力。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["龙威残留", "魔力结晶"], "stateKey": ""
+    },
+    {
+      "id": "V-G152", "slug": "central-hub", "name": "中央交通枢纽", "type": "hub", "regionId": "valkain", "layerId": "surface",
+      "x": 46, "y": 46, "recommendedLevel": [1, 60], "spawnable": true,
+      "summary": "艾沃兰大陆正中心的交通枢纽，六国商路在此交汇。",
+      "facilities": ["旅店", "大型驿站", "多国办事处", "冒险者公会"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["人流密集"], "stateKey": ""
+    },
+    {
+      "id": "V-G153", "slug": "north-hub", "name": "北方转运站", "type": "hub", "regionId": "oseran", "layerId": "surface",
+      "x": 52, "y": 20, "recommendedLevel": [3, 55], "spawnable": false,
+      "summary": "连接奥瑟兰与外界的北方交通枢纽。",
+      "facilities": ["驿站", "暖炉大厅", "物资仓库"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["严寒"], "stateKey": ""
+    },
+    {
+      "id": "V-G154", "slug": "south-hub", "name": "南方港口枢纽", "type": "hub", "regionId": "visalin", "layerId": "surface",
+      "x": 64, "y": 78, "recommendedLevel": [1, 55], "spawnable": true,
+      "summary": "南部沿海的综合性港口枢纽，连接海陆交通。",
+      "facilities": ["旅店", "港口", "仓库群", "海关"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["海关抽检"], "stateKey": ""
+    },
+    {
+      "id": "V-G155", "slug": "east-hub", "name": "东方集散站", "type": "hub", "regionId": "kardros", "layerId": "surface",
+      "x": 84, "y": 38, "recommendedLevel": [5, 55], "spawnable": false,
+      "summary": "卡德罗斯东部边境的货物集散中心。",
+      "facilities": ["旅店", "集散仓库", "维修站"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["山地区险"], "stateKey": ""
+    },
+    {
+      "id": "V-G156", "slug": "west-hub", "name": "西海岸转运港", "type": "hub", "regionId": "serantia", "layerId": "surface",
+      "x": 8, "y": 55, "recommendedLevel": [3, 55], "spawnable": false,
+      "summary": "瑟兰提亚西海岸的大型转运港，面向外海。",
+      "facilities": ["旅店", "深水码头", "远洋船坞", "灯塔"],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["外海风暴"], "stateKey": ""
+    },
+    {
+      "id": "V-G157", "slug": "aerial-hub", "name": "天路站", "type": "hub", "regionId": "oseran", "layerId": "surface",
+      "x": 50, "y": 36, "recommendedLevel": [5, 60], "spawnable": false,
+      "summary": "奥瑟兰开发的飞行船起降站，空中交通的中转枢纽。",
+      "facilities": ["起降平台", "飞行船维修", "空中管制塔"],
+      "factionIds": ["oseran-scholarum"], "characterIds": [], "questIds": [],
+      "riskTags": ["空域管制"], "stateKey": ""
+    },
+    {
+      "id": "V-G158", "slug": "first-sanctuary", "name": "初火圣地", "type": "hidden", "regionId": "oseran", "layerId": "hidden",
+      "x": 62, "y": 14, "recommendedLevel": [25, 60], "spawnable": false,
+      "summary": "隐藏于奥瑟兰最北端的圣地，传说中是创世初火燃烧的地方。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["神圣试炼"], "stateKey": "vielsaen.sanctuary.first_fire_revealed"
+    },
+    {
+      "id": "V-G159", "slug": "moon-sanctuary", "name": "月影圣地", "type": "hidden", "regionId": "bresia", "layerId": "hidden",
+      "x": 35, "y": 68, "recommendedLevel": [20, 60], "spawnable": false,
+      "summary": "布雷西亚深林中的月光圣地，仅在月圆之夜显现。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["月相限制"], "stateKey": "vielsaen.sanctuary.moon_revealed"
+    },
+    {
+      "id": "V-G160", "slug": "storm-sanctuary", "name": "暴风圣地", "type": "hidden", "regionId": "serantia", "layerId": "hidden",
+      "x": 3, "y": 60, "recommendedLevel": [22, 60], "spawnable": false,
+      "summary": "外海孤岛上的暴风圣地，雷霆永不停息。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["永续风暴"], "stateKey": "vielsaen.sanctuary.storm_revealed"
+    },
+    {
+      "id": "V-G161", "slug": "demon-king-rift", "name": "魔王裂谷", "type": "hidden", "regionId": "kardros", "layerId": "hidden",
+      "x": 88, "y": 51, "recommendedLevel": [50, 60], "spawnable": false,
+      "summary": "卡德罗斯深处通往魔王领域的裂隙，被远古封印封锁。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["魔王气息", "封印"], "stateKey": "vielsaen.demon_king.seal_status"
+    },
+    {
+      "id": "V-G162", "slug": "demon-king-throne", "name": "魔王座", "type": "hidden", "regionId": "valkain", "layerId": "hidden",
+      "x": 22, "y": 24, "recommendedLevel": [55, 60], "spawnable": false,
+      "summary": "据说是前任魔王陨落之地，残存着强大的黑暗魔力。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["黑暗魔力", "魔王残响"], "stateKey": "vielsaen.demon_king.throne_revealed"
+    },
+    {
+      "id": "V-G163", "slug": "deep-sanctuary", "name": "深渊圣地", "type": "hidden", "regionId": "visalin", "layerId": "hidden",
+      "x": 78, "y": 68, "recommendedLevel": [30, 60], "spawnable": false,
+      "summary": "维萨林地下深处的隐藏圣地，守护着远古的禁忌知识。",
+      "facilities": [],
+      "factionIds": [], "characterIds": [], "questIds": [],
+      "riskTags": ["禁忌知识", "守护者试炼"], "stateKey": "vielsaen.sanctuary.deep_revealed"
+    }
+  ],
+  "edges": [
+    {"id": "ve-V100-V106", "from": "V-G100", "to": "V-G106", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": ["ve-V100-V124-V106"]},
+    {"id": "ve-V100-V107", "from": "V-G100", "to": "V-G107", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V100-V124", "from": "V-G100", "to": "V-G124", "bidirectional": true, "mode": "驿道", "time": 0, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V100-V118", "from": "V-G100", "to": "V-G118", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V100-V135", "from": "V-G100", "to": "V-G135", "bidirectional": true, "mode": "道路", "time": 2, "cost": 4, "level": 8, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V101-V108", "from": "V-G101", "to": "V-G108", "bidirectional": true, "mode": "海路", "time": 1, "cost": 5, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V101-V125-V108"]},
+    {"id": "ve-V101-V109", "from": "V-G101", "to": "V-G109", "bidirectional": true, "mode": "海路", "time": 1, "cost": 8, "level": 5, "risk": 3, "stateKey": "serantia.pirate_activity", "alternativeRouteIds": []},
+    {"id": "ve-V101-V125", "from": "V-G101", "to": "V-G125", "bidirectional": true, "mode": "驿道", "time": 0, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V101-V119", "from": "V-G101", "to": "V-G119", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V101-V131", "from": "V-G101", "to": "V-G131", "bidirectional": true, "mode": "海路", "time": 2, "cost": 6, "level": 5, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V102-V110", "from": "V-G102", "to": "V-G110", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": ["ve-V102-V126-V110"]},
+    {"id": "ve-V102-V111", "from": "V-G102", "to": "V-G111", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V102-V126", "from": "V-G102", "to": "V-G126", "bidirectional": true, "mode": "驿道", "time": 0, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V102-V120", "from": "V-G102", "to": "V-G120", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V102-V144", "from": "V-G102", "to": "V-G144", "bidirectional": true, "mode": "道路", "time": 1, "cost": 1, "level": 10, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V103-V112", "from": "V-G103", "to": "V-G112", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": ["ve-V103-V127-V112"]},
+    {"id": "ve-V103-V113", "from": "V-G103", "to": "V-G113", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 5, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V103-V127", "from": "V-G103", "to": "V-G127", "bidirectional": true, "mode": "驿道", "time": 0, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V103-V121", "from": "V-G103", "to": "V-G121", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V103-V145", "from": "V-G103", "to": "V-G145", "bidirectional": true, "mode": "道路", "time": 0, "cost": 0, "level": 18, "risk": 5, "stateKey": "oseran.forbidden_library_sealed", "alternativeRouteIds": []},
+    {"id": "ve-V104-V114", "from": "V-G104", "to": "V-G114", "bidirectional": true, "mode": "山道", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V104-V128-V114"]},
+    {"id": "ve-V104-V115", "from": "V-G104", "to": "V-G115", "bidirectional": true, "mode": "隧道", "time": 1, "cost": 5, "level": 8, "risk": 4, "stateKey": "kardros.east_pass_blocked", "alternativeRouteIds": ["ve-V104-V133-V115"]},
+    {"id": "ve-V104-V128", "from": "V-G104", "to": "V-G128", "bidirectional": true, "mode": "驿道", "time": 0, "cost": 1, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V104-V122", "from": "V-G104", "to": "V-G122", "bidirectional": true, "mode": "山路", "time": 1, "cost": 2, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V104-V146", "from": "V-G104", "to": "V-G146", "bidirectional": true, "mode": "隧道", "time": 2, "cost": 3, "level": 20, "risk": 5, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V105-V116", "from": "V-G105", "to": "V-G116", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": ["ve-V105-V129-V116"]},
+    {"id": "ve-V105-V117", "from": "V-G105", "to": "V-G117", "bidirectional": true, "mode": "水路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V105-V129", "from": "V-G105", "to": "V-G129", "bidirectional": true, "mode": "驿道", "time": 0, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V105-V123", "from": "V-G105", "to": "V-G123", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V105-V147", "from": "V-G105", "to": "V-G147", "bidirectional": true, "mode": "地下通道", "time": 1, "cost": 5, "level": 8, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V106-V107", "from": "V-G106", "to": "V-G107", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V106-V124", "from": "V-G106", "to": "V-G124", "bidirectional": true, "mode": "驿道", "time": 1, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V107-V118", "from": "V-G107", "to": "V-G118", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V108-V109", "from": "V-G108", "to": "V-G109", "bidirectional": true, "mode": "海路", "time": 2, "cost": 8, "level": 5, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V108-V125", "from": "V-G108", "to": "V-G125", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V109-V131", "from": "V-G109", "to": "V-G131", "bidirectional": true, "mode": "海路", "time": 1, "cost": 5, "level": 5, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V110-V111", "from": "V-G110", "to": "V-G111", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V110-V126", "from": "V-G110", "to": "V-G126", "bidirectional": true, "mode": "驿道", "time": 1, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V110-V120", "from": "V-G110", "to": "V-G120", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V111-V138", "from": "V-G111", "to": "V-G138", "bidirectional": true, "mode": "林道", "time": 2, "cost": 3, "level": 3, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V112-V113", "from": "V-G112", "to": "V-G113", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 3, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V112-V127", "from": "V-G112", "to": "V-G127", "bidirectional": true, "mode": "驿道", "time": 1, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V112-V139", "from": "V-G112", "to": "V-G139", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V113-V121", "from": "V-G113", "to": "V-G121", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V113-V132", "from": "V-G113", "to": "V-G132", "bidirectional": true, "mode": "荒野道", "time": 2, "cost": 3, "level": 10, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V114-V115", "from": "V-G114", "to": "V-G115", "bidirectional": true, "mode": "山道", "time": 2, "cost": 5, "level": 5, "risk": 3, "stateKey": "", "alternativeRouteIds": ["ve-V114-V128-V115"]},
+    {"id": "ve-V114-V128", "from": "V-G114", "to": "V-G128", "bidirectional": true, "mode": "驿道", "time": 1, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V114-V122", "from": "V-G114", "to": "V-G122", "bidirectional": true, "mode": "山路", "time": 1, "cost": 2, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V115-V133", "from": "V-G115", "to": "V-G133", "bidirectional": true, "mode": "山道", "time": 1, "cost": 4, "level": 8, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V116-V117", "from": "V-G116", "to": "V-G117", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V116-V129-V117"]},
+    {"id": "ve-V116-V129", "from": "V-G116", "to": "V-G129", "bidirectional": true, "mode": "驿道", "time": 1, "cost": 1, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V116-V123", "from": "V-G116", "to": "V-G123", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V117-V134", "from": "V-G117", "to": "V-G134", "bidirectional": true, "mode": "水路", "time": 1, "cost": 3, "level": 3, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V117-V141", "from": "V-G117", "to": "V-G141", "bidirectional": true, "mode": "水路", "time": 1, "cost": 2, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V100-V136", "from": "V-G100", "to": "V-G136", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V100-V152"]},
+    {"id": "ve-V102-V136", "from": "V-G102", "to": "V-G136", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V102-V152"]},
+    {"id": "ve-V103-V136", "from": "V-G103", "to": "V-G136", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V103-V152"]},
+    {"id": "ve-V118-V136", "from": "V-G118", "to": "V-G136", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V125-V136", "from": "V-G125", "to": "V-G136", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V126-V136", "from": "V-G126", "to": "V-G136", "bidirectional": true, "mode": "驿道", "time": 1, "cost": 3, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V127-V136", "from": "V-G127", "to": "V-G136", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V128-V136", "from": "V-G128", "to": "V-G136", "bidirectional": true, "mode": "山道", "time": 2, "cost": 6, "level": 3, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V129-V136", "from": "V-G129", "to": "V-G136", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V101-V137", "from": "V-G101", "to": "V-G137", "bidirectional": true, "mode": "海路", "time": 2, "cost": 6, "level": 10, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V101-V143", "from": "V-G101", "to": "V-G143", "bidirectional": true, "mode": "海路", "time": 1, "cost": 5, "level": 12, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V100-V142", "from": "V-G100", "to": "V-G142", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 12, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V104-V140", "from": "V-G104", "to": "V-G140", "bidirectional": true, "mode": "山路", "time": 2, "cost": 4, "level": 12, "risk": 5, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V104-V151", "from": "V-G104", "to": "V-G151", "bidirectional": true, "mode": "山路", "time": 1, "cost": 3, "level": 18, "risk": 5, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V103-V150", "from": "V-G103", "to": "V-G150", "bidirectional": true, "mode": "道路", "time": 1, "cost": 1, "level": 25, "risk": 5, "stateKey": "oseran.void_lab_sealed", "alternativeRouteIds": []},
+    {"id": "ve-V136-V152", "from": "V-G136", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V152-V157", "from": "V-G152", "to": "V-G157", "bidirectional": true, "mode": "航空", "time": 1, "cost": 15, "level": 5, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V152-V100-V157"]},
+    {"id": "ve-V152-V153", "from": "V-G152", "to": "V-G153", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V152-V154", "from": "V-G152", "to": "V-G154", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 6, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V152-V105-V154"]},
+    {"id": "ve-V152-V155", "from": "V-G152", "to": "V-G155", "bidirectional": true, "mode": "驿道", "time": 3, "cost": 8, "level": 3, "risk": 3, "stateKey": "", "alternativeRouteIds": ["ve-V152-V104-V155"]},
+    {"id": "ve-V152-V156", "from": "V-G152", "to": "V-G156", "bidirectional": true, "mode": "驿道", "time": 3, "cost": 8, "level": 3, "risk": 3, "stateKey": "", "alternativeRouteIds": ["ve-V152-V101-V156"]},
+    {"id": "ve-V152-V148", "from": "V-G152", "to": "V-G148", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 8, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V101-V149", "from": "V-G101", "to": "V-G149", "bidirectional": true, "mode": "海岸道路", "time": 1, "cost": 2, "level": 8, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V105-V134", "from": "V-G105", "to": "V-G134", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 3, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V106-V135", "from": "V-G106", "to": "V-G135", "bidirectional": true, "mode": "道路", "time": 2, "cost": 4, "level": 5, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V118-V130", "from": "V-G118", "to": "V-G130", "bidirectional": true, "mode": "道路", "time": 2, "cost": 4, "level": 3, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V120-V130", "from": "V-G120", "to": "V-G130", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V157-V100", "from": "V-G157", "to": "V-G100", "bidirectional": true, "mode": "航空", "time": 1, "cost": 15, "level": 5, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V157-V152-V100"]},
+    {"id": "ve-V153-V113", "from": "V-G153", "to": "V-G113", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 3, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V153-V132", "from": "V-G153", "to": "V-G132", "bidirectional": true, "mode": "荒野道", "time": 2, "cost": 4, "level": 12, "risk": 4, "stateKey": "oseran.magic_wild_active", "alternativeRouteIds": []},
+    {"id": "ve-V154-V117", "from": "V-G154", "to": "V-G117", "bidirectional": true, "mode": "水路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V154-V141", "from": "V-G154", "to": "V-G141", "bidirectional": true, "mode": "水路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V155-V115", "from": "V-G155", "to": "V-G115", "bidirectional": true, "mode": "隧道", "time": 1, "cost": 5, "level": 8, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V155-V140", "from": "V-G155", "to": "V-G140", "bidirectional": true, "mode": "山路", "time": 2, "cost": 5, "level": 12, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V156-V108", "from": "V-G156", "to": "V-G108", "bidirectional": true, "mode": "海路", "time": 1, "cost": 5, "level": 3, "risk": 3, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V156-V137", "from": "V-G156", "to": "V-G137", "bidirectional": true, "mode": "海路", "time": 1, "cost": 6, "level": 10, "risk": 4, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V106-V152", "from": "V-G106", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V110-V152", "from": "V-G110", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 1, "cost": 3, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V112-V152", "from": "V-G112", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 4, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V114-V152", "from": "V-G114", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 6, "level": 3, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V116-V152", "from": "V-G116", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V119-V156", "from": "V-G119", "to": "V-G156", "bidirectional": true, "mode": "海岸道路", "time": 1, "cost": 2, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V122-V128", "from": "V-G122", "to": "V-G128", "bidirectional": true, "mode": "山路", "time": 1, "cost": 2, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V123-V129", "from": "V-G123", "to": "V-G129", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V130-V136", "from": "V-G130", "to": "V-G136", "bidirectional": true, "mode": "道路", "time": 1, "cost": 3, "level": 1, "risk": 2, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V139-V112", "from": "V-G139", "to": "V-G112", "bidirectional": true, "mode": "道路", "time": 1, "cost": 2, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V157-V154", "from": "V-G157", "to": "V-G154", "bidirectional": true, "mode": "航空", "time": 1, "cost": 12, "level": 5, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V157-V152-V154"]},
+    {"id": "ve-V157-V155", "from": "V-G157", "to": "V-G155", "bidirectional": true, "mode": "航空", "time": 1, "cost": 12, "level": 5, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V157-V152-V155"]},
+    {"id": "ve-V157-V156", "from": "V-G157", "to": "V-G156", "bidirectional": true, "mode": "航空", "time": 1, "cost": 12, "level": 5, "risk": 3, "stateKey": "", "alternativeRouteIds": ["ve-V157-V152-V156"]},
+    {"id": "ve-V100-V152", "from": "V-G100", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V101-V152", "from": "V-G101", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 3, "cost": 8, "level": 3, "risk": 2, "stateKey": "", "alternativeRouteIds": ["ve-V101-V125-V136-V152"]},
+    {"id": "ve-V102-V152", "from": "V-G102", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V103-V152", "from": "V-G103", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 5, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V104-V152", "from": "V-G104", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 3, "cost": 8, "level": 3, "risk": 3, "stateKey": "", "alternativeRouteIds": ["ve-V104-V128-V136-V152"]},
+    {"id": "ve-V105-V152", "from": "V-G105", "to": "V-G152", "bidirectional": true, "mode": "驿道", "time": 2, "cost": 6, "level": 1, "risk": 1, "stateKey": "", "alternativeRouteIds": []},
+    {"id": "ve-V159-V138", "from": "V-G159", "to": "V-G138", "bidirectional": true, "mode": "秘道", "time": 3, "cost": 0, "level": 20, "risk": 4, "stateKey": "vielsaen.sanctuary.moon_revealed", "alternativeRouteIds": []},
+    {"id": "ve-V158-V132", "from": "V-G158", "to": "V-G132", "bidirectional": true, "mode": "秘道", "time": 3, "cost": 0, "level": 25, "risk": 5, "stateKey": "vielsaen.sanctuary.first_fire_revealed", "alternativeRouteIds": []},
+    {"id": "ve-V160-V137", "from": "V-G160", "to": "V-G137", "bidirectional": true, "mode": "秘道", "time": 2, "cost": 0, "level": 22, "risk": 5, "stateKey": "vielsaen.sanctuary.storm_revealed", "alternativeRouteIds": []},
+    {"id": "ve-V161-V146", "from": "V-G161", "to": "V-G146", "bidirectional": true, "mode": "裂隙", "time": 1, "cost": 0, "level": 50, "risk": 5, "stateKey": "vielsaen.demon_king.seal_status", "alternativeRouteIds": []},
+    {"id": "ve-V162-V135", "from": "V-G162", "to": "V-G135", "bidirectional": true, "mode": "秘道", "time": 2, "cost": 0, "level": 55, "risk": 5, "stateKey": "vielsaen.demon_king.throne_revealed", "alternativeRouteIds": []},
+    {"id": "ve-V163-V147", "from": "V-G163", "to": "V-G147", "bidirectional": true, "mode": "秘道", "time": 2, "cost": 0, "level": 30, "risk": 4, "stateKey": "vielsaen.sanctuary.deep_revealed", "alternativeRouteIds": []}
+  ]
 }
