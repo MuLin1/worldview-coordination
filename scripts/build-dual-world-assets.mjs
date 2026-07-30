@@ -150,16 +150,10 @@ globalThis.${worldId.toUpperCase()}_MAP = ${worldId.toUpperCase()}_MAP;
 async function generateCompanionModule(data, worldId) {
   const roles = data.roles[worldId];
   const speciesEntries = data.species.entries;
-  let approvals = [];
-  try {
-    const approvalData = JSON.parse(await readFile(join(DATA_DIR, 'companion-species-approval.json'), 'utf-8'));
-    approvals = approvalData.choices.filter(c => {
-      const role = roles.find(r => r.id === c.roleId);
-      return role && role.worldId === worldId;
-    });
-  } catch {
-    // approvals not yet available
-  }
+  const approvals = (data.approvals?.choices || []).filter(choice => {
+    const role = roles.find(candidate => candidate.id === choice.roleId);
+    return role && role.worldId === worldId;
+  });
 
   const speciesById = {};
   for (const s of speciesEntries) {
@@ -186,7 +180,9 @@ async function generateCompanionModule(data, worldId) {
 
     // Build physiology
     companion.physiology = {
-      adult: true,
+      adult: role.age >= 18,
+      sex: approval.sex,
+      capability: approval.capability,
       system: species.system,
       classificationId: approval.speciesId,
       species: species.name,
