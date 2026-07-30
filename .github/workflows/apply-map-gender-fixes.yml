@@ -7,12 +7,16 @@ on:
     paths:
       - .github/workflows/apply-map-gender-fixes.yml
       - scripts/apply-map-gender-fixes.py
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
 
 jobs:
   apply-and-verify:
+    if: github.event_name != 'pull_request' || github.head_ref == 'fix/map-gender-interactions-20260731'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repair branch
