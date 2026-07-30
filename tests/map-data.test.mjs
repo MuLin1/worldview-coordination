@@ -14,9 +14,11 @@ test('Vielsaen map has 64 nodes, six regions, hidden nodes, and dense edges', ()
   assert.ok(VIELSAEN_MAP.edges.length >= 100);
 });
 
-test('Modern map skeleton has correct worldId (full map in Task 5)', () => {
+test('Modern map has 48 nodes across two layers with proper structure', () => {
   assert.equal(MODERN_MAP.worldId, 'modern');
-  // Skeleton or full map: both are valid
-  assert.ok(Array.isArray(MODERN_MAP.nodes));
-  assert.ok(Array.isArray(MODERN_MAP.edges));
+  assert.equal(MODERN_MAP.nodes.length, 48);
+  assert.equal(MODERN_MAP.layers.length, 2);
+  assert.ok(MODERN_MAP.edges.length >= 75);
+  // At least 7 world regions
+  assert.ok(new Set(MODERN_MAP.nodes.filter(n => n.type === 'city').map(n => n.regionId)).size >= 7);
 });

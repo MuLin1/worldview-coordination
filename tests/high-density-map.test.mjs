@@ -38,3 +38,28 @@ test('Vielsaen routes are connected, cyclic, and state-aware', async () => {
     assert.ok(region.count >= 2, `region ${region.region} only has ${region.count} external routes`);
   }
 });
+
+test('Modern City has sixteen hubs and thirty-two local nodes', async () => {
+  const map = await loadJson('modern-map.json');
+  assert.equal(map.nodes.length, 48);
+  const cities = map.nodes.filter(x => x.type === 'city');
+  const localDaily = map.nodes.filter(x => x.type === 'local-daily');
+  const localAnomaly = map.nodes.filter(x => x.type === 'local-anomaly');
+  assert.equal(cities.length, 16);
+  assert.equal(localDaily.length, 16);
+  assert.equal(localAnomaly.length, 16);
+  assert.ok(new Set(cities.map(x => x.regionId)).size >= 7);
+  for (const city of cities) {
+    assert.equal(map.nodes.filter(x => x.parentCityId === city.id).length, 2);
+  }
+  assert.ok(map.edges.length >= 75, `edges ${map.edges.length} < 75`);
+  assert.ok(map.edges.length <= 90, `edges ${map.edges.length} > 90`);
+});
+
+test('Modern global and local layers are independently connected', async () => {
+  const map = await loadJson('modern-map.json');
+  const report = analyzeGraph(map);
+  assert.deepEqual(report.isolatedNodeIds, []);
+  assert.deepEqual(report.unknownEdgeNodeIds, []);
+  assert.ok(report.cycleCount >= 3, `cycles ${report.cycleCount} < 3`);
+});
