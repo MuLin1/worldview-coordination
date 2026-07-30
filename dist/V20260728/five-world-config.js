@@ -1,0 +1,202 @@
+const freezeEntries = entries => Object.freeze(Object.fromEntries(
+  entries.map(([id, value]) => [id, Object.freeze(value)]),
+));
+
+export const WORLD_REGISTRY = Object.freeze({
+  corridor: Object.freeze({ label: '创世回廊', prefix: 'C', exclusiveState: null }),
+  sao: Object.freeze({ label: '刀剑神域', prefix: 'S', exclusiveState: null }),
+  jiuzhou: Object.freeze({ label: '大明志异', prefix: 'J', exclusiveState: null }),
+  vielsaen: Object.freeze({ label: '维尔萨恩', prefix: 'V', exclusiveState: '维尔萨恩' }),
+  modern: Object.freeze({ label: '现代都市', prefix: 'U', exclusiveState: '现代都市' }),
+});
+
+const normal = (name, cycleDays, activeDays, seasonal, gestationDays, birthMode, offspringCount, adjustments) => ({
+  name,
+  system: '普通',
+  cycleDays,
+  activeDays,
+  seasonal,
+  defaultOffsetDays: [-2, 2],
+  gestationDays,
+  birthMode,
+  offspringCount,
+  adjustments,
+});
+
+// Numerical ranges are game-scale defaults. A registered concrete species may
+// narrow them, but may not replace the shared engine.
+export const NORMAL_SPECIES = freezeEntries([
+  ['G-S01', normal('犬科', [21, 35], [5, 9], '弱季节性', [58, 72], '胎生', [1, 5], ['医疗抑制', '周期调节'])],
+  ['G-S02', normal('猫科', [18, 30], [4, 8], '季节性', [60, 70], '胎生', [1, 5], ['医疗抑制', '光照调节'])],
+  ['G-S03', normal('熊科', [28, 42], [5, 9], '季节性', [180, 240], '胎生', [1, 3], ['医疗抑制', '季节调节'])],
+  ['G-S04', normal('鼬科', [18, 30], [4, 8], '季节性', [35, 50], '胎生', [1, 6], ['医疗抑制', '光照调节'])],
+  ['G-S05', normal('小型啮齿与兔形类', [16, 28], [3, 7], '弱季节性', [28, 45], '胎生', [1, 6], ['医疗抑制', '周期调节'])],
+  ['G-S06', normal('马科', [19, 25], [4, 7], '季节性', [320, 370], '胎生', [1, 2], ['医疗抑制', '光照调节'])],
+  ['G-S07', normal('鹿科', [24, 36], [4, 8], '强季节性', [190, 250], '胎生', [1, 3], ['医疗抑制', '季节调节'])],
+  ['G-S08', normal('牛羊羚类', [17, 25], [3, 6], '品种差异', [145, 290], '胎生', [1, 3], ['医疗抑制', '周期调节'])],
+  ['G-S09', normal('猪科', [18, 24], [3, 6], '弱季节性', [108, 122], '胎生', [1, 6], ['医疗抑制', '周期调节'])],
+  ['G-S10', normal('猛禽类', [24, 40], [5, 10], '强季节性', [28, 45], '卵生', [1, 3], ['医疗抑制', '光照调节'])],
+  ['G-S11', normal('鸣禽鸦鹦类', [20, 35], [4, 9], '季节性', [18, 32], '卵生', [1, 5], ['医疗抑制', '光照调节'])],
+  ['G-S12', normal('水禽与海鸟类', [24, 42], [5, 10], '强季节性', [25, 55], '卵生', [1, 4], ['医疗抑制', '光照调节'])],
+  ['G-S13', normal('蜥蜴与蛇类', [25, 50], [5, 12], '温度相关', [45, 100], '卵生', [1, 6], ['医疗抑制', '温度调节'])],
+  ['G-S14', normal('龟鳖类', [35, 60], [7, 14], '温度相关', [55, 120], '卵生', [1, 6], ['医疗抑制', '温度调节'])],
+  ['G-S15', normal('鳄类', [28, 50], [6, 12], '温度相关', [65, 95], '卵生', [1, 5], ['医疗抑制', '温度调节'])],
+  ['G-S16', normal('鲸豚类', [25, 40], [5, 10], '品种差异', [300, 390], '胎生', [1, 2], ['医疗抑制', '周期调节'])],
+  ['G-S17', normal('软骨鱼类', [30, 60], [6, 14], '品种差异', [180, 390], '卵生', [1, 4], ['医疗抑制', '水温调节'])],
+  ['G-S18', normal('硬骨鱼类', [20, 45], [5, 12], '品种差异', [20, 90], '卵生', [1, 6], ['医疗抑制', '水温调节'])],
+]);
+
+const mythic = (name, cycleDays, activeDays, gestationDays, birthMode, offspringCount) => ({
+  name,
+  system: '神话',
+  cycleDays,
+  activeDays,
+  seasonal: '魔力与个体状态相关',
+  defaultOffsetDays: [-5, 5],
+  gestationDays,
+  birthMode,
+  offspringCount,
+  adjustments: ['高阶医疗抑制', '魔力调节'],
+});
+
+export const MYTHIC_SPECIES = freezeEntries([
+  ['G-M01', mythic('巨龙', [90, 180], [10, 21], [540, 900], '卵生', [1, 2])],
+  ['G-M02', mythic('凤凰', [120, 240], [12, 24], [360, 720], '卵生', [1, 2])],
+  ['G-M03', mythic('麒麟', [80, 160], [9, 18], [420, 720], '胎生', [1, 2])],
+  ['G-M04', mythic('狮鹫', [60, 120], [8, 16], [270, 420], '卵生', [1, 3])],
+  ['G-M05', mythic('深海巨兽', [120, 240], [14, 28], [600, 1080], '胎生', [1, 2])],
+  ['G-M06', mythic('独角兽', [70, 140], [8, 16], [360, 600], '胎生', [1, 2])],
+  ['G-M07', mythic('雷鸟', [80, 160], [9, 18], [300, 480], '卵生', [1, 3])],
+  ['G-M08', mythic('多首巨蛇', [100, 200], [12, 24], [420, 720], '卵生', [1, 4])],
+]);
+
+export const VIELSAEN_CONFIG = Object.freeze({
+  land: '艾沃兰大陆',
+  sea: '瑟雷亚海',
+  nations: Object.freeze([
+    { id: 'valkain', name: '瓦尔凯恩帝国', role: '中央集权、魔法工业与代理扩张' },
+    { id: 'serantia', name: '瑟兰提亚海盟', role: '海贸、金融、舰队与群岛航路' },
+    { id: 'bresia', name: '布雷西亚王国', role: '粮食、陆军、骑士制度与大陆平原' },
+    { id: 'oseran', name: '奥瑟兰学邦', role: '魔法教育、医疗、标准制定与中立研究' },
+    { id: 'kadros', name: '卡德罗斯山国', role: '山地要塞、矿脉、构型材料与防御工事' },
+    { id: 'visalin', name: '维萨林城邦联盟', role: '交通咽喉、转口贸易、情报与多城自治' },
+  ]),
+  schools: Object.freeze(['生息学派', '灵魂学派', '塑能学派', '构型学派', '护界学派', '迁跃学派']),
+  deities: Object.freeze(['阿维娜', '瑟弗兰', '凯尔铎', '瓦尔迦', '伊瑟琳', '欧洛恩', '奈维尔']),
+  hotspots: Object.freeze(['格兰维尔河谷', '赫尔岬走廊', '凯斯特群岛']),
+});
+
+export const MODERN_CONFIG = Object.freeze({
+  year: 2026,
+  abilityTypes: Object.freeze(['身体强化', '元素操控', '物质塑形', '能量放射', '感知与精神', '生命调节', '空间干涉', '规则特例']),
+  abilityGrades: Object.freeze(['E', 'D', 'C', 'B', 'A', 'S']),
+  plotStages: Object.freeze([
+    { stage: 0, name: '常态都市生活', requiredEvidence: ['异常裂隙样本', '基本取证'] },
+    { stage: 1, name: '异常裂隙样本', requiredEvidence: ['组织痕迹对比', '2014年档案线索'] },
+    { stage: 2, name: '旧案回声', requiredEvidence: ['排除自然灾害', '人为开启步骤'] },
+    { stage: 3, name: '人为裂隙', requiredEvidence: ['统一指挥证据', '锚点网络证据'] },
+    { stage: 4, name: '魔物王与锚点网络', requiredEvidence: ['公开预警', '联合指挥基础'] },
+    { stage: 5, name: '全球魔物入侵', requiredEvidence: ['稳定主要战线', '远征队组建条件'] },
+    { stage: 6, name: '异界联合远征', requiredEvidence: ['统治核心定位', '关闭与撤离方案'] },
+    { stage: 7, name: '击败魔物王', requiredEvidence: ['魔物王败亡', '主通道关闭', '锚点网络失效'] },
+  ]),
+});
+
+const physiology = (sex, capability, classificationId, species, traits) => Object.freeze({
+  adult: true,
+  sex,
+  capability,
+  system: classificationId.startsWith('G-M') ? '神话' : '普通',
+  classificationId,
+  species,
+  heritableTraits: Object.freeze(traits),
+});
+
+export const REPLACEMENT_BONDS = Object.freeze([
+  Object.freeze({
+    id: 'vielsaen_kael_rhodes',
+    name: '凯尔·洛德斯',
+    worldId: 'vielsaen',
+    species: '灰狼',
+    role: '前卫与边境向导',
+    origin: '格兰维尔河谷',
+    faction: '布雷西亚边境守备队',
+    profession: '护界学派战士',
+    level: 8,
+    attributes: Object.freeze({ strength: 15, agility: 12, vitality: 15, intellect: 10, spirit: 11 }),
+    physiology: physiology('雄性', '可授精', 'G-S01', '灰狼', ['灰银被毛', '琥珀色虹膜', '敏锐听觉']),
+    heritableTraits: Object.freeze(['灰银被毛', '琥珀色虹膜', '敏锐听觉']),
+  }),
+  Object.freeze({
+    id: 'vielsaen_mira_vel',
+    name: '米拉·维尔',
+    worldId: 'vielsaen',
+    species: '赤狐',
+    role: '治疗与魔力研究',
+    origin: '奥瑟兰学邦',
+    faction: '公共伦理医疗院',
+    profession: '生息学派医师',
+    level: 7,
+    attributes: Object.freeze({ strength: 8, agility: 13, vitality: 11, intellect: 16, spirit: 15 }),
+    physiology: physiology('雌性', '可妊娠', 'G-S01', '赤狐', ['赤金被毛', '白色尾尖', '细长耳廓']),
+    heritableTraits: Object.freeze(['赤金被毛', '白色尾尖', '细长耳廓']),
+  }),
+  Object.freeze({
+    id: 'vielsaen_orin_sable',
+    name: '奥林·塞布尔',
+    worldId: 'vielsaen',
+    species: '渡鸦',
+    role: '侦察与外交情报',
+    origin: '维萨林城邦联盟',
+    faction: '自由信使公会',
+    profession: '迁跃学派信使',
+    level: 6,
+    attributes: Object.freeze({ strength: 9, agility: 16, vitality: 10, intellect: 14, spirit: 12 }),
+    physiology: physiology('双性', '双向', 'G-S11', '渡鸦', ['蓝黑羽色', '银灰喙缘', '方向感']),
+    heritableTraits: Object.freeze(['蓝黑羽色', '银灰喙缘', '方向感']),
+  }),
+  Object.freeze({
+    id: 'modern_lin_xiaoyu',
+    name: '林晓雨',
+    worldId: 'modern',
+    species: '云豹',
+    role: '城市调查与感知支援',
+    origin: '上海',
+    faction: '东海城市裂隙应急中心',
+    profession: '现场调查员',
+    ability: Object.freeze({ type: '感知与精神', grade: 'C', name: '回声定位' }),
+    level: 6,
+    attributes: Object.freeze({ strength: 10, agility: 15, vitality: 11, intellect: 14, spirit: 15 }),
+    physiology: physiology('雌性', '可妊娠', 'G-S02', '云豹', ['云纹斑块', '灰绿色虹膜', '长尾']),
+    heritableTraits: Object.freeze(['云纹斑块', '灰绿色虹膜', '长尾']),
+  }),
+  Object.freeze({
+    id: 'modern_chen_mojun',
+    name: '陈墨君',
+    worldId: 'modern',
+    species: '水獭',
+    role: '工程与裂隙封锁',
+    origin: '新加坡',
+    faction: '国际裂隙协调署工程组',
+    profession: '空间结构工程师',
+    ability: Object.freeze({ type: '物质塑形', grade: 'C', name: '应力重排' }),
+    level: 5,
+    attributes: Object.freeze({ strength: 11, agility: 12, vitality: 13, intellect: 16, spirit: 12 }),
+    physiology: physiology('雄性', '可授精', 'G-S04', '水獭', ['深褐短毛', '蹼掌', '水下闭气']),
+    heritableTraits: Object.freeze(['深褐短毛', '蹼掌', '水下闭气']),
+  }),
+  Object.freeze({
+    id: 'modern_ava_storm',
+    name: '艾娃·斯托姆',
+    worldId: 'modern',
+    species: '雷鸟',
+    role: '隐藏神话顾问与空中救援',
+    origin: '温哥华',
+    faction: '北太平洋隐匿议会',
+    profession: '航空救援顾问',
+    level: 10,
+    attributes: Object.freeze({ strength: 14, agility: 16, vitality: 14, intellect: 13, spirit: 16 }),
+    physiology: physiology('可变', '双向', 'G-M07', '雷鸟', ['深蓝翼羽', '金色眼纹', '静电亲和']),
+    heritableTraits: Object.freeze(['深蓝翼羽', '金色眼纹', '静电亲和']),
+  }),
+]);

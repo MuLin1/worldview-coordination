@@ -1,0 +1,53 @@
+{
+  "version": "V20260728",
+  "status": "frozen",
+  "retiredWorldIds": ["amber", "dragon"],
+  "retiredTerms": [
+    "琥珀之剑",
+    "屠龙与都市日常",
+    "惊悚乐园",
+    "龙族副本",
+    "锁情咒"
+  ],
+  "activeFilesToRemediate": {
+    "dist/V20260728/build.html": [
+      "world selector",
+      "opening presets",
+      "bond templates",
+      "map links",
+      "retired prompts"
+    ],
+    "dist/V20260728/helper-calculator.js": [
+      "world predicate",
+      "bond templates",
+      "protected retired event fields",
+      "retired scenario ledger"
+    ],
+    "dist/V20260728/external-status-bar.js": [
+      "world predicate",
+      "retired scenario catalogue and UI",
+      "retired location fields"
+    ],
+    "dist/V20260728/mobile-phone.js": [
+      "worldbook selector",
+      "retired prompts",
+      "bond display"
+    ],
+    "dist/V20260728/bootom-status-bar.html": [
+      "retired world display and state fields"
+    ],
+    "dist/V20260728/auto-fix.js": [
+      "retired field repair rules"
+    ],
+    "amber_sword_worldmap.html": ["delete after Vielsaen replacement"],
+    "amber_sword_mapdata.js": ["delete after Vielsaen replacement"],
+    "dragon_map.html": ["delete after Modern City replacement"],
+    "dragon_mapdata.js": ["delete after Modern City replacement"]
+  },
+  "allowlistedHistory": [
+    "docs/superpowers/specs/2026-07-30-dnf-five-world-migration-design.md",
+    "docs/superpowers/plans/2026-07-30-dnf-five-world-migration.md",
+    "docs/migration/five-world-id-map.md",
+    "docs/migration/retired-content-audit.json"
+  ]
+}
