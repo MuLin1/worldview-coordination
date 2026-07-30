@@ -756,7 +756,7 @@
     }
 
     function isAmberSwordWorldView(variables) {
-        return getCurrentWorldView(variables) === '琥珀之剑';
+        return getCurrentWorldView(variables) === '维尔萨恩';
     }
 
     function getWeaponCalcLevel(weapon, player, variables) {
@@ -2869,10 +2869,10 @@
     }
 
     // 位于「当前事件」下、只允许合并不允许整体丢失的对象键。
-    // 典型隐患：AI 结算/进入新副本时用 { "op":"add", "path":"/当前事件/惊悚乐园副本", "value": { 单个副本 } }
+    // 典型隐患：AI 结算/进入新副本时用 { "op":"add", "path":"/当前事件/已退役模块", "value": { 单个副本 } }
     // 会把之前已完成副本的记录整体冲掉；或直接 remove 整个对象/整个「当前事件」导致进度丢失。
     // 如需保护更多进度对象，在此追加键名即可。
-    const MERGE_PROTECTED_EVENT_KEYS = ['惊悚乐园副本', '惊悚乐园副本评价', '龙族副本'];
+    const MERGE_PROTECTED_EVENT_KEYS = [];
 
     function isPlainObject(value) {
         return !!value && typeof value === 'object' && !Array.isArray(value);
@@ -2935,8 +2935,8 @@
 
     // 副本进度状态对象：其子键的值只能是「进行中 / 已完成」。
     // 与 MERGE_PROTECTED_EVENT_KEYS 不同，这里只列“状态值对象”，
-    // 不含评价文本对象（惊悚乐园副本评价）。
-    const DUNGEON_STATUS_EVENT_KEYS = ['惊悚乐园副本', '龙族副本'];
+    // 不含评价文本对象（已退役模块评价）。
+    const DUNGEON_STATUS_EVENT_KEYS = [];
     // 这些对象下不是状态值、不参与校验的特殊子键。
     const DUNGEON_STATUS_SKIP_SUBKEYS = new Set(['暂存副本']);
     const DUNGEON_ALLOWED_STATUS = new Set(['进行中', '已完成']);
@@ -3524,9 +3524,6 @@
             // 末日时钟（仅"大明志异"世界观，内部自带世界观判断）
             handleDoomClock(statData, statDataBefore);
 
-            // 惊悚乐园：原创随机副本剧本落库 + 副本防重（内部自带惊悚乐园判断）
-            handleFrightParadiseScript(statData, statDataBefore);
-
             const comboEnteredBattle = handleComboBattleEntry(statData, statDataBefore);
             console.log(`[组合切换] 主循环 comboEnteredBattle=${comboEnteredBattle}`);
             const previousCombatValueMode = getCombatValueMode(statDataBefore);
@@ -3970,190 +3967,6 @@
     }
 
     // ==========================================
-    // 惊悚乐园：原创随机副本剧本落库 + 副本防重
-    // ----------------------------------------------------------------
-    // 设计：
-    // 1) AI 在“玩家选随机/原创”那轮，把整份剧本写进
-    //    /当前事件/惊悚乐园副本/暂存副本 （单字段，天然防重）。
-    // 2) 本脚本每轮同步读取该暂存字段：若有内容，拷出后立即从变量删除
-    //    （变量不残留剧本），并异步全量覆盖主世界书里固定名条目
-    //    “随机副本内容”。
-    // 3) 每轮同步判定“当前是否有原创随机副本进行中”：
-    //    - 有 → “随机副本内容”条目启用并保留剧本（在暂存搬运时写入）；
-    //    - 无（固定副本进行中/已完成/无副本）→ 异步把该条目禁用并清空，
-    //      确保只有原创副本进行中时剧本才注入给 AI。
-    // 4) 副本防重：若同时存在多个“进行中”，把除“本轮新开的那个”以外的
-    //    旧进行中副本自动改为“已完成”，固定副本与原创副本同样适用。
-    // 世界书写入为异步副作用，不阻塞主流程、不参与 isProcessing。
-    // ==========================================
-    const FRIGHT_STATE_PATH_KEY = '惊悚乐园副本';
-    const FRIGHT_DRAFT_KEY = '暂存副本';
-    const FRIGHT_WORLDBOOK_ENTRY_NAME = '随机副本内容';
-    // 固定副本索引：用于判断“当前进行中副本”是固定还是原创
-    const FRIGHT_FIXED_MODULES = new Set([
-        '新手教程', '医院危情', '诡影迷城', '山池鬼屋篇', '大蒜无双篇', '校园七不思议',
-        '猎人岛篇', '霹雳初临', '死亡问答', '地球废土篇', '进击的主角', '卑鄙的我',
-        '苍灵论剑', '特别篇·侦探', '兄弟', '披风争夺战', '入侵脑细胞', '南方公园篇',
-        '巅峰争霸战S1·虫之战', '巅峰争霸战S1·茧之战', '巅峰争霸战S1·蝶之战', '巅峰争霸战S1·决赛篇',
-        '被诅咒的医院', '咀魔岛', '绝世高手篇', '我，小丑', '猛鬼电力公司', '里世界',
-        '荒野求毒', '恐怖童谣与上古守魔', '后宫篇', '幽灵邮差', '终极营救',
-        '巅峰争霸战S2·英杰聚首', '巅峰争霸战S2·鏖战四界', '巅峰争霸战S2·诸神的黄昏',
-        '极限实验', '宇超联', '雅歌号赌局', '夏日的回忆', '没有游戏的世界', '重返咀魔岛', '剑神一笑'
-    ]);
-
-    // 解析酒馆助手全局函数：优先 TavernHelper.xxx，回退到 iframe 注入的裸全局
-    function resolveHostFn(name) {
-        try {
-            const host = (window.parent && window.parent.TavernHelper) || window.TavernHelper || null;
-            if (host && typeof host[name] === 'function') return host[name].bind(host);
-        } catch (_) {}
-        try {
-            const g = (window.parent || window);
-            if (g && typeof g[name] === 'function') return g[name].bind(g);
-        } catch (_) {}
-        if (typeof window !== 'undefined' && typeof window[name] === 'function') return window[name].bind(window);
-        return null;
-    }
-
-    // 取当前角色卡主世界书名（原创剧本条目与总控制器同处一本，getWorldInfo 单参才能读到）
-    async function frightResolveWorldbookName() {
-        const getCharWorldbookNames = resolveHostFn('getCharWorldbookNames');
-        if (getCharWorldbookNames) {
-            try {
-                const cw = await getCharWorldbookNames('current');
-                const primary = cw && (cw.primary || (Array.isArray(cw.additional) ? cw.additional[0] : ''));
-                if (primary) return primary;
-            } catch (e) {
-                console.warn('[惊悚乐园剧本] 获取角色卡世界书失败：', e);
-            }
-        }
-        // 回退：聊天世界书
-        const getChatWorldbookName = resolveHostFn('getChatWorldbookName');
-        if (getChatWorldbookName) {
-            try {
-                const chatBook = await getChatWorldbookName('current');
-                if (chatBook) return chatBook;
-            } catch (_) {}
-        }
-        return '';
-    }
-
-    // 全量写入/更新“随机副本内容”条目：存在则覆盖内容与启用状态，不存在则新建
-    // enabled=true 时写入剧本正文并启用；enabled=false 时禁用并清空，避免注入
-    let frightWorldbookBusy = false;
-    async function frightWriteWorldbookEntry(scriptText, enabled) {
-        if (frightWorldbookBusy) return;
-        frightWorldbookBusy = true;
-        try {
-            const bookName = await frightResolveWorldbookName();
-            if (!bookName) {
-                console.warn('[惊悚乐园剧本] 未找到可写入的世界书，跳过');
-                return;
-            }
-            const getWorldbook = resolveHostFn('getWorldbook');
-            const updateWorldbookWith = resolveHostFn('updateWorldbookWith');
-            const createWorldbookEntries = resolveHostFn('createWorldbookEntries');
-            if (!getWorldbook || !updateWorldbookWith || !createWorldbookEntries) {
-                console.warn('[惊悚乐园剧本] 世界书 API 不可用，跳过');
-                return;
-            }
-
-            const content = enabled ? String(scriptText || '') : '';
-            let entries = [];
-            try { entries = await getWorldbook(bookName) || []; } catch (e) {
-                console.warn('[惊悚乐园剧本] 读取世界书失败：', e);
-                return;
-            }
-            const existing = entries.find(e => e && e.name === FRIGHT_WORLDBOOK_ENTRY_NAME);
-
-            if (!existing) {
-                // 仅在需要启用时才创建；不需要启用又不存在，则无需创建空条目
-                if (!enabled) return;
-                await createWorldbookEntries(bookName, [{
-                    name: FRIGHT_WORLDBOOK_ENTRY_NAME,
-                    enabled: true,
-                    strategy: { type: 'constant', keys: [], keys_secondary: { logic: 'and_any', keys: [] }, scan_depth: 'same_as_global' },
-                    position: { type: 'at_depth', role: 'system', depth: 4, order: 100 },
-                    content
-                }]);
-                console.log('[惊悚乐园剧本] 已创建“随机副本内容”条目并写入剧本');
-                return;
-            }
-
-            // 幂等：已是目标状态则跳过，避免固定副本每轮触发多余的世界书写入与重渲染
-            if (!!existing.enabled === !!enabled && String(existing.content || '') === content) {
-                return;
-            }
-
-            await updateWorldbookWith(bookName, (list) => list.map(e => {
-                if (!e || e.name !== FRIGHT_WORLDBOOK_ENTRY_NAME) return e;
-                return { ...e, enabled: !!enabled, content };
-            }));
-            console.log(`[惊悚乐园剧本] 已更新“随机副本内容”条目：enabled=${!!enabled}, 内容长度=${content.length}`);
-        } catch (e) {
-            console.warn('[惊悚乐园剧本] 写入世界书异常：', e);
-        } finally {
-            frightWorldbookBusy = false;
-        }
-    }
-
-    // 主处理：暂存搬运 + 防重 + 按需切换条目启用状态
-    function handleFrightParadiseScript(statData, statDataBefore) {
-        const events = statData?.当前事件;
-        if (!events || typeof events !== 'object') return;
-        const state = events[FRIGHT_STATE_PATH_KEY];
-        if (!state || typeof state !== 'object' || Array.isArray(state)) return;
-
-        // ---- 1) 副本防重：多个“进行中”时，保留本轮新开的，其余改“已完成” ----
-        const beforeState = statDataBefore?.当前事件?.[FRIGHT_STATE_PATH_KEY];
-        const runningNames = Object.keys(state)
-            .filter(name => name !== FRIGHT_DRAFT_KEY && String(state[name] || '').trim() === '进行中');
-        if (runningNames.length > 1) {
-            // 本轮新变成“进行中”的副本（上一轮不是进行中）视为要保留的当前副本
-            const newlyStarted = runningNames.filter(name => {
-                const prev = beforeState && typeof beforeState === 'object' ? String(beforeState[name] || '').trim() : '';
-                return prev !== '进行中';
-            });
-            const keep = newlyStarted.length > 0 ? newlyStarted[newlyStarted.length - 1] : runningNames[runningNames.length - 1];
-            runningNames.forEach(name => {
-                if (name !== keep) {
-                    state[name] = '已完成';
-                    console.warn(`[惊悚乐园防重] 检测到多个进行中副本，已自动将“${name}”结清为“已完成”，保留当前副本“${keep}”`);
-                }
-            });
-        }
-
-        // ---- 2) 取暂存剧本：搬运后立即从变量删除（变量不残留剧本）----
-        let draftText = '';
-        if (Object.prototype.hasOwnProperty.call(state, FRIGHT_DRAFT_KEY)) {
-            const raw = state[FRIGHT_DRAFT_KEY];
-            draftText = typeof raw === 'string' ? raw : (raw == null ? '' : (() => {
-                try { return JSON.stringify(raw); } catch (_) { return String(raw); }
-            })());
-            delete state[FRIGHT_DRAFT_KEY];
-            if (draftText.trim()) {
-                console.log(`[惊悚乐园剧本] 捕获暂存副本剧本（长度=${draftText.length}），已从变量剥离`);
-            }
-        }
-
-        // ---- 3) 判定当前是否有“原创随机副本”进行中 ----
-        const runningAfter = Object.keys(state)
-            .filter(name => name !== FRIGHT_DRAFT_KEY && String(state[name] || '').trim() === '进行中');
-        const current = runningAfter[0] || '';
-        const originalRunning = !!current && !FRIGHT_FIXED_MODULES.has(current);
-
-        // ---- 4) 异步同步世界书条目 ----
-        if (originalRunning && draftText.trim()) {
-            // 新剧本落库并启用（全量覆盖，天然防重）
-            frightWriteWorldbookEntry(draftText, true);
-        } else if (originalRunning && !draftText.trim()) {
-            // 原创副本进行中但本轮没有新剧本：保持现状，不动条目
-        } else {
-            // 非原创副本进行中（固定/已完成/无副本）：禁用并清空条目，避免注入
-            frightWriteWorldbookEntry('', false);
-        }
-    }
-
     // ==========================================
     // 事件注册
     // ==========================================

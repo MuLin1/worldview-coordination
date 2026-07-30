@@ -11137,18 +11137,18 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
       };
 
       // ==================== 渲染函数 ====================
-      const amberMapDebugUrl = 'https://testingcf.jsdelivr.net/gh/tangquanghuy/dnf@latest/amber_sword_worldmap.html';
-      let _amberMapEmbedSrcdoc = '';
-      let _amberMapHydratedUrl = '';
-      let _amberMapHydratingUrl = '';
-      let _amberMapDirectUrl = '';
+      const vielsaenMapDebugUrl = '../../vielsaen_map.html';
+      let _vielsaenMapEmbedSrcdoc = '';
+      let _vielsaenMapHydratedUrl = '';
+      let _vielsaenMapHydratingUrl = '';
+      let _vielsaenMapDirectUrl = '';
 
-      const resolveAmberMapBaseUrl = () => {
+      const resolveVielsaenMapBaseUrl = () => {
         try {
-          const fromQuery = new URL(window.location.href).searchParams.get('amberMapUrl');
+          const fromQuery = new URL(window.location.href).searchParams.get('vielsaenMapUrl');
           if (fromQuery) return fromQuery;
         } catch (error) {
-          console.warn('[底部状态栏] 读取 amberMapUrl 参数失败:', error);
+          console.warn('[底部状态栏] 读取 vielsaenMapUrl 参数失败:', error);
         }
         try {
           if (typeof window.AMBER_SWORD_MAP_EMBED_URL === 'string' && window.AMBER_SWORD_MAP_EMBED_URL.trim()) {
@@ -11157,12 +11157,12 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
         } catch (error) {
           console.warn('[底部状态栏] 读取全局琥珀地图地址失败:', error);
         }
-        return amberMapDebugUrl;
+        return vielsaenMapDebugUrl;
       };
 
       // 大明志异（两京九州）地图地址：可由 query 参数 damingMapUrl 或全局 DAMING_MAP_EMBED_URL 覆盖
       const damingMapDebugUrl = 'https://cdn.jsdelivr.net/gh/tangquanghuy/dnf@latest/jiuzhou_map_v1_5.html?v=1';
-      const dragonMapDebugUrl = 'https://tangquanghuy.github.io/dnf/dragon_map.html?v=airp20260711_6';
+      const modernMapDebugUrl = '../../modern_map.html';
       const dungeonMapDebugUrl = 'https://cdn.jsdelivr.net/gh/tangquanghuy/dnf@latest/dungeon_map_v1_19.html?v=1';
       let _dungeonMapEmbedSrcdoc = '';
       let _dungeonMapHydratedUrl = '';
@@ -11185,12 +11185,12 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
         return damingMapDebugUrl;
       };
 
-      const resolveDragonMapBaseUrl = () => {
+      const resolveModernMapBaseUrl = () => {
         try {
-          const fromQuery = new URL(window.location.href).searchParams.get('dragonMapUrl');
+          const fromQuery = new URL(window.location.href).searchParams.get('modernMapUrl');
           if (fromQuery) return fromQuery;
         } catch (error) {
-          console.warn('[底部状态栏] 读取 dragonMapUrl 参数失败:', error);
+          console.warn('[底部状态栏] 读取 modernMapUrl 参数失败:', error);
         }
         try {
           if (typeof window.DRAGON_MAP_EMBED_URL === 'string' && window.DRAGON_MAP_EMBED_URL.trim()) {
@@ -11199,12 +11199,12 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
         } catch (error) {
           console.warn('[底部状态栏] 读取全局龙族地图地址失败:', error);
         }
-        return dragonMapDebugUrl;
+        return modernMapDebugUrl;
       };
 
-      const buildAmberMapEmbedUrl = (baseUrl) => {
+      const buildVielsaenMapEmbedUrl = (baseUrl) => {
         const rawUrl = String(baseUrl || '').trim();
-        if (!rawUrl) return amberMapDebugUrl;
+        if (!rawUrl) return vielsaenMapDebugUrl;
         try {
           const url = new URL(rawUrl, window.location.href);
           url.searchParams.set('mode', 'browse');
@@ -11256,11 +11256,11 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
         }
       };
 
-      const applyAmberMapFrameToDom = () => {
+      const applyVielsaenMapFrameToDom = () => {
         const frame = document.getElementById('statusbar-world-map-frame');
         if (!frame) return;
         const worldviewMode = String(frame.dataset.worldviewMode || '').trim();
-        const isEmbedMode = worldviewMode === 'amber' || worldviewMode === 'daming' || worldviewMode === 'dragon';
+        const isEmbedMode = worldviewMode === 'vielsaen' || worldviewMode === 'daming' || worldviewMode === 'modern';
         if (!isEmbedMode) {
           if (frame.srcdoc) frame.srcdoc = '';
           const fallbackSrc = String(frame.dataset.mapSrc || '').trim();
@@ -11268,76 +11268,76 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
           return;
         }
 
-        if (_amberMapEmbedSrcdoc) {
+        if (_vielsaenMapEmbedSrcdoc) {
           if (frame.getAttribute('src') !== 'about:blank') frame.setAttribute('src', 'about:blank');
-          if (frame.srcdoc !== _amberMapEmbedSrcdoc) frame.srcdoc = _amberMapEmbedSrcdoc;
+          if (frame.srcdoc !== _vielsaenMapEmbedSrcdoc) frame.srcdoc = _vielsaenMapEmbedSrcdoc;
           return;
         }
 
         if (frame.srcdoc) frame.srcdoc = '';
-        const directSrc = String(_amberMapDirectUrl || frame.dataset.mapSrc || '').trim() || 'about:blank';
+        const directSrc = String(_vielsaenMapDirectUrl || frame.dataset.mapSrc || '').trim() || 'about:blank';
         if (frame.getAttribute('src') !== directSrc) frame.setAttribute('src', directSrc);
       };
 
-      const hydrateAmberMapEmbed = async (url) => {
+      const hydrateVielsaenMapEmbed = async (url) => {
         const targetUrl = String(url || '').trim();
-        _amberMapHydratingUrl = targetUrl;
-        _amberMapHydratedUrl = '';
-        _amberMapEmbedSrcdoc = '';
-        _amberMapDirectUrl = '';
-        applyAmberMapFrameToDom();
+        _vielsaenMapHydratingUrl = targetUrl;
+        _vielsaenMapHydratedUrl = '';
+        _vielsaenMapEmbedSrcdoc = '';
+        _vielsaenMapDirectUrl = '';
+        applyVielsaenMapFrameToDom();
 
         if (!targetUrl || !/^https?:\/\//i.test(targetUrl)) {
-          _amberMapHydratingUrl = '';
+          _vielsaenMapHydratingUrl = '';
           return;
         }
 
         try {
           const response = await fetch(targetUrl, { method: 'GET', mode: 'cors', credentials: 'omit' });
-          if (_amberMapHydratingUrl !== targetUrl) return;
+          if (_vielsaenMapHydratingUrl !== targetUrl) return;
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
           const contentType = String(response.headers.get('content-type') || '').toLowerCase();
           if (contentType.includes('text/html')) {
-            _amberMapDirectUrl = targetUrl;
-            _amberMapHydratedUrl = targetUrl;
-            _amberMapHydratingUrl = '';
-            applyAmberMapFrameToDom();
+            _vielsaenMapDirectUrl = targetUrl;
+            _vielsaenMapHydratedUrl = targetUrl;
+            _vielsaenMapHydratingUrl = '';
+            applyVielsaenMapFrameToDom();
             return;
           }
 
           const text = await response.text();
-          if (_amberMapHydratingUrl !== targetUrl) return;
+          if (_vielsaenMapHydratingUrl !== targetUrl) return;
           if (/(<!doctype\s+html|<html\b)/i.test(text)) {
-            _amberMapEmbedSrcdoc = injectBaseHrefIntoHtml(text, targetUrl, {
+            _vielsaenMapEmbedSrcdoc = injectBaseHrefIntoHtml(text, targetUrl, {
               mode: 'browse',
               embed: '1'
             });
-            _amberMapHydratedUrl = targetUrl;
-            _amberMapHydratingUrl = '';
-            applyAmberMapFrameToDom();
+            _vielsaenMapHydratedUrl = targetUrl;
+            _vielsaenMapHydratingUrl = '';
+            applyVielsaenMapFrameToDom();
             return;
           }
 
-          _amberMapDirectUrl = targetUrl;
-          _amberMapHydratedUrl = targetUrl;
-          _amberMapHydratingUrl = '';
-          applyAmberMapFrameToDom();
+          _vielsaenMapDirectUrl = targetUrl;
+          _vielsaenMapHydratedUrl = targetUrl;
+          _vielsaenMapHydratingUrl = '';
+          applyVielsaenMapFrameToDom();
         } catch (error) {
-          if (_amberMapHydratingUrl !== targetUrl) return;
+          if (_vielsaenMapHydratingUrl !== targetUrl) return;
           console.warn('[底部状态栏] 琥珀地图预取失败，回退直接加载:', error);
-          _amberMapDirectUrl = targetUrl;
-          _amberMapHydratedUrl = targetUrl;
-          _amberMapHydratingUrl = '';
-          applyAmberMapFrameToDom();
+          _vielsaenMapDirectUrl = targetUrl;
+          _vielsaenMapHydratedUrl = targetUrl;
+          _vielsaenMapHydratingUrl = '';
+          applyVielsaenMapFrameToDom();
         }
       };
 
-      const ensureAmberMapEmbedReady = (url) => {
+      const ensureVielsaenMapEmbedReady = (url) => {
         const targetUrl = String(url || '').trim();
         if (!targetUrl) return;
-        if (_amberMapHydratedUrl === targetUrl || _amberMapHydratingUrl === targetUrl) return;
-        hydrateAmberMapEmbed(targetUrl);
+        if (_vielsaenMapHydratedUrl === targetUrl || _vielsaenMapHydratingUrl === targetUrl) return;
+        hydrateVielsaenMapEmbed(targetUrl);
       };
 
       const applyDungeonMapFrameToDom = () => {
@@ -11422,14 +11422,14 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
 
       const resolveWorldviewMapSrc = (worldviewLabel) => {
         const worldview = String(worldviewLabel || '').trim();
-        if (worldview === '琥珀之剑') {
-          return buildAmberMapEmbedUrl(resolveAmberMapBaseUrl());
+        if (worldview === '维尔萨恩') {
+          return buildVielsaenMapEmbedUrl(resolveVielsaenMapBaseUrl());
         }
         if (worldview === '大明志异') {
-          return buildAmberMapEmbedUrl(resolveDamingMapBaseUrl());
+          return buildVielsaenMapEmbedUrl(resolveDamingMapBaseUrl());
         }
-        if (worldview === '屠龙与都市日常' || worldview === '屠龙与惊悚都市日常') {
-          return buildAmberMapEmbedUrl(resolveDragonMapBaseUrl());
+        if (worldview === '现代都市' || worldview === '现代都市') {
+          return buildVielsaenMapEmbedUrl(resolveModernMapBaseUrl());
         }
         return 'https://tangquanghuy.github.io/dnf/map.html?v=10';
       };
@@ -11459,24 +11459,24 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
         const 年历 = 世界信息.年历 || '';
         const 世界观 = 系统配置.世界观 || '';
         const isSaoWorldview = 世界观 === '刀剑神域';
-        const isAmberWorldview = 世界观 === '琥珀之剑';
+        const isVielsaenWorldview = 世界观 === '维尔萨恩';
         const isDamingWorldview = 世界观 === '大明志异';
-        const isDragonWorldview = 世界观 === '屠龙与都市日常' || 世界观 === '屠龙与惊悚都市日常';
-        const isEmbedWorldview = isAmberWorldview || isDamingWorldview || isDragonWorldview;
+        const isModernWorldview = 世界观 === '现代都市' || 世界观 === '现代都市';
+        const isEmbedWorldview = isVielsaenWorldview || isDamingWorldview || isModernWorldview;
         const dungeonIframeSrc = dungeonMapDebugUrl;
         const mapIframeSrc = resolveWorldviewMapSrc(世界观);
         if (isEmbedWorldview) {
-          ensureAmberMapEmbedReady(mapIframeSrc);
+          ensureVielsaenMapEmbedReady(mapIframeSrc);
         }
         if (isSaoWorldview) {
           ensureDungeonMapEmbedReady(dungeonIframeSrc);
         }
-        const shouldUseAmberDirectSrc = isEmbedWorldview
-          && _amberMapHydratedUrl === mapIframeSrc
-          && !_amberMapEmbedSrcdoc
-          && _amberMapDirectUrl === mapIframeSrc;
+        const shouldUseVielsaenDirectSrc = isEmbedWorldview
+          && _vielsaenMapHydratedUrl === mapIframeSrc
+          && !_vielsaenMapEmbedSrcdoc
+          && _vielsaenMapDirectUrl === mapIframeSrc;
         const renderedMapSrc = isEmbedWorldview
-          ? (shouldUseAmberDirectSrc ? mapIframeSrc : 'about:blank')
+          ? (shouldUseVielsaenDirectSrc ? mapIframeSrc : 'about:blank')
           : mapIframeSrc;
         const shouldUseDungeonDirectSrc = isSaoWorldview
           && _dungeonMapHydratedUrl === dungeonIframeSrc
@@ -11489,13 +11489,13 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
         const 场所 = 位置.场所 || '';
         const 区域 = 位置.区域 || '';
         const 大陆 = 位置.大陆 || '';
-        const 惊悚乐园位置 = 位置.惊悚乐园 || {};
-        const 惊悚乐园登录中 = Boolean(惊悚乐园位置.登录中);
-        const 位置显示 = 惊悚乐园登录中
-          ? (惊悚乐园位置.场所 || 惊悚乐园位置.区域 || '惊悚乐园')
+        const 异常网络位置 = 位置.异常网络 || {};
+        const 异常网络登录中 = Boolean(异常网络位置.登录中);
+        const 位置显示 = 异常网络登录中
+          ? (异常网络位置.场所 || 异常网络位置.区域 || '异常网络')
           : (场所 || 区域 || 大陆 || '未知');
-        const 位置完整 = 惊悚乐园登录中
-          ? ['惊悚乐园', 惊悚乐园位置.区域, 惊悚乐园位置.场所].filter(Boolean).join(' > ')
+        const 位置完整 = 异常网络登录中
+          ? ['异常网络', 异常网络位置.区域, 异常网络位置.场所].filter(Boolean).join(' > ')
           : [大陆, 区域, 场所].filter(Boolean).join(' > ');
         const 名称 = 人物.名称 || '冒险者';
         const 等级 = 人物.等级 || 1;
@@ -12613,7 +12613,7 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
                     <button class="map-sub-tab" data-map-tab="dungeon"><i class="ri-treasure-map-line"></i>副本地图</button>
                   </div>
                   <div class="map-sub-pane active" data-map-pane="world">
-                    <iframe id="statusbar-world-map-frame" data-worldview-mode="${isAmberWorldview ? 'amber' : (isDamingWorldview ? 'daming' : (isDragonWorldview ? 'dragon' : 'default'))}" data-map-src="${mapIframeSrc}" src="${renderedMapSrc}" style="width:100%;height:400px;border:none;border-radius:8px;"></iframe>
+                    <iframe id="statusbar-world-map-frame" data-worldview-mode="${isVielsaenWorldview ? 'vielsaen' : (isDamingWorldview ? 'daming' : (isModernWorldview ? 'modern' : 'default'))}" data-map-src="${mapIframeSrc}" src="${renderedMapSrc}" style="width:100%;height:400px;border:none;border-radius:8px;"></iframe>
                   </div>
                   <div class="map-sub-pane" data-map-pane="dungeon">
                     <iframe id="statusbar-dungeon-map-frame" data-dungeon-embed-mode="remote" data-dungeon-src="${dungeonIframeSrc}" src="about:blank" style="width:100%;height:400px;border:none;border-radius:8px;"></iframe>
@@ -13567,7 +13567,7 @@ ${CHARACTER_PROFILE_FORMAT_SAMPLE.trim()}
               console.error('[status-bar] bindEvents failed:', error);
               throw error;
             }
-            applyAmberMapFrameToDom();
+            applyVielsaenMapFrameToDom();
             applyDungeonMapFrameToDom();
             // 向地图 iframe 推送位置数据
             try {

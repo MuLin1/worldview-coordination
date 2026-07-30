@@ -1,6 +1,6 @@
 {
   "version": "V20260728",
-  "status": "frozen",
+  "status": "completed",
   "retiredWorldIds": ["amber", "dragon"],
   "retiredTerms": [
     "琥珀之剑",
@@ -49,5 +49,13 @@
     "docs/superpowers/plans/2026-07-30-dnf-five-world-migration.md",
     "docs/migration/five-world-id-map.md",
     "docs/migration/retired-content-audit.json"
-  ]
+  ],
+  "verification": {
+    "staticScan": "tests/runtime-integration.test.py",
+    "activeFilesPassed": 10,
+    "retiredMapFilesDeleted": 4,
+    "replacementMapFilesAdded": 4,
+    "retiredScenarioRuntimeRemoved": true,
+    "retiredEventProtectionRemoved": true
+  }
 }

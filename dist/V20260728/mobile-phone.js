@@ -7728,6 +7728,7 @@ function showFriendDetail(friendName, friendData, isRestoring = false) {
     const affection = friendData.好感度 ?? 0;
     const isTraveling = friendData.同行誓约 === true;
     const currentThought = friendData.当前想法 || '';
+    const physiologyHtml = globalThis.DNFFiveWorld?.renderPhysiologySummary(friendData.生理档案) || '';
 
     /* 好感度进度条颜色 */
     const affectionPercent = Math.abs(affection);
@@ -7760,6 +7761,14 @@ function showFriendDetail(friendName, friendData, isRestoring = false) {
                     </div>
                 </div>
             </div>
+
+            ${physiologyHtml ? `
+            <div class="list-item" style="margin-bottom: 12px;">
+                <div class="list-item-header">
+                    <span class="list-item-name">🌿 生理档案</span>
+                </div>
+                <div class="list-item-desc" style="margin-top: 6px;">${physiologyHtml}</div>
+            </div>` : ''}
             
             <!-- 好感度 -->
             <div class="list-item" style="margin-bottom: 12px;">
