@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>现代都市全球节点图</title>
+<style>
+body{margin:0;background:#081827;color:#d8f3ff;font:14px system-ui}header{padding:14px 18px;background:#102b40}main{position:relative;min-height:620px;background:linear-gradient(145deg,#0d2639,#153d51)}
+.node{position:absolute;transform:translate(-50%,-50%);border:1px solid #62c9e8;border-radius:18px;background:#10334a;padding:7px 11px;cursor:pointer;color:inherit}#detail{padding:12px 18px;background:#102b40}
+</style>
+<header><strong id="title"></strong></header><main id="map"></main><aside id="detail">选择城市查看机构与当前异常状态。地图不写入主线。</aside>
+<script type="module">
+import { MODERN_MAP as data } from './modern_mapdata.js';
+title.textContent=data.title;
+for(const node of data.nodes){const button=document.createElement('button');button.className='node';button.style.left=`${node.x}%`;button.style.top=`${node.y}%`;button.textContent=node.city;button.onclick=()=>{const state=parent?.DNFFiveWorldState?.世界状态?.现代都市||{};detail.textContent=`${node.city} · ${node.region} · ${node.agency} · 裂隙：${state.裂隙?.[node.id]??'未记录'} · 魔物：${state.异界魔物?.[node.id]??'未记录'} · 主线阶段：${state.主线?.阶段??0}`;parent.postMessage({channel:'modern-spawn-map',type:'modern_spawn_selected',spawn:{id:node.id,名称:node.city}},'*')};map.append(button)}
+parent.postMessage({channel:'modern-spawn-map',type:'map_ready'},'*');
+</script>
+</html>

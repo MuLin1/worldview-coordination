@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>维尔萨恩地图</title>
+<style>
+body{margin:0;background:#13211d;color:#f3ead3;font:14px system-ui}header{padding:14px 18px;background:#1d332b}main{position:relative;min-height:620px;background:radial-gradient(circle,#315847,#162820)}
+.node{position:absolute;transform:translate(-50%,-50%);border:1px solid #d2b36b;border-radius:8px;background:#203a30;padding:7px 10px;cursor:pointer;color:inherit}.node[data-event]{box-shadow:0 0 12px #d2b36b}.region{font-weight:700}#detail{padding:12px 18px;background:#1d332b}
+</style>
+<header><strong id="title"></strong></header><main id="map"></main><aside id="detail">选择地点查看信息。地图仅显示当前状态，不推进剧情。</aside>
+<script type="module">
+import { VIELSAEN_MAP as data } from './vielsaen_mapdata.js';
+title.textContent=data.title;
+for(const node of data.nodes){const button=document.createElement('button');button.className=`node ${node.type==='capital'?'region':''}`;button.style.left=`${node.x}%`;button.style.top=`${node.y}%`;button.textContent=node.name;button.dataset.event=node.eventKey||'';button.onclick=()=>{const state=parent?.DNFFiveWorldState?.世界状态?.维尔萨恩;const value=node.eventKey?node.eventKey.split('.').slice(1).reduce((v,k)=>v?.[k],state):null;detail.textContent=`${node.name}${node.regionId?` · ${node.regionId}`:''}${node.eventKey?` · 当前状态：${JSON.stringify(value??'未记录')}`:''}`;parent.postMessage({channel:'vielsaen-spawn-map',type:'vielsaen_spawn_selected',spawn:{id:node.id,名称:node.name}},'*')};map.append(button)}
+parent.postMessage({channel:'vielsaen-spawn-map',type:'map_ready'},'*');
+</script>
+</html>
