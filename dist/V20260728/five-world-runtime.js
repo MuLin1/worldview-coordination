@@ -378,6 +378,178 @@ export function settleBirth(root, gestatingId, random = Math.random) {
   return clone(record);
 }
 
+const evidenceList = event => Array.isArray(event?.evidence)
+  ? [...new Set(event.evidence.map(String).map(x => x.trim()).filter(Boolean))]
+  : [];
+const rejection = (reason, state) => ({ accepted: false, changed: false, reason, state });
+const acceptance = state => ({ accepted: true, changed: true, reason: '', state });
+
+export function advanceVielsaenState(root, event = {}) {
+  const state = root?.世界状态?.维尔萨恩;
+  if (!state) throw new Error('缺少维尔萨恩状态');
+  if (root.世界状态.当前世界 !== 'vielsaen') return rejection('当前世界不是维尔萨恩', state);
+
+  const evidence = evidenceList(event);
+  if (evidence.length === 0) return rejection('缺少剧情证据', state);
+
+  switch (event.type) {
+    case 'condenseDemonKing':
+      if (state.魔王.状态 !== '未凝聚') return rejection('魔王之力已经凝聚', state);
+      state.魔王.状态 = '已凝聚';
+      state.魔王.证据.push(...evidence);
+      return acceptance(state);
+    case 'publishDemonKing':
+      if (state.魔王.状态 !== '已凝聚') return rejection('魔王尚未凝聚，不能公开', state);
+      state.魔王.是否公开 = true;
+      state.魔王.证据.push(...evidence);
+      return acceptance(state);
+    case 'setHeroCandidate':
+      if (!event.characterId || !root.角色档案[event.characterId]) return rejection('勇者候选档案不存在', state);
+      if (state.勇者.状态 === '已确认') return rejection('勇者已经确认', state);
+      state.勇者.状态 = '候选';
+      state.勇者.候选ID = event.characterId;
+      state.勇者.证据.push(...evidence);
+      return acceptance(state);
+    case 'confirmHero':
+      if (!event.characterId || state.勇者.候选ID !== event.characterId) return rejection('角色不是已登记候选', state);
+      state.勇者.状态 = '已确认';
+      state.勇者.确认ID = event.characterId;
+      state.勇者.证据.push(...evidence);
+      return acceptance(state);
+    case 'updateSanctuary':
+      if (!event.status) return rejection('缺少圣地状态', state);
+      state.圣地.状态 = String(event.status);
+      state.圣地.证据.push(...evidence);
+      return acceptance(state);
+    case 'startWindow': {
+      parseWorldDate(event.date, 'vielsaen');
+      if (!state.魔王.是否公开 || state.勇者.状态 !== '已确认') {
+        return rejection('魔王与勇者状态未满足空窗期起点', state);
+      }
+      state.五个月空窗期 = {
+        状态: '进行中',
+        开始日期: event.date,
+        已过天数: 0,
+        总天数: 150,
+        证据: evidence,
+      };
+      return acceptance(state);
+    }
+    case 'advanceWindow': {
+      const windowState = state.五个月空窗期;
+      if (windowState.状态 !== '进行中') return rejection('五个月空窗期尚未开始', state);
+      const start = parseWorldDate(windowState.开始日期, 'vielsaen');
+      const current = parseWorldDate(event.date, 'vielsaen');
+      if (current.epochDay < start.epochDay) return rejection('日期倒退', state);
+      windowState.已过天数 = Math.min(windowState.总天数, current.epochDay - start.epochDay);
+      if (windowState.已过天数 >= windowState.总天数) windowState.状态 = '已结束';
+      windowState.证据 = [...new Set([...(windowState.证据 || []), ...evidence])];
+      return acceptance(state);
+    }
+    case 'setManaExhaustion':
+      if (!event.characterId || !root.角色档案[event.characterId]) return rejection('角色档案不存在', state);
+      state.魔力枯竭[event.characterId] = {
+        状态: String(event.status || '枯竭'),
+        证据: evidence,
+      };
+      root.角色档案[event.characterId].魔力档案.枯竭状态 = String(event.status || '枯竭');
+      return acceptance(state);
+    default:
+      return rejection(`未知维尔萨恩事件: ${event.type || ''}`, state);
+  }
+}
+
+export function registerModernAbility(profile, request = {}, random = Math.random) {
+  if (!profile) return rejection('角色档案不存在', {});
+  if (profile.生物体系 === '神话') return rejection('神话生物不会觉醒异能', profile.异能档案);
+  const evidence = evidenceList(request);
+  if (evidence.length === 0) return rejection('缺少觉醒与检测证据', profile.异能档案);
+
+  const typeIndex = Math.min(
+    MODERN_CONFIG.abilityTypes.length - 1,
+    Math.floor(random() * MODERN_CONFIG.abilityTypes.length),
+  );
+  const gradeIndex = Math.min(
+    MODERN_CONFIG.abilityGrades.length - 1,
+    Math.floor(random() * MODERN_CONFIG.abilityGrades.length),
+  );
+  const ability = {
+    type: MODERN_CONFIG.abilityTypes[typeIndex],
+    grade: MODERN_CONFIG.abilityGrades[gradeIndex],
+    name: String(request.name || `${MODERN_CONFIG.abilityTypes[typeIndex]}个体表现`),
+    evidence,
+  };
+  profile.异能档案 = {
+    登记状态: '已登记',
+    异能类别: ability.type,
+    异能等级: ability.grade,
+    异能名称: ability.name,
+    觉醒证据: evidence,
+  };
+  return { accepted: true, changed: true, reason: '', ability };
+}
+
+function hasRequiredEvidence(actual, required) {
+  const present = new Set(actual);
+  return required.every(item => present.has(item));
+}
+
+export function advanceModernState(root, event = {}) {
+  const state = root?.世界状态?.现代都市;
+  if (!state) throw new Error('缺少现代都市状态');
+  if (root.世界状态.当前世界 !== 'modern') return rejection('当前世界不是现代都市', state);
+
+  const evidence = evidenceList(event);
+  if (evidence.length === 0) return rejection('缺少剧情证据', state);
+
+  if (event.type === 'advancePlot') {
+    const current = state.主线.阶段;
+    if (event.targetStage !== current + 1 || event.targetStage > 7) {
+      return rejection('现代都市主线只能顺序推进一级', state);
+    }
+    const gate = MODERN_CONFIG.plotStages[current];
+    if (!hasRequiredEvidence(evidence, gate.requiredEvidence)) {
+      return rejection(`缺少阶段${current}推进证据`, state);
+    }
+    state.主线.历史.push({ 从: current, 到: event.targetStage, 证据: evidence });
+    state.主线.阶段 = event.targetStage;
+    state.主线.证据 = [...new Set([...state.主线.证据, ...evidence])];
+    if (event.targetStage >= 5) {
+      state.魔物王入侵 = { 状态: '进行中', 证据: evidence };
+    }
+    if (event.targetStage === 7) {
+      state.魔物王入侵 = { 状态: '最终行动', 证据: evidence };
+    }
+    return acceptance(state);
+  }
+
+  if (event.type === 'updateRift') {
+    if (!event.nodeId || !event.status) return rejection('裂隙节点或状态缺失', state);
+    state.裂隙[event.nodeId] = { 状态: String(event.status), 证据: evidence };
+    return acceptance(state);
+  }
+
+  if (event.type === 'updateMonsterActivity') {
+    if (!event.nodeId || !event.status) return rejection('魔物活动节点或状态缺失', state);
+    state.异界魔物活动[event.nodeId] = { 状态: String(event.status), 证据: evidence };
+    return acceptance(state);
+  }
+
+  return rejection(`未知现代都市事件: ${event.type || ''}`, state);
+}
+
+export function validateAdultTrigger(profiles, participantIds, context = {}) {
+  if (!Array.isArray(participantIds) || participantIds.length === 0) {
+    return { accepted: false, reason: '参与者为空' };
+  }
+  const participants = participantIds.map(id => profiles?.[id]);
+  if (participants.some(profile => !profile)) return { accepted: false, reason: '参与者档案不存在' };
+  if (participants.some(profile => profile.是否成年 !== true)) return { accepted: false, reason: '参与者存在未成年人' };
+  if (context.capacity !== true) return { accepted: false, reason: '缺少行为能力确认' };
+  if (context.consent !== true) return { accepted: false, reason: '缺少有效同意' };
+  return { accepted: true, reason: '' };
+}
+
 const escapeHtml = value => String(value ?? '')
   .replaceAll('&', '&amp;')
   .replaceAll('<', '&lt;')
@@ -435,6 +607,10 @@ export const DNFFiveWorld = Object.freeze({
   advanceState,
   submitConception,
   settleBirth,
+  advanceVielsaenState,
+  registerModernAbility,
+  advanceModernState,
+  validateAdultTrigger,
   renderPhysiologySummary,
 });
 
