@@ -339,7 +339,6 @@
         body {
             font-family: var(--font-ui);
             background-color: var(--bg-body);
-            background-image: url('bg.png');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -9948,12 +9947,12 @@
                 const vielsaenSpawnMapFrame = ref(null);
                 const vielsaenMapEmbedLoading = ref(true);
                 const vielsaenMapEmbedSrcdoc = ref('');
-                const vielsaenMapDebugUrl = new URL('../../vielsaen_map.html', window.location.href).href;
+                const vielsaenMapDebugUrl = new URL('../../vielsaen_map.html', document.baseURI).href;
                 const modernSpawnMapFrame = ref(null);
                 const modernMapEmbedLoading = ref(true);
                 const modernMapEmbedSrcdoc = ref('');
                 // 优先使用 GitHub Pages：可直接作为 HTML 执行，且同目录的 modern_mapdata.js 会自然解析。调试时可用 ?modernMapUrl= 覆盖。
-                const modernMapDebugUrl = new URL('../../modern_map.html', window.location.href).href;
+                const modernMapDebugUrl = new URL('../../modern_map.html', document.baseURI).href;
                 const jiuzhouSpawnMapFrame = ref(null);
                 const jiuzhouMapEmbedLoading = ref(true);
                 const jiuzhouMapEmbedSrcdoc = ref('');
@@ -9969,7 +9968,7 @@
 
                 function resolveVielsaenMapBaseUrl() {
                     try {
-                        const fromQuery = new URL(window.location.href).searchParams.get('vielsaenMapUrl');
+                        const fromQuery = new URL(document.baseURI).searchParams.get('vielsaenMapUrl');
                         if (fromQuery) return fromQuery;
                     } catch (error) {
                         console.warn('[维尔萨恩地图] 读取 vielsaenMapUrl 参数失败:', error);
@@ -9988,7 +9987,7 @@
                     const rawUrl = String(baseUrl || '').trim();
                     if (!rawUrl) return '';
                     try {
-                        const url = new URL(rawUrl, window.location.href);
+                        const url = new URL(rawUrl, document.baseURI);
                         url.searchParams.set('mode', 'spawn-select');
                         url.searchParams.set('embed', '1');
                         return url.toString();
@@ -10210,7 +10209,7 @@
                 // ==================== 现代都市出生点地图嵌入 ====================
                 function resolveModernMapBaseUrl() {
                     try {
-                        const fromQuery = new URL(window.location.href).searchParams.get('modernMapUrl');
+                        const fromQuery = new URL(document.baseURI).searchParams.get('modernMapUrl');
                         if (fromQuery) return fromQuery;
                     } catch (error) {
                         console.warn('[现代都市地图] 读取 modernMapUrl 参数失败:', error);
@@ -10229,7 +10228,7 @@
                     const rawUrl = String(baseUrl || '').trim();
                     if (!rawUrl) return '';
                     try {
-                        const url = new URL(rawUrl, window.location.href);
+                        const url = new URL(rawUrl, document.baseURI);
                         url.searchParams.set('mode', 'spawn-select');
                         url.searchParams.set('embed', '1');
                         url.searchParams.set('dataVersion', 'airp20260711_5');
@@ -10296,7 +10295,7 @@
                 // 开局页这边只负责：拼出 spawn-select 地址、预取页面注入 <base href> + 一小段 bootstrap config。
                 function resolveJiuzhouMapBaseUrl() {
                     try {
-                        const fromQuery = new URL(window.location.href).searchParams.get('jiuzhouMapUrl');
+                        const fromQuery = new URL(document.baseURI).searchParams.get('jiuzhouMapUrl');
                         if (fromQuery) return fromQuery;
                     } catch (error) {
                         console.warn('[大明志异地图] 读取 jiuzhouMapUrl 参数失败:', error);
@@ -10315,7 +10314,7 @@
                     const rawUrl = String(baseUrl || '').trim();
                     if (!rawUrl) return '';
                     try {
-                        const url = new URL(rawUrl, window.location.href);
+                        const url = new URL(rawUrl, document.baseURI);
                         url.searchParams.set('mode', 'spawn-select');
                         url.searchParams.set('embed', '1');
                         return url.toString();
@@ -10333,7 +10332,7 @@
                     const rawUrl = String(baseUrl || '').trim();
                     if (!rawUrl) return '';
                     try {
-                        return new URL('./jiuzhouMapData.js', new URL(rawUrl, window.location.href)).toString();
+                        return new URL('./jiuzhouMapData.js', new URL(rawUrl, document.baseURI)).toString();
                     } catch (error) {
                         console.warn('[大明志异地图] 构造门派数据地址失败:', error);
                         return '';
@@ -13802,59 +13801,11 @@
                     return camp;
                 };
 
-                const toSafeVielsaenRaceList = (rawRacesByCamp) => {
-                    if (!rawRacesByCamp || typeof rawRacesByCamp !== 'object') return [];
-                    const normalized = [];
-                    let rank = 1;
-                    for (const [campName, races] of Object.entries(rawRacesByCamp)) {
-                        if (!Array.isArray(races)) continue;
-                        for (const race of races) {
-                            if (!race || typeof race !== 'object') continue;
-                            normalized.push({
-                                name: String(race.name || `未命名种族${rank}`),
-                                rank,
-                                cost: 0,
-                                startLevel: Math.max(1, Number(race.startLevel) || 1),
-                                tier: Number(race.tier) || 1,
-                                type: String(race.type || 'material'),
-                                tierName: String(race.tierName || '未知'),
-                                tierColor: String(race.tierColor || '#b2bec3'),
-                                desc: String(race.desc || ''),
-                                lore: String(race.lore || ''),
-                                bonuses: {
-                                    strength: Number(race?.bonuses?.strength) || 0,
-                                    dexterity: Number(race?.bonuses?.dexterity) || 0,
-                                    constitution: Number(race?.bonuses?.constitution) || 0,
-                                    intelligence: Number(race?.bonuses?.intelligence) || 0,
-                                    wisdom: Number(race?.bonuses?.wisdom) || 0,
-                                    charisma: Number(race?.bonuses?.charisma) || 0
-                                },
-                                buffs: Array.isArray(race.buffs) ? race.buffs : [],
-                                icon: String(race.icon || 'ri-user-line'),
-                                camp: normalizeVielsaenCampName(campName)
-                            });
-                            rank += 1;
-                        }
-                    }
-                    return normalized;
-                };
-
-                const vielsaenWorldviewRaces = markRaw(
-                    toSafeVielsaenRaceList(typeof vielsaenSpecies !== 'undefined' ? vielsaenSpecies : null)
-                );
                 const vielsaenCampOrder = ['普通', '神话'];
-                const vielsaenRaceNamesByCamp = new Map(
-                    vielsaenCampOrder.map(camp => [
-                        camp,
-                        new Set(
-                            Array.isArray(vielsaenSpecies?.[camp])
-                                ? vielsaenSpecies[camp]
-                                    .map(race => String(race?.name || '').trim())
-                                    .filter(Boolean)
-                                : []
-                        )
-                    ])
-                );
+                const vielsaenRaceNamesByCamp = new Map([
+                    ['普通', new Set(Object.values(NORMAL_SPECIES).map(race => String(race?.name || '').trim()).filter(Boolean))],
+                    ['神话', new Set(Object.values(MYTHIC_SPECIES).map(race => String(race?.name || '').trim()).filter(Boolean))]
+                ]);
                 const getVielsaenCampByRace = (race) => {
                     if (race?.system === '神话') return '神话';
                     if (race?.system === '普通') return '普通';
@@ -14892,7 +14843,7 @@
                     };
                 });
                 const STARTER_SHOP_REMOTE_URLS = Object.freeze([
-                    './start_equipment_shop.json',
+                    '../../start_equipment_shop.json',
                     'https://cdn.jsdelivr.net/gh/tangquanghuy/dnf@master/start_equipment_shop.json',
                     'https://cdn.jsdelivr.net/gh/tangquanghuy/dnf@master/start_equipment_shop_v1_3.json'
                 ]);
