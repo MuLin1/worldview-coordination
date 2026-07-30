@@ -126,11 +126,28 @@ import { MODERN_COMPANIONS } from './generated/modern-companions.js';
 
 export { VIELSAEN_COMPANIONS, MODERN_COMPANIONS };
 
+const withOpeningAliases = character => Object.freeze({
+  ...character,
+  species: character.speciesName || character.physiology?.species || '',
+  profession: character.professionOrAbility?.label || '',
+  level: character.baseLevel,
+  role: character.combatRole || '',
+  origin: character.joinCondition || character.originNodeId || '',
+  faction: character.factionId || '无固定势力',
+  ability: character.professionOrAbility?.kind === 'ability'
+    ? Object.freeze({
+        name: character.activeSkills?.[0]?.name || character.professionOrAbility.label,
+        type: character.professionOrAbility.abilityType || '',
+        grade: '异能',
+      })
+    : null,
+});
+
 // 兼容性导出：合并的同伴列表
 export const REPLACEMENT_BONDS = Object.freeze([
   ...VIELSAEN_COMPANIONS,
   ...MODERN_COMPANIONS,
-]);
+].map(withOpeningAliases));
 
 // 旧 ID 到新规范 ID 的迁移映射
 export const COMPANION_ID_ALIASES = Object.freeze({
