@@ -120,101 +120,24 @@ export const MODERN_CONFIG = Object.freeze({
   ]),
 });
 
-const physiology = (sex, capability, classificationId, species, traits) => Object.freeze({
-  adult: true,
-  sex,
-  capability,
-  system: classificationId.startsWith('G-M') ? '神话' : '普通',
-  classificationId,
-  species,
-  heritableTraits: Object.freeze(traits),
-});
+// 从自动生成模块导入最终同伴数据
+import { VIELSAEN_COMPANIONS } from './generated/vielsaen-companions.js';
+import { MODERN_COMPANIONS } from './generated/modern-companions.js';
 
+export { VIELSAEN_COMPANIONS, MODERN_COMPANIONS };
+
+// 兼容性导出：合并的同伴列表
 export const REPLACEMENT_BONDS = Object.freeze([
-  Object.freeze({
-    id: 'vielsaen_kael_rhodes',
-    name: '凯尔·洛德斯',
-    worldId: 'vielsaen',
-    species: '灰狼',
-    role: '前卫与边境向导',
-    origin: '格兰维尔河谷',
-    faction: '布雷西亚边境守备队',
-    profession: '护界学派战士',
-    level: 8,
-    attributes: Object.freeze({ strength: 15, agility: 12, vitality: 15, intellect: 10, spirit: 11 }),
-    physiology: physiology('雄性', '可授精', 'G-S01', '灰狼', ['灰银被毛', '琥珀色虹膜', '敏锐听觉']),
-    heritableTraits: Object.freeze(['灰银被毛', '琥珀色虹膜', '敏锐听觉']),
-  }),
-  Object.freeze({
-    id: 'vielsaen_mira_vel',
-    name: '米拉·维尔',
-    worldId: 'vielsaen',
-    species: '赤狐',
-    role: '治疗与魔力研究',
-    origin: '奥瑟兰学邦',
-    faction: '公共伦理医疗院',
-    profession: '生息学派医师',
-    level: 7,
-    attributes: Object.freeze({ strength: 8, agility: 13, vitality: 11, intellect: 16, spirit: 15 }),
-    physiology: physiology('雌性', '可妊娠', 'G-S01', '赤狐', ['赤金被毛', '白色尾尖', '细长耳廓']),
-    heritableTraits: Object.freeze(['赤金被毛', '白色尾尖', '细长耳廓']),
-  }),
-  Object.freeze({
-    id: 'vielsaen_orin_sable',
-    name: '奥林·塞布尔',
-    worldId: 'vielsaen',
-    species: '渡鸦',
-    role: '侦察与外交情报',
-    origin: '维萨林城邦联盟',
-    faction: '自由信使公会',
-    profession: '迁跃学派信使',
-    level: 6,
-    attributes: Object.freeze({ strength: 9, agility: 16, vitality: 10, intellect: 14, spirit: 12 }),
-    physiology: physiology('双性', '双向', 'G-S11', '渡鸦', ['蓝黑羽色', '银灰喙缘', '方向感']),
-    heritableTraits: Object.freeze(['蓝黑羽色', '银灰喙缘', '方向感']),
-  }),
-  Object.freeze({
-    id: 'modern_lin_xiaoyu',
-    name: '林晓雨',
-    worldId: 'modern',
-    species: '云豹',
-    role: '城市调查与感知支援',
-    origin: '上海',
-    faction: '东海城市裂隙应急中心',
-    profession: '现场调查员',
-    ability: Object.freeze({ type: '感知与精神', grade: 'C', name: '回声定位' }),
-    level: 6,
-    attributes: Object.freeze({ strength: 10, agility: 15, vitality: 11, intellect: 14, spirit: 15 }),
-    physiology: physiology('雌性', '可妊娠', 'G-S02', '云豹', ['云纹斑块', '灰绿色虹膜', '长尾']),
-    heritableTraits: Object.freeze(['云纹斑块', '灰绿色虹膜', '长尾']),
-  }),
-  Object.freeze({
-    id: 'modern_chen_mojun',
-    name: '陈墨君',
-    worldId: 'modern',
-    species: '水獭',
-    role: '工程与裂隙封锁',
-    origin: '新加坡',
-    faction: '国际裂隙协调署工程组',
-    profession: '空间结构工程师',
-    ability: Object.freeze({ type: '物质塑形', grade: 'C', name: '应力重排' }),
-    level: 5,
-    attributes: Object.freeze({ strength: 11, agility: 12, vitality: 13, intellect: 16, spirit: 12 }),
-    physiology: physiology('雄性', '可授精', 'G-S04', '水獭', ['深褐短毛', '蹼掌', '水下闭气']),
-    heritableTraits: Object.freeze(['深褐短毛', '蹼掌', '水下闭气']),
-  }),
-  Object.freeze({
-    id: 'modern_ava_storm',
-    name: '艾娃·斯托姆',
-    worldId: 'modern',
-    species: '雷鸟',
-    role: '隐藏神话顾问与空中救援',
-    origin: '温哥华',
-    faction: '北太平洋隐匿议会',
-    profession: '航空救援顾问',
-    level: 10,
-    attributes: Object.freeze({ strength: 14, agility: 16, vitality: 14, intellect: 13, spirit: 16 }),
-    physiology: physiology('可变', '双向', 'G-M07', '雷鸟', ['深蓝翼羽', '金色眼纹', '静电亲和']),
-    heritableTraits: Object.freeze(['深蓝翼羽', '金色眼纹', '静电亲和']),
-  }),
+  ...VIELSAEN_COMPANIONS,
+  ...MODERN_COMPANIONS,
 ]);
+
+// 旧 ID 到新规范 ID 的迁移映射
+export const COMPANION_ID_ALIASES = Object.freeze({
+  vielsaen_kael_rhodes: 'V-C100',
+  vielsaen_mira_vel: 'V-C101',
+  vielsaen_orin_sable: 'V-C102',
+  modern_lin_xiaoyu: 'U-C100',
+  modern_chen_mojun: 'U-C101',
+  modern_ava_storm: 'U-C102',
+});

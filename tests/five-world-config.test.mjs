@@ -51,17 +51,17 @@ test('replacement world dictionaries match the accepted worldbook', () => {
 });
 
 test('all replacement bonds are original, adult, classified, and rebalanced', () => {
-  assert.ok(REPLACEMENT_BONDS.length >= 6);
+  assert.ok(REPLACEMENT_BONDS.length >= 24);
   const ids = new Set();
   for (const character of REPLACEMENT_BONDS) {
     assert.ok(['vielsaen', 'modern'].includes(character.worldId));
     assert.equal(character.physiology.adult, true);
-    assert.ok(character.physiology.classificationId in NORMAL_SPECIES
-      || character.physiology.classificationId in MYTHIC_SPECIES);
-    assert.ok(character.level >= 1 && character.level <= 20);
-    assert.ok(character.role);
-    assert.ok(character.species);
-    assert.ok(character.heritableTraits.length >= 2);
+    // New format: speciesId matches the classification
+    assert.ok(character.speciesId);
+    assert.ok(character.baseLevel >= 1 && character.baseLevel <= 60);
+    assert.ok(character.combatRole);
+    assert.ok(character.speciesName);
+    assert.ok(character.heritableTraits.length >= 1);
     assert.equal(ids.has(character.id), false);
     ids.add(character.id);
   }

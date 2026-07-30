@@ -6,6 +6,7 @@ import { loadDualWorldData, validateDualWorldData, renderNamedExport, stableStri
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
 const DNF_ROOT = join(SCRIPT_DIR, '..');
+const DATA_DIR = join(DNF_ROOT, 'data', 'dual-world');
 const GENERATED_DIR = join(DNF_ROOT, 'dist', 'V20260728', 'generated');
 const MAP_OUTPUT_DIR = DNF_ROOT; // map modules go to dnf/ root
 
@@ -14,9 +15,16 @@ const MAP_OUTPUT_DIR = DNF_ROOT; // map modules go to dnf/ root
  */
 function parseArgs() {
   const args = process.argv.slice(2);
-  const phaseIndex = args.indexOf('--phase');
-  const phase = phaseIndex >= 0 ? (args[phaseIndex + 1] || 'base') : 'base';
-  const check = args.includes('--check');
+  let phase = 'base';
+  let check = false;
+  for (const arg of args) {
+    if (arg === '--check') check = true;
+    else if (arg.startsWith('--phase=')) phase = arg.slice('--phase='.length);
+    else if (arg === '--phase') {
+      const idx = args.indexOf('--phase');
+      phase = args[idx + 1] || 'base';
+    }
+  }
   return { phase, check };
 }
 
@@ -137,8 +145,86 @@ globalThis.${worldId.toUpperCase()}_MAP = ${worldId.toUpperCase()}_MAP;
 }
 
 /**
- * Hash a file for check comparison.
+ * Generate companion ESM module from roles + approval + species data.
  */
+async function generateCompanionModule(data, worldId) {
+  const roles = data.roles[worldId];
+  const speciesEntries = data.species.entries;
+  let approvals = [];
+  try {
+    const approvalData = JSON.parse(await readFile(join(DATA_DIR, 'companion-species-approval.json'), 'utf-8'));
+    approvals = approvalData.choices.filter(c => {
+      const role = roles.find(r => r.id === c.roleId);
+      return role && role.worldId === worldId;
+    });
+  } catch {
+    // approvals not yet available
+  }
+
+  const speciesById = {};
+  for (const s of speciesEntries) {
+    speciesById[s.id] = s;
+  }
+
+  const companions = [];
+  for (const role of roles) {
+    const approval = approvals.find(a => a.roleId === role.id);
+    if (!approval) continue;
+
+    const species = speciesById[approval.speciesId];
+    if (!species) continue;
+
+    const companion = {
+      ...role,
+      speciesId: approval.speciesId,
+      speciesName: species.name,
+      speciesSystem: species.system,
+      rpCost: species.rpCost,
+      speciesTraits: species.buffs.map(b => b.name),
+      speciesBonuses: species.bonuses,
+    };
+
+    // Build physiology
+    companion.physiology = {
+      adult: true,
+      system: species.system,
+      classificationId: approval.speciesId,
+      species: species.name,
+    };
+
+    // Heritable traits from species prototype traits
+    companion.heritableTraits = species.prototypeTraits.map(t => t.name);
+
+    // Hybrid data
+    if (approval.hybrid) {
+      companion.hybrid = {
+        maternalBaseId: approval.hybrid.maternalBaseId,
+        paternalExpressionId: approval.hybrid.paternalExpressionId,
+        positiveTraits: approval.hybrid.positiveTraits,
+        negativeTraits: approval.hybrid.negativeTraits,
+        description: approval.hybrid.description,
+      };
+    }
+
+    // Modern mythic: no ability
+    if (worldId === 'modern' && species.system === '神话') {
+      companion.ability = null;
+    }
+
+    companions.push(companion);
+  }
+
+  const exportName = worldId === 'vielsaen' ? 'VIELSAEN_COMPANIONS' : 'MODERN_COMPANIONS';
+  const content = `// 由 build-dual-world-assets.mjs 自动生成 — 手写编辑会被覆盖。
+// 数据源: data/dual-world/companions-${worldId}.roles.json + companion-species-approval.json
+
+export const ${exportName} = Object.freeze(${stableStringify(companions)});
+`;
+  const path = join(GENERATED_DIR, `${worldId}-companions.js`);
+  await mkdir(dirname(path), { recursive: true });
+  await writeFile(path, content, 'utf-8');
+  return { path, companions };
+}
 async function hashFile(path) {
   try {
     const buf = await readFile(path);
@@ -169,6 +255,15 @@ async function buildPhase(phase, data) {
 
   const modernMapPath = await generateMapModule(data, 'modern');
   results.push({ type: 'modern-map', path: modernMapPath });
+
+  // Generate companion modules (final phase only, requires approval data)
+  if (phase === 'final') {
+    const { path: vcPath } = await generateCompanionModule(data, 'vielsaen');
+    results.push({ type: 'vielsaen-companions', path: vcPath });
+
+    const { path: mcPath } = await generateCompanionModule(data, 'modern');
+    results.push({ type: 'modern-companions', path: mcPath });
+  }
 
   return results;
 }
