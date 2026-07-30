@@ -1,4 +1,6 @@
-﻿﻿﻿/**
+﻿﻿﻿import './five-world-mvu.js';
+
+/**
  * 变量映射：
  * variables.人物.等级
  * variables.人物.当前总经验
@@ -3396,6 +3398,20 @@
             const statDataBefore = rawVariablesBefore?.stat_data;
 
             if (!statData) return;
+
+            // 五世界状态仅由脚本推进。旧式年历不猜测转换；新格式日期错误会写入
+            // 生殖系统.最后错误，并停止本轮周期与妊娠推进。
+            DNFFiveWorldMvu.ensureFiveWorldState(statData);
+            const fiveWorldDate = statData?.世界信息?.日期
+                || statData?.世界信息?.当前日期
+                || statData?.世界信息?.年历
+                || '';
+            if (fiveWorldDate) {
+                const fiveWorldResult = DNFFiveWorldMvu.advanceMvuState(statData, fiveWorldDate);
+                if (fiveWorldResult.error) {
+                    console.error(`[五世界状态] ${fiveWorldResult.error}`);
+                }
+            }
 
             // 先纠正 AI 偶发写入的 /状态/当前事件/战斗 或 /当前事件/战斗，
             // 后续所有战斗/冷却逻辑统一读取正式根路径 /战斗。

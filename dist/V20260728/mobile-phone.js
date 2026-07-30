@@ -1,3 +1,5 @@
+import './five-world-mvu.js';
+
 // ==================== 手机界面状态栏 ====================
 // ==================== 加载 Font Awesome（安全方式）====================
 function loadFontAwesome() {
@@ -11701,11 +11703,11 @@ $(window).on('unload', () => {
 // 切换某世界观时，打开其 open 词命中的世界书条目，关闭 close 词命中的条目（close 优先）。
 // 英文关键词按大小写严格匹配（includes 默认区分大小写）。
 const PHONE_WORLDVIEWS = [
-    { id: 'corridor', label: '创世回廊',       icon: 'fa-dice',                open: ['创世回廊', 'DNF', 'NGNL', '西幻'], close: ['SAO', '琥珀', '大明', '都市'] },
-    { id: 'sao',      label: '刀剑神域',       icon: 'fa-gamepad',             open: ['创世回廊', 'SAO', '西幻'],         close: ['琥珀', 'DNF', 'NGNL', '大明', '都市'] },
-    { id: 'amber',    label: '琥珀之剑',       icon: 'fa-chess-rook',          open: ['琥珀', '西幻'],                    close: ['创世回廊', 'SAO', 'DNF', 'NGNL', '大明', '都市'] },
-    { id: 'jiuzhou',  label: '大明志异',       icon: 'fa-dragon',              open: ['大明'],                            close: ['创世回廊', 'SAO', '琥珀', 'DNF', 'NGNL', '西幻', '都市'] },
-    { id: 'dragon',   label: '屠龙与都市日常', icon: 'fa-cloud-showers-heavy', open: ['都市'],                            close: ['创世回廊', 'SAO', '琥珀', '大明', 'DNF', 'NGNL', '西幻'] }
+    { id: 'corridor', label: '创世回廊', icon: 'fa-dice', open: ['创世回廊', 'DNF', 'NGNL'], close: ['SAO', '大明', '维尔萨恩', '现代都市'] },
+    { id: 'sao', label: '刀剑神域', icon: 'fa-gamepad', open: ['创世回廊', 'SAO'], close: ['DNF', 'NGNL', '大明', '维尔萨恩', '现代都市'] },
+    { id: 'jiuzhou', label: '大明志异', icon: 'fa-dragon', open: ['大明'], close: ['创世回廊', 'SAO', 'DNF', 'NGNL', '维尔萨恩', '现代都市'] },
+    { id: 'vielsaen', label: '维尔萨恩', icon: 'fa-chess-rook', open: ['维尔萨恩'], close: ['创世回廊', 'SAO', 'DNF', 'NGNL', '大明', '现代都市'] },
+    { id: 'modern', label: '现代都市', icon: 'fa-city', open: ['现代都市'], close: ['创世回廊', 'SAO', 'DNF', 'NGNL', '大明', '维尔萨恩'] }
 ];
 
 function phoneGetTavernHelper() {
@@ -11749,20 +11751,19 @@ async function phoneCollectWorldbookNames(TH) {
 }
 
 // 写入 系统配置.世界观（复刻开局页 saveWorldviewToMvu 的路径与API）
-async function phoneSetWorldviewVariable(label) {
+async function phoneSetWorldviewVariable(view) {
     const mvu = phoneGetMvuApi();
     if (!mvu || typeof mvu.getMvuData !== 'function' || typeof mvu.replaceMvuData !== 'function') return false;
     try {
         const mvuData = mvu.getMvuData({ type: 'message', message_id: 'latest' });
         if (!mvuData) return false;
         if (!mvuData.stat_data) mvuData.stat_data = {};
-        if (!mvuData.stat_data.系统配置) mvuData.stat_data.系统配置 = {};
-        mvuData.stat_data.系统配置.世界观 = label;
-        // 与开局页保持一致：都市世界观同时初始化对应的年历和世界剧情。
-        if (label === '屠龙与都市日常') {
+        DNFFiveWorldMvu.ensureFiveWorldState(mvuData.stat_data);
+        DNFFiveWorldMvu.switchWorld(mvuData.stat_data, view.id);
+        if (view.id === 'modern') {
             if (!mvuData.stat_data.世界信息) mvuData.stat_data.世界信息 = {};
-            mvuData.stat_data.世界信息.年历 = '2026年';
-            mvuData.stat_data.世界信息.世界剧情 = '屠龙与都市日常';
+            mvuData.stat_data.世界信息.年历 = 'U2026年1月1日';
+            mvuData.stat_data.世界信息.世界剧情 = '现代都市';
         }
         await mvu.replaceMvuData(mvuData, { type: 'message', message_id: 'latest' });
         return true;
@@ -11865,7 +11866,7 @@ async function phoneSwitchWorldview(targetId) {
             }
         }
 
-        const varOk = await phoneSetWorldviewVariable(view.label);
+        const varOk = await phoneSetWorldviewVariable(view);
 
         if (typeof toastr !== 'undefined') {
             toastr.success(`已切换到「${view.label}」：世界书 ${changedBooks} 本 / ${changedEntries} 条${varOk ? '' : '（世界观变量写入失败）'}`);

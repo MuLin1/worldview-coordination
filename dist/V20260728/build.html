@@ -7263,7 +7263,7 @@
 
                         <!-- 种族选择区域 -->
                         <div v-if="!isPresetChar" class="race-selection-container"
-                            :class="{'amber-race-selection': isAmberWorldview}"
+                            :class="{'amber-race-selection': isVielsaenWorldview}"
                             style="display:grid; grid-template-columns:200px 1fr; gap:12px; position:relative;">
                             <!-- 左侧：种族列表 -->
                             <div class="race-list-wrapper" style="position:relative;">
@@ -7271,8 +7271,8 @@
                                     style="background:white; border-radius:12px; padding:6px; position:absolute; top:0; left:0; right:0; bottom:0; overflow-y:auto; box-shadow:var(--shadow-card);">
                                     <div
                                         style="font-size:0.8rem; color:var(--secondary); font-weight:700; margin:6px 4px 8px; padding-bottom:6px; border-bottom:1px solid rgba(0,0,0,0.05);">
-                                        {{ (isJiuzhouWorldview || isDragonWorldview) ? '选择出身' : '选择种族' }}</div>
-                                    <template v-if="isAmberWorldview">
+                                        {{ (isJiuzhouWorldview || isModernWorldview) ? '选择出身' : '选择种族' }}</div>
+                                    <template v-if="isVielsaenWorldview">
                                         <div class="amber-camp-tabs">
                                             <div v-for="camp in amberCampTabs" :key="camp.key" class="amber-camp-tab"
                                                 :class="{active: selectedAmberCamp === camp.key}"
@@ -7342,7 +7342,7 @@
                                                         :style="{background: race.tierColor, fontSize:'0.6rem', padding:'1px 4px'}">
                                                         {{ race.tierName }}
                                                     </span>
-                                                    <span v-if="!isJiuzhouWorldview && !isDragonWorldview"
+                                                    <span v-if="!isJiuzhouWorldview && !isModernWorldview"
                                                         style="font-size:0.65rem; color:var(--secondary);">Lv.{{
                                                         race.startLevel }}</span>
                                                 </div>
@@ -7410,7 +7410,7 @@
                                                 {{ currentRace.name }}
                                             </div>
                                             <div class="race-head-meta">
-                                                <template v-if="isAmberWorldview">
+                                                <template v-if="isVielsaenWorldview">
                                                     <span class="tier-badge"
                                                         :style="{...getAmberCampBadgeStyle(currentRace.camp), fontSize:'0.65rem'}">
                                                         {{ currentRace.camp || '未分阵营' }}
@@ -7424,10 +7424,10 @@
                                                     </span>
                                                 </template>
                                                 <span
-                                                    v-if="!isAmberWorldview && !isJiuzhouWorldview && !isDragonWorldview"
+                                                    v-if="!isVielsaenWorldview && !isJiuzhouWorldview && !isModernWorldview"
                                                     style="font-size:0.75rem; color:var(--accent); font-weight:600;">初始等级
                                                     Lv.{{ currentRace.startLevel }}</span>
-                                                <span v-if="isDragonWorldview"
+                                                <span v-if="isModernWorldview"
                                                     style="font-size:0.75rem; color:var(--accent); font-weight:600;">等级自由选择</span>
                                             </div>
                                         </div>
@@ -7444,7 +7444,7 @@
                                         style="margin-top:12px; padding-top:12px; border-top:1px solid rgba(0,0,0,0.05);">
                                         <div
                                             style="font-size:0.8rem; font-weight:600; color:var(--secondary); margin-bottom:8px;">
-                                            {{ (isJiuzhouWorldview || isDragonWorldview) ? '出身特性' : '种族特性' }}</div>
+                                            {{ (isJiuzhouWorldview || isModernWorldview) ? '出身特性' : '种族特性' }}</div>
                                         <div class="race-buffs-list">
                                             <!-- 自定义种族的空白特性标签 -->
                                             <template v-if="customRace.enabled && character.race === '__custom__'">
@@ -7581,7 +7581,7 @@
                                                     :style="{background: race.tierColor, fontSize:'0.6rem', padding:'1px 4px'}">
                                                     {{ race.tierName }}
                                                 </span>
-                                                <span v-if="!isDragonWorldview"
+                                                <span v-if="!isModernWorldview"
                                                     style="font-size:0.65rem; color:var(--secondary);">Lv.{{
                                                     race.startLevel }}</span>
                                             </div>
@@ -7616,7 +7616,7 @@
                                                     :style="{background: currentRace.tierColor, fontSize:'0.65rem'}">
                                                     {{ currentRace.tierName }} · 第{{ currentRace.rank }}位
                                                 </span>
-                                                <span v-if="!isDragonWorldview"
+                                                <span v-if="!isModernWorldview"
                                                     style="font-size:0.75rem; color:var(--accent); font-weight:600;">初始等级
                                                     Lv.{{ currentRace.startLevel }}</span>
                                                 <span v-else
@@ -7755,7 +7755,7 @@
                                     </div>
                                 </template>
                                 <template v-else>
-                                    <template v-if="isAmberWorldview">
+                                    <template v-if="isVielsaenWorldview">
                                         <div style="display:flex; flex-wrap:wrap; gap:6px;">
                                             <div v-for="opt in amberUnifiedStartLevels" :key="'amber-lv-' + opt.level"
                                                 @click="setStartLevelMode('custom', opt.level)"
@@ -7799,10 +7799,10 @@
                                             </div>
                                         </div>
                                     </template>
-                                    <template v-else-if="isDragonWorldview">
+                                    <template v-else-if="isModernWorldview">
                                         <div style="display:flex; flex-direction:column; gap:10px;">
                                             <div style="display:flex; align-items:center; gap:12px;">
-                                                <input type="range" min="1" :max="DRAGON_MAX_START_LEVEL" step="1"
+                                                <input type="range" min="1" :max="MODERN_MAX_START_LEVEL" step="1"
                                                     :value="actualStartLevel"
                                                     @input="setCustomStartLevel(Number($event.target.value))"
                                                     style="flex:1; accent-color:var(--accent); cursor:pointer;">
@@ -7813,10 +7813,10 @@
                                             <div
                                                 style="display:flex; align-items:center; justify-content:space-between; font-size:0.7rem; color:var(--secondary);">
                                                 <span>Lv.1 · 从零开始（+20 RP）</span>
-                                                <span>Lv.{{ DRAGON_MAX_START_LEVEL }} · 都市巅峰</span>
+                                                <span>Lv.{{ MODERN_MAX_START_LEVEL }} · 都市巅峰</span>
                                             </div>
                                             <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                                                <div v-for="lv in dragonQuickLevels" :key="'dragon-lv-' + lv"
+                                                <div v-for="lv in modernQuickLevels" :key="'dragon-lv-' + lv"
                                                     @click="setCustomStartLevel(lv)"
                                                     style="padding:6px 12px; border-radius:8px; cursor:pointer; transition:all 0.2s; border:2px solid transparent; font-size:0.78rem; font-weight:700;"
                                                     :style="{
@@ -7887,7 +7887,7 @@
                         </div>
 
                         <!-- ==================== 出生点选择 ==================== -->
-                        <div v-if="currentRace && (isSaoOpeningSelected || isAmberWorldview || isJiuzhouWorldview || isDragonWorldview || currentSpawnPoints.length > 0)"
+                        <div v-if="currentRace && (isSaoOpeningSelected || isVielsaenWorldview || isJiuzhouWorldview || isModernWorldview || currentSpawnPoints.length > 0)"
                             style="margin-top:16px;">
                             <div
                                 style="background:white; border-radius:12px; padding:15px; box-shadow:var(--shadow-card);">
@@ -7911,7 +7911,7 @@
                                         </div>
                                     </div>
                                 </template>
-                                <template v-else-if="isAmberWorldview">
+                                <template v-else-if="isVielsaenWorldview">
                                     <div
                                         style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
                                         <div style="display:flex; align-items:center; gap:8px;">
@@ -7932,32 +7932,32 @@
                                             地图加载中，载入后可直接点击地点作为出生点。
                                         </div>
                                         <iframe ref="amberSpawnMapFrame" :src="amberMapFrameSrc"
-                                            :srcdoc="amberMapEmbedSrcdoc || null" @load="handleAmberSpawnMapFrameLoad"
+                                            :srcdoc="amberMapEmbedSrcdoc || null" @load="handleVielsaenSpawnMapFrameLoad"
                                             title="琥珀之剑出生点地图"
                                             style="display:block; width:100%; min-height:560px; border:none; background:#0f1720;"></iframe>
                                     </div>
 
-                                    <div v-if="selectedAmberSpawn"
+                                    <div v-if="selectedVielsaenSpawn"
                                         style="padding:14px 16px; border-radius:12px; background:rgba(212,168,83,0.08); border:1px solid rgba(212,168,83,0.2);">
                                         <div
                                             style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; flex-wrap:wrap;">
                                             <div style="font-size:1rem; font-weight:700; color:var(--primary);">
-                                                {{ selectedAmberSpawn.名称 }}
+                                                {{ selectedVielsaenSpawn.名称 }}
                                             </div>
                                             <div style="font-size:0.75rem; color:var(--gold-dim); font-weight:700;">
                                                 {{ summarySpawnMeta }}
                                             </div>
                                         </div>
                                         <div style="font-size:0.78rem; color:var(--secondary); line-height:1.7;">
-                                            {{ selectedAmberSpawn.聚落描述 || '已从地图选定出生点。' }}
+                                            {{ selectedVielsaenSpawn.聚落描述 || '已从地图选定出生点。' }}
                                         </div>
-                                        <div v-if="selectedAmberSpawn.地貌特征"
+                                        <div v-if="selectedVielsaenSpawn.地貌特征"
                                             style="margin-top:8px; font-size:0.72rem; color:var(--secondary); line-height:1.6;">
-                                            地貌特征：{{ selectedAmberSpawn.地貌特征 }}
+                                            地貌特征：{{ selectedVielsaenSpawn.地貌特征 }}
                                         </div>
-                                        <div v-if="selectedAmberSpawn.周边威胁"
+                                        <div v-if="selectedVielsaenSpawn.周边威胁"
                                             style="margin-top:6px; font-size:0.72rem; color:#8b5e34; line-height:1.6;">
-                                            周边威胁：{{ selectedAmberSpawn.周边威胁 }}
+                                            周边威胁：{{ selectedVielsaenSpawn.周边威胁 }}
                                         </div>
                                     </div>
                                     <div v-else
@@ -8095,13 +8095,13 @@
                                         </div>
                                     </div>
                                 </template>
-                                <template v-else-if="isDragonWorldview">
+                                <template v-else-if="isModernWorldview">
                                     <div
                                         style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap;">
                                         <div style="display:flex; align-items:center; gap:8px;">
                                             <i class="ri-map-pin-line" style="font-size:1.1rem; color:#6c5ce7;"></i>
                                             <span style="font-size:0.9rem; font-weight:700;">出生点选择</span>
-                                            <span v-if="!isDragonHighSchoolOrigin"
+                                            <span v-if="!isModernSpecialOrigin"
                                                 style="font-size:0.7rem; color:var(--secondary);">（在都市地图中自由选择）</span>
                                             <span v-else
                                                 style="font-size:0.7rem; color:var(--secondary);">（特殊出身固定）</span>
@@ -8111,7 +8111,7 @@
                                         </div>
                                     </div>
 
-                                    <template v-if="isDragonHighSchoolOrigin">
+                                    <template v-if="isModernSpecialOrigin">
                                         <div
                                             style="padding:14px 16px; border-radius:12px; background:rgba(108,92,231,0.08); border:1px solid rgba(108,92,231,0.2);">
                                             <div
@@ -8137,31 +8137,31 @@
                                             </div>
                                             <iframe ref="dragonSpawnMapFrame" :src="dragonMapFrameSrc"
                                                 :srcdoc="dragonMapEmbedSrcdoc || null"
-                                                @load="handleDragonSpawnMapFrameLoad" title="屠龙与都市日常出生点地图"
+                                                @load="handleModernSpawnMapFrameLoad" title="屠龙与都市日常出生点地图"
                                                 style="display:block; width:100%; min-height:560px; border:none; background:#eef3f8;"></iframe>
                                         </div>
 
-                                        <div v-if="selectedDragonSpawn"
+                                        <div v-if="selectedModernSpawn"
                                             style="padding:14px 16px; border-radius:12px; background:rgba(108,92,231,0.08); border:1px solid rgba(108,92,231,0.2);">
                                             <div
                                                 style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; flex-wrap:wrap;">
                                                 <div style="font-size:1rem; font-weight:700; color:var(--primary);">
-                                                    {{ selectedDragonSpawn.名称 }}
+                                                    {{ selectedModernSpawn.名称 }}
                                                 </div>
                                                 <div style="font-size:0.75rem; color:#6c5ce7; font-weight:700;">
                                                     {{ summarySpawnMeta }}
                                                 </div>
                                             </div>
                                             <div style="font-size:0.78rem; color:var(--secondary); line-height:1.7;">
-                                                {{ selectedDragonSpawn.聚落描述 || '已从都市地图选定出生点。' }}
+                                                {{ selectedModernSpawn.聚落描述 || '已从都市地图选定出生点。' }}
                                             </div>
-                                            <div v-if="selectedDragonSpawn.地貌特征"
+                                            <div v-if="selectedModernSpawn.地貌特征"
                                                 style="margin-top:8px; font-size:0.72rem; color:var(--secondary); line-height:1.6;">
-                                                地貌特征：{{ selectedDragonSpawn.地貌特征 }}
+                                                地貌特征：{{ selectedModernSpawn.地貌特征 }}
                                             </div>
-                                            <div v-if="selectedDragonSpawn.周边威胁"
+                                            <div v-if="selectedModernSpawn.周边威胁"
                                                 style="margin-top:6px; font-size:0.72rem; color:#8b5e34; line-height:1.6;">
-                                                周边威胁：{{ selectedDragonSpawn.周边威胁 }}
+                                                周边威胁：{{ selectedModernSpawn.周边威胁 }}
                                             </div>
                                         </div>
                                         <div v-else
@@ -8285,7 +8285,7 @@
                                 <div
                                     style="background:white; border-radius:10px; padding:10px; box-shadow:var(--shadow-card); min-width:140px;">
                                     <div style="font-size:0.75rem; color:#999; font-weight:700; margin-bottom:8px;">
-                                        {{ (isAmberWorldview || isJiuzhouWorldview || isSaoOpeningSelected) ? '职业' :
+                                        {{ (isVielsaenWorldview || isJiuzhouWorldview || isSaoOpeningSelected) ? '职业' :
                                         `基础职业 (${character.gender})` }}
                                     </div>
                                     <div style="display:flex; flex-wrap:wrap; gap:4px;">
@@ -8312,7 +8312,7 @@
                                 <div v-if="selectedBaseClass && !isCustomClass"
                                     style="background:white; border-radius:10px; padding:10px; box-shadow:var(--shadow-card); flex:1; min-width:200px;">
                                     <div style="font-size:0.75rem; color:#999; font-weight:700; margin-bottom:8px;">
-                                        {{ selectedBaseClass }} {{ isAmberWorldview ? '子职业' : (isJiuzhouWorldview ?
+                                        {{ selectedBaseClass }} {{ isVielsaenWorldview ? '子职业' : (isJiuzhouWorldview ?
                                         '进阶流派' : '转职分支') }}
                                     </div>
                                     <div style="display:flex; flex-wrap:wrap; gap:6px;">
@@ -9826,10 +9826,10 @@
                             </div>
                             <div class="summary-meta" v-else>
                                 <span
-                                    :style="isAmberWorldview ? getAmberCampBadgeStyle(currentRace?.camp) : {color: currentRace?.tierColor}">
-                                    {{ isAmberWorldview ? (currentRace?.camp || '未分阵营') : currentRace?.tierName }}
+                                    :style="isVielsaenWorldview ? getAmberCampBadgeStyle(currentRace?.camp) : {color: currentRace?.tierColor}">
+                                    {{ isVielsaenWorldview ? (currentRace?.camp || '未分阵营') : currentRace?.tierName }}
                                 </span> ·
-                                {{ currentWorldviewLabel }} / <template v-if="isAmberWorldview">{{ currentRace?.camp ||
+                                {{ currentWorldviewLabel }} / <template v-if="isVielsaenWorldview">{{ currentRace?.camp ||
                                     '未分阵营' }} / </template><template v-else>第{{ currentRace?.rank }}位 </template>{{
                                 displayRaceName }} / {{ displayClassName }} / {{
                                 summaryIdentityLabel }} /
@@ -10549,8 +10549,8 @@
                         console.warn('[琥珀地图] 读取 amberMapUrl 参数失败:', error);
                     }
                     try {
-                        if (typeof window.AMBER_SWORD_MAP_EMBED_URL === 'string' && window.AMBER_SWORD_MAP_EMBED_URL.trim()) {
-                            return window.AMBER_SWORD_MAP_EMBED_URL.trim();
+                        if (typeof window.VIELSAEN_SWORD_MAP_EMBED_URL === 'string' && window.VIELSAEN_SWORD_MAP_EMBED_URL.trim()) {
+                            return window.VIELSAEN_SWORD_MAP_EMBED_URL.trim();
                         }
                     } catch (error) {
                         console.warn('[琥珀地图] 读取全局嵌入地址失败:', error);
@@ -10579,7 +10579,7 @@
                 const amberMapEmbedUrl = computed(() => buildAmberMapEmbedUrl(resolveAmberMapBaseUrl()));
                 const amberMapFrameSrc = computed(() => amberMapEmbedSrcdoc.value ? 'about:blank' : amberMapEmbedUrl.value);
 
-                function injectBaseHrefIntoHtml(html, pageUrl, bootstrapConfig = null, configVarName = '__AMBER_MAP_EMBED_CONFIG__', extraHeadMarkup = '') {
+                function injectBaseHrefIntoHtml(html, pageUrl, bootstrapConfig = null, configVarName = '__VIELSAEN_MAP_EMBED_CONFIG__', extraHeadMarkup = '') {
                     const text = String(html || '');
                     if (!text.trim()) return '';
                     try {
@@ -10790,8 +10790,8 @@
                         console.warn('[龙族地图] 读取 dragonMapUrl 参数失败:', error);
                     }
                     try {
-                        if (typeof window.DRAGON_MAP_EMBED_URL === 'string' && window.DRAGON_MAP_EMBED_URL.trim()) {
-                            return window.DRAGON_MAP_EMBED_URL.trim();
+                        if (typeof window.MODERN_MAP_EMBED_URL === 'string' && window.MODERN_MAP_EMBED_URL.trim()) {
+                            return window.MODERN_MAP_EMBED_URL.trim();
                         }
                     } catch (error) {
                         console.warn('[龙族地图] 读取全局嵌入地址失败:', error);
@@ -10845,19 +10845,19 @@
                     }
                 }
 
-                function postDragonSpawnFocusToMap() {
+                function postModernSpawnFocusToMap() {
                     const iframeWindow = dragonSpawnMapFrame.value?.contentWindow;
-                    if (!iframeWindow || !selectedDragonSpawn.value) return;
+                    if (!iframeWindow || !selectedModernSpawn.value) return;
                     iframeWindow.postMessage({
                         type: 'dragon_spawn_focus',
-                        spawn: selectedDragonSpawn.value
+                        spawn: selectedModernSpawn.value
                     }, '*');
                 }
 
-                function handleDragonSpawnMapFrameLoad() {
+                function handleModernSpawnMapFrameLoad() {
                     dragonMapEmbedLoading.value = false;
                     setTimeout(() => {
-                        postDragonSpawnFocusToMap();
+                        postModernSpawnFocusToMap();
                     }, 0);
                 }
 
@@ -11165,19 +11165,19 @@
                     }
                 }
 
-                function postAmberSpawnFocusToMap() {
+                function postVielsaenSpawnFocusToMap() {
                     const iframeWindow = amberSpawnMapFrame.value?.contentWindow;
-                    if (!iframeWindow || !selectedAmberSpawn.value) return;
+                    if (!iframeWindow || !selectedVielsaenSpawn.value) return;
                     iframeWindow.postMessage({
                         type: 'amber_spawn_focus',
-                        spawn: selectedAmberSpawn.value
+                        spawn: selectedVielsaenSpawn.value
                     }, '*');
                 }
 
-                function handleAmberSpawnMapFrameLoad() {
+                function handleVielsaenSpawnMapFrameLoad() {
                     amberMapEmbedLoading.value = false;
                     setTimeout(() => {
-                        postAmberSpawnFocusToMap();
+                        postVielsaenSpawnFocusToMap();
                     }, 0);
                 }
 
@@ -11187,20 +11187,20 @@
 
                         if (data?.channel === 'amber-spawn-map') {
                             if (data.type === 'amber_spawn_selected' && data.spawn) {
-                                applyAmberSpawnSelection(data.spawn);
+                                applyVielsaenSpawnSelection(data.spawn);
                                 amberMapEmbedLoading.value = false;
                                 return;
                             }
                             if (data.type === 'map_ready') {
                                 amberMapEmbedLoading.value = false;
-                                postAmberSpawnFocusToMap();
+                                postVielsaenSpawnFocusToMap();
                                 return;
                             }
                         }
 
                         if (data?.channel === 'dragon-spawn-map') {
                             if (data.type === 'dragon_spawn_selected' && data.spawn) {
-                                applyDragonSpawnSelection(data.spawn);
+                                applyModernSpawnSelection(data.spawn);
                                 dragonMapEmbedLoading.value = false;
                                 return;
                             }
@@ -11210,7 +11210,7 @@
                             }
                             if (data.type === 'map_ready') {
                                 dragonMapEmbedLoading.value = false;
-                                postDragonSpawnFocusToMap();
+                                postModernSpawnFocusToMap();
                                 return;
                             }
                         }
@@ -12548,9 +12548,9 @@
                         selectedLevelMode: selectedLevelMode.value,
                         selectedCustomLevel: selectedCustomLevel.value,
                         selectedSpawnPoint: selectedSpawnPoint.value,
-                        selectedAmberSpawn: selectedAmberSpawn.value ? cloneJson(selectedAmberSpawn.value) : null,
+                        selectedVielsaenSpawn: selectedVielsaenSpawn.value ? cloneJson(selectedVielsaenSpawn.value) : null,
                         selectedJiuzhouSpawn: selectedJiuzhouSpawn.value ? cloneJson(selectedJiuzhouSpawn.value) : null,
-                        selectedDragonSpawn: selectedDragonSpawn.value ? cloneJson(selectedDragonSpawn.value) : null,
+                        selectedModernSpawn: selectedModernSpawn.value ? cloneJson(selectedModernSpawn.value) : null,
                         selectedJiuzhouSect: selectedJiuzhouSect.value,
                         // 职业相关
                         class: character.class,
@@ -12652,11 +12652,11 @@
                     if (config.selectedLevelMode !== undefined) selectedLevelMode.value = config.selectedLevelMode;
                     if (config.selectedCustomLevel !== undefined) selectedCustomLevel.value = config.selectedCustomLevel;
                     if (config.selectedSpawnPoint !== undefined) selectedSpawnPoint.value = config.selectedSpawnPoint;
-                    if (config.selectedAmberSpawn !== undefined) {
-                        const restoredAmberSpawn = normalizeCommonSpawnSelection(config.selectedAmberSpawn);
-                        if (!trySetAmberSpawnSelection(restoredAmberSpawn, { silent: true, source: '预设' })) {
-                            selectedAmberSpawn.value = null;
-                            if (isAmberWorldview.value) selectedSpawnPoint.value = null;
+                    if (config.selectedVielsaenSpawn !== undefined) {
+                        const restoredVielsaenSpawn = normalizeCommonSpawnSelection(config.selectedVielsaenSpawn);
+                        if (!trySetVielsaenSpawnSelection(restoredVielsaenSpawn, { silent: true, source: '预设' })) {
+                            selectedVielsaenSpawn.value = null;
+                            if (isVielsaenWorldview.value) selectedSpawnPoint.value = null;
                         }
                     }
                     if (config.selectedJiuzhouSpawn !== undefined) {
@@ -12666,11 +12666,11 @@
                             if (isJiuzhouWorldview.value) selectedSpawnPoint.value = null;
                         }
                     }
-                    if (config.selectedDragonSpawn !== undefined) {
-                        const restoredDragonSpawn = normalizeCommonSpawnSelection(config.selectedDragonSpawn);
-                        if (!trySetDragonSpawnSelection(restoredDragonSpawn, { silent: true, source: '预设' })) {
-                            selectedDragonSpawn.value = null;
-                            if (isDragonWorldview.value) selectedSpawnPoint.value = null;
+                    if (config.selectedModernSpawn !== undefined) {
+                        const restoredModernSpawn = normalizeCommonSpawnSelection(config.selectedModernSpawn);
+                        if (!trySetModernSpawnSelection(restoredModernSpawn, { silent: true, source: '预设' })) {
+                            selectedModernSpawn.value = null;
+                            if (isModernWorldview.value) selectedSpawnPoint.value = null;
                         }
                     }
                     if (config.selectedJiuzhouSect !== undefined) {
@@ -13862,54 +13862,54 @@
                 const selectedLevelMode = ref('native'); // 种族变化时自动切换为custom（高位种族默认Lv.1出发）
                 const selectedCustomLevel = ref(1); // 默认Lv.1
                 const selectedSpawnPoint = ref(null); // 选择的出生点名称
-                const selectedAmberSpawn = ref(null); // 琥珀之剑地图选择的出生点
+                const selectedVielsaenSpawn = ref(null); // 维尔萨恩地图选择的出生点
                 const selectedJiuzhouSpawn = ref(null); // 大明志异地图选择的出生点
-                const selectedDragonSpawn = ref(null); // 屠龙与都市日常地图选择的出生点
+                const selectedModernSpawn = ref(null); // 现代都市地图选择的出生点
                 const selectedJiuzhouSect = ref(''); // 大明志异附加门派选择
                 // 开局选择（需提前定义，避免下方计算属性在 setup 阶段触发 TDZ）
                 const WORLDVIEW_CORRIDOR_ID = 'corridor';
                 const WORLDVIEW_SAO_ID = 'sao';
-                const WORLDVIEW_AMBER_ID = 'amber';
+                const WORLDVIEW_VIELSAEN_ID = 'vielsaen';
                 const WORLDVIEW_JIUZHOU_ID = 'jiuzhou';
-                const WORLDVIEW_DRAGON_ID = 'dragon';
+                const WORLDVIEW_MODERN_ID = 'modern';
                 const SAO_INITIAL_OPENING_ID = 'sao_initial_town';
                 const JIUZHOU_YUAN_MARRIAGE_OPENING_ID = 'jiuzhou_yuan_marriage';
                 const JIUZHOU_FU_INLAW_OPENING_ID = 'jiuzhou_fu_inlaw';
-                const DRAGON_NATIVE_OPENING_ID = 'dragon_city_daily';
-                const DRAGON_CUSTOM_OPENING_ID = 'dragon_custom';
-                const DRAGON_HIGH_SCHOOL_OPENING_ID = 'dragon_shilan_lock';
+                const MODERN_NATIVE_OPENING_ID = 'modern_city_daily';
+                const MODERN_CUSTOM_OPENING_ID = 'modern_custom';
+                const MODERN_HIGH_SCHOOL_OPENING_ID = 'modern_registered_student';
                 const JIUZHOU_MAX_START_LEVEL = 65; // 大明志异可自选出生等级上限
                 const jiuzhouQuickLevels = Object.freeze([1, 10, 20, 30, 40, 50, 60, 65]); // 滑杆旁的快捷等级
-                const DRAGON_MAX_START_LEVEL = 60; // 都市开局所有出身共用的可选等级上限
-                const dragonQuickLevels = Object.freeze([1, 5, 10, 15, 20, 30, 40, 50, 60]); // 都市开局快捷等级
-                const DEFAULT_AMBER_SPAWN = Object.freeze({
-                    名称: '布契',
-                    大陆: '沃恩德大陆',
-                    区域: '布契',
-                    场所: '布契',
-                    层级: '埃鲁因中部',
-                    地区等级: 'Lv.1~8',
-                    危险等级: '低',
-                    地貌特征: '韦氏河上游西岸河谷村落，森林覆盖率高，周边多溪流、缓坡林地与小型山间盆地',
-                    聚落描述: '埃鲁因东境剧情前期的核心起点，依山傍水的小型边境村落，也是布兰多、罗曼、芙蕾雅的故乡。',
-                    周边威胁: '低阶魔物、野兽、黑森林边缘盗匪',
-                    地点类型: 'village',
-                    节点ID: 'village_buqi',
-                    地图层级: null
-                });
-                const DEFAULT_AMBER_BAIMA_SPAWN = Object.freeze({
-                    名称: '白马城外·马蹄镇',
-                    大陆: '沃恩德大陆',
-                    区域: '白马城',
-                    场所: '马蹄镇·驿站酒馆',
-                    层级: '埃鲁因东境',
+                const MODERN_MAX_START_LEVEL = 60; // 都市开局所有出身共用的可选等级上限
+                const modernQuickLevels = Object.freeze([1, 5, 10, 15, 20, 30, 40, 50, 60]); // 都市开局快捷等级
+                const DEFAULT_VIELSAEN_SPAWN = Object.freeze({
+                    名称: '格兰维尔河谷',
+                    大陆: '艾沃兰大陆',
+                    区域: '格兰维尔河谷',
+                    场所: '中立商路驿站',
+                    层级: '六国边境',
                     地区等级: 'Lv.1~10',
                     危险等级: '低',
-                    地貌特征: '白马城城门外半日路程的小镇，是通往城堡的最后一个补给点。驿站酒馆、铁匠铺、小教堂，往来商旅和当地农人混杂。城堡的轮廓在北面山坡上隐约可见',
-                    聚落描述: '东境一处沉默而古老的领主领地，以城主家两位骑士兄弟的旧事闻名。塔楼上常年停驻乌鸦，马厩与跑马场是城中少有还有人气的地方。',
-                    周边威胁: '黑森林边缘的野兽、偶发的亡灵异动，以及笼罩这个家族的、说不清道不明的阴影',
-                    地点类型: 'town',
-                    节点ID: null,
+                    地貌特征: '河网、粮运码头与丘陵商路交汇，六国军需与平民迁徙在此碰撞。',
+                    聚落描述: '由多物种商旅、医师、工匠与边境守备者共同维持的中立驿站。',
+                    周边威胁: '代理战争、盗匪、补给中断与局部魔力失衡。',
+                    地点类型: 'hotspot',
+                    节点ID: 'vielsaen_granville',
+                    地图层级: null
+                });
+                const DEFAULT_VIELSAEN_BAIMA_SPAWN = Object.freeze({
+                    名称: '赫尔岬走廊',
+                    大陆: '艾沃兰大陆',
+                    区域: '赫尔岬走廊',
+                    场所: '海陆联运站',
+                    层级: '西南海岸',
+                    地区等级: 'Lv.1~10',
+                    危险等级: '低',
+                    地貌特征: '狭长海岸、峭壁道路与军港连接六国南部航路。',
+                    聚落描述: '海盟、帝国与城邦联盟共同争夺的交通咽喉。',
+                    周边威胁: '海盗、封锁、军需争夺与护界设施故障。',
+                    地点类型: 'hotspot',
+                    节点ID: 'vielsaen_herl_cape',
                     地图层级: null
                 });
                 const DEFAULT_JIUZHOU_LUOJING_SPAWN = Object.freeze({
@@ -13944,7 +13944,7 @@
                     节点ID: 'capital_jiangning',
                     地图层级: 0
                 });
-                const DRAGON_SHILAN_SPAWN = Object.freeze({
+                const MODERN_SHILAN_SPAWN = Object.freeze({
                     名称: '南京·仕兰高中',
                     大陆: '现代世界',
                     区域: '中国·南京',
@@ -13960,7 +13960,7 @@
                     地图层级: 0
                 });
 
-                const DEFAULT_DRAGON_SPAWN = Object.freeze({
+                const DEFAULT_MODERN_SPAWN = Object.freeze({
                     名称: '南京',
                     大陆: '现代世界',
                     区域: '南京',
@@ -13979,12 +13979,12 @@
                 const selectedOpening = ref('');
                 const customOpeningText = ref('');
                 const isSaoOpeningSelected = computed(() => selectedWorldview.value === WORLDVIEW_SAO_ID);
-                const isAmberWorldview = computed(() => selectedWorldview.value === WORLDVIEW_AMBER_ID);
+                const isVielsaenWorldview = computed(() => selectedWorldview.value === WORLDVIEW_VIELSAEN_ID);
                 const isJiuzhouWorldview = computed(() => selectedWorldview.value === WORLDVIEW_JIUZHOU_ID);
-                const isDragonWorldview = computed(() => selectedWorldview.value === WORLDVIEW_DRAGON_ID);
-                const isDragonHighSchoolOrigin = computed(() => isDragonWorldview.value && character.race === '青春期男高');
+                const isModernWorldview = computed(() => selectedWorldview.value === WORLDVIEW_MODERN_ID);
+                const isModernSpecialOrigin = computed(() => isModernWorldview.value && character.race === '青春期男高');
                 const showMapWorldbookOption = computed(() => selectedWorldview.value === WORLDVIEW_CORRIDOR_ID);
-                const AMBER_BLOCKED_SPAWN_IDS = new Set([
+                const VIELSAEN_BLOCKED_SPAWN_IDS = new Set([
                     'under_haim',
                     'under_wangzhe_qiao',
                     'under_wangzhe_jie',
@@ -13994,7 +13994,7 @@
                     'under_minghe',
                     'under_minghai'
                 ]);
-                const AMBER_BLOCKED_SPAWN_KEYWORDS = [
+                const VIELSAEN_BLOCKED_SPAWN_KEYWORDS = [
                     '海姆冥界',
                     '亡者之桥',
                     '亡者之阶',
@@ -14004,10 +14004,10 @@
                     '冥河',
                     '冥海'
                 ];
-                const AMBER_BLOCKED_SPAWN_TYPE_KEYS = new Set(['ruins', 'faction', 'portal', 'temple']);
-                const AMBER_BLOCKED_SPAWN_TYPE_LABELS = new Set(['遗迹', '势力', '传送门', '神殿']);
+                const VIELSAEN_BLOCKED_SPAWN_TYPE_KEYS = new Set(['ruins', 'faction', 'portal', 'temple']);
+                const VIELSAEN_BLOCKED_SPAWN_TYPE_LABELS = new Set(['遗迹', '势力', '传送门', '神殿']);
 
-                function normalizeAmberSpawnSelection(rawSpawn) {
+                function normalizeVielsaenSpawnSelection(rawSpawn) {
                     if (!rawSpawn || typeof rawSpawn !== 'object') return null;
                     const name = String(rawSpawn.名称 || rawSpawn.name || rawSpawn.场所 || '').trim();
                     if (!name) return null;
@@ -14030,16 +14030,16 @@
                     };
                 }
 
-                function getAmberSpawnBlockedReason(rawSpawn) {
-                    const normalized = normalizeAmberSpawnSelection(rawSpawn) || normalizeCommonSpawnSelection(rawSpawn);
+                function getVielsaenSpawnBlockedReason(rawSpawn) {
+                    const normalized = normalizeVielsaenSpawnSelection(rawSpawn) || normalizeCommonSpawnSelection(rawSpawn);
                     if (!normalized) return '';
                     const nodeId = String(normalized.节点ID || rawSpawn?.节点ID || '').trim();
-                    if (nodeId && AMBER_BLOCKED_SPAWN_IDS.has(nodeId)) {
+                    if (nodeId && VIELSAEN_BLOCKED_SPAWN_IDS.has(nodeId)) {
                         return '海姆冥界附近过于危险，不能作为初始出生点。';
                     }
                     const rawTypeKey = String(rawSpawn?.type || rawSpawn?.类型 || '').trim().toLowerCase();
                     const typeLabel = String(normalized.地点类型 || rawSpawn?.地点类型 || '').trim();
-                    if ((rawTypeKey && AMBER_BLOCKED_SPAWN_TYPE_KEYS.has(rawTypeKey)) || (typeLabel && AMBER_BLOCKED_SPAWN_TYPE_LABELS.has(typeLabel))) {
+                    if ((rawTypeKey && VIELSAEN_BLOCKED_SPAWN_TYPE_KEYS.has(rawTypeKey)) || (typeLabel && VIELSAEN_BLOCKED_SPAWN_TYPE_LABELS.has(typeLabel))) {
                         return `“${typeLabel || rawTypeKey}”类型地点不能作为初始出生点。`;
                     }
                     const areaTexts = [normalized.大陆, normalized.区域, normalized.层级].filter(Boolean);
@@ -14056,7 +14056,7 @@
                         normalized.地貌特征,
                         normalized.周边威胁
                     ].filter(Boolean);
-                    const hitKeyword = AMBER_BLOCKED_SPAWN_KEYWORDS.find(keyword => haystacks.some(text => String(text).includes(keyword)));
+                    const hitKeyword = VIELSAEN_BLOCKED_SPAWN_KEYWORDS.find(keyword => haystacks.some(text => String(text).includes(keyword)));
                     return hitKeyword ? '海姆冥界附近过于危险，不能作为初始出生点。' : '';
                 }
 
@@ -14082,12 +14082,12 @@
                     };
                 }
 
-                function normalizeDragonSpawnSelection(rawSpawn) {
+                function normalizeModernSpawnSelection(rawSpawn) {
                     const normalized = normalizeCommonSpawnSelection(rawSpawn);
                     return normalized ? { ...normalized, 大陆: '现代世界' } : null;
                 }
 
-                const DRAGON_BLOCKED_SPAWN_IDS = new Set([
+                const MODERN_BLOCKED_SPAWN_IDS = new Set([
                     'otherspace_rain_train',
                     'otherspace_tokoyo',
                     'otherspace_nibelungen',
@@ -14096,23 +14096,23 @@
                     'nest_odin'
                 ]);
 
-                function getDragonSpawnBlockedReason(rawSpawn) {
-                    const normalized = normalizeDragonSpawnSelection(rawSpawn);
+                function getModernSpawnBlockedReason(rawSpawn) {
+                    const normalized = normalizeModernSpawnSelection(rawSpawn);
                     if (!normalized) return '';
                     const nodeId = String(normalized.节点ID || '').trim();
-                    const blockedId = Array.from(DRAGON_BLOCKED_SPAWN_IDS).find(id => nodeId === id || nodeId.startsWith(`${id}_scene_`));
+                    const blockedId = Array.from(MODERN_BLOCKED_SPAWN_IDS).find(id => nodeId === id || nodeId.startsWith(`${id}_scene_`));
                     if (!blockedId) return '';
                     if (blockedId === 'nest_odin') return '奥丁之渊无法作为初始出生点。';
                     return '该地点属于特异空间，无法作为初始出生点。';
                 }
-                function trySetDragonSpawnSelection(rawSpawn, options = {}) {
+                function trySetModernSpawnSelection(rawSpawn, options = {}) {
                     const { silent = false, source = '地图' } = options;
-                    const normalized = normalizeDragonSpawnSelection(rawSpawn);
+                    const normalized = normalizeModernSpawnSelection(rawSpawn);
                     if (!normalized) return false;
-                    const blockedReason = getDragonSpawnBlockedReason(normalized);
+                    const blockedReason = getModernSpawnBlockedReason(normalized);
                     if (blockedReason) {
-                        if (selectedDragonSpawn.value?.名称 === normalized.名称) {
-                            selectedDragonSpawn.value = null;
+                        if (selectedModernSpawn.value?.名称 === normalized.名称) {
+                            selectedModernSpawn.value = null;
                             selectedSpawnPoint.value = null;
                         }
                         console.warn(`[龙族出生点] 已拦截${source}选择: ${normalized.名称}，原因: ${blockedReason}`);
@@ -14121,34 +14121,34 @@
                         }
                         return false;
                     }
-                    selectedDragonSpawn.value = normalized;
+                    selectedModernSpawn.value = normalized;
                     selectedSpawnPoint.value = normalized.名称;
                     return true;
                 }
 
-                function getEffectiveDragonSpawn() {
-                    if (!isDragonWorldview.value) return null;
-                    if (isDragonHighSchoolOrigin.value || selectedOpening.value === DRAGON_HIGH_SCHOOL_OPENING_ID) {
-                        return normalizeDragonSpawnSelection(DRAGON_SHILAN_SPAWN);
+                function getEffectiveModernSpawn() {
+                    if (!isModernWorldview.value) return null;
+                    if (isModernSpecialOrigin.value || selectedOpening.value === MODERN_HIGH_SCHOOL_OPENING_ID) {
+                        return normalizeModernSpawnSelection(MODERN_SHILAN_SPAWN);
                     }
-                    return normalizeDragonSpawnSelection(selectedDragonSpawn.value);
+                    return normalizeModernSpawnSelection(selectedModernSpawn.value);
                 }
 
-                function applyDragonSpawnSelection(rawSpawn) {
-                    if (isDragonHighSchoolOrigin.value || selectedOpening.value === DRAGON_HIGH_SCHOOL_OPENING_ID) {
-                        return trySetDragonSpawnSelection(DRAGON_SHILAN_SPAWN, { silent: true, source: '仕兰高中特殊开局' });
+                function applyModernSpawnSelection(rawSpawn) {
+                    if (isModernSpecialOrigin.value || selectedOpening.value === MODERN_HIGH_SCHOOL_OPENING_ID) {
+                        return trySetModernSpawnSelection(MODERN_SHILAN_SPAWN, { silent: true, source: '仕兰高中特殊开局' });
                     }
-                    return trySetDragonSpawnSelection(rawSpawn, { source: '地图' });
+                    return trySetModernSpawnSelection(rawSpawn, { source: '地图' });
                 }
 
-                function trySetAmberSpawnSelection(rawSpawn, options = {}) {
+                function trySetVielsaenSpawnSelection(rawSpawn, options = {}) {
                     const { silent = false, source = '地图' } = options;
-                    const normalized = normalizeAmberSpawnSelection(rawSpawn);
+                    const normalized = normalizeVielsaenSpawnSelection(rawSpawn);
                     if (!normalized) return false;
-                    const blockedReason = getAmberSpawnBlockedReason(normalized);
+                    const blockedReason = getVielsaenSpawnBlockedReason(normalized);
                     if (blockedReason) {
-                        if (selectedAmberSpawn.value?.名称 === normalized.名称) {
-                            selectedAmberSpawn.value = null;
+                        if (selectedVielsaenSpawn.value?.名称 === normalized.名称) {
+                            selectedVielsaenSpawn.value = null;
                             selectedSpawnPoint.value = null;
                         }
                         console.warn(`[琥珀出生点] 已拦截${source}选择: ${normalized.名称}，原因: ${blockedReason}`);
@@ -14157,30 +14157,30 @@
                         }
                         return false;
                     }
-                    selectedAmberSpawn.value = normalized;
+                    selectedVielsaenSpawn.value = normalized;
                     selectedSpawnPoint.value = normalized.名称;
                     return true;
                 }
 
-                function getEffectiveAmberSpawn() {
-                    if (!isAmberWorldview.value) return null;
+                function getEffectiveVielsaenSpawn() {
+                    if (!isVielsaenWorldview.value) return null;
                     if (selectedOpening.value === 'amber_arrival') {
-                        return normalizeAmberSpawnSelection(DEFAULT_AMBER_SPAWN);
+                        return normalizeVielsaenSpawnSelection(DEFAULT_VIELSAEN_SPAWN);
                     }
                     if (selectedOpening.value === 'amber_nightmare') {
-                        return normalizeAmberSpawnSelection(DEFAULT_AMBER_BAIMA_SPAWN);
+                        return normalizeVielsaenSpawnSelection(DEFAULT_VIELSAEN_BAIMA_SPAWN);
                     }
-                    return normalizeCommonSpawnSelection(selectedAmberSpawn.value);
+                    return normalizeCommonSpawnSelection(selectedVielsaenSpawn.value);
                 }
 
-                function applyAmberSpawnSelection(rawSpawn) {
+                function applyVielsaenSpawnSelection(rawSpawn) {
                     if (selectedOpening.value === 'amber_arrival') {
-                        return trySetAmberSpawnSelection(DEFAULT_AMBER_SPAWN, { silent: true, source: '血与火的序章' });
+                        return trySetVielsaenSpawnSelection(DEFAULT_VIELSAEN_SPAWN, { silent: true, source: '血与火的序章' });
                     }
                     if (selectedOpening.value === 'amber_nightmare') {
-                        return trySetAmberSpawnSelection(DEFAULT_AMBER_BAIMA_SPAWN, { silent: true, source: '明焰与梦魇' });
+                        return trySetVielsaenSpawnSelection(DEFAULT_VIELSAEN_BAIMA_SPAWN, { silent: true, source: '明焰与梦魇' });
                     }
-                    return trySetAmberSpawnSelection(rawSpawn, { source: '地图' });
+                    return trySetVielsaenSpawnSelection(rawSpawn, { source: '地图' });
                 }
 
                 // ==================== 大明志异（两京九州）地图出生点 ====================
@@ -14352,7 +14352,7 @@
                     } else {
                         selectedCustomLevel.value = level;
                     }
-                    if (!isAmberWorldview.value && !isJiuzhouWorldview.value && !isDragonWorldview.value) {
+                    if (!isVielsaenWorldview.value && !isJiuzhouWorldview.value && !isModernWorldview.value) {
                         selectedSpawnPoint.value = null;
                     }
                 }
@@ -14361,11 +14361,11 @@
                     let safeLevel = Math.max(1, Math.floor(Number(level) || 1));
                     if (isJiuzhouWorldview.value) {
                         safeLevel = Math.min(JIUZHOU_MAX_START_LEVEL, safeLevel);
-                    } else if (isDragonWorldview.value) {
-                        safeLevel = Math.min(DRAGON_MAX_START_LEVEL, safeLevel);
+                    } else if (isModernWorldview.value) {
+                        safeLevel = Math.min(MODERN_MAX_START_LEVEL, safeLevel);
                     }
                     selectedCustomLevel.value = safeLevel;
-                    if (!isAmberWorldview.value && !isJiuzhouWorldview.value && !isDragonWorldview.value) {
+                    if (!isVielsaenWorldview.value && !isJiuzhouWorldview.value && !isModernWorldview.value) {
                         selectedSpawnPoint.value = null;
                     }
                 }
@@ -14457,13 +14457,13 @@
                     dragonWorldviewRaces.map(race => String(race?.name || '').trim()).filter(Boolean)
                 );
                 const availableRaces = computed(() => {
-                    if (isAmberWorldview.value && amberWorldviewRaces.length > 0) {
+                    if (isVielsaenWorldview.value && amberWorldviewRaces.length > 0) {
                         return amberWorldviewRaces;
                     }
                     if (isJiuzhouWorldview.value && jiuzhouWorldviewRaces.length > 0) {
                         return jiuzhouWorldviewRaces;
                     }
-                    if (isDragonWorldview.value && dragonWorldviewRaces.length > 0) {
+                    if (isModernWorldview.value && dragonWorldviewRaces.length > 0) {
                         return dragonWorldviewRaces;
                     }
                     return mockData.races;
@@ -14523,15 +14523,15 @@
                     if (oldWorldviewId !== undefined && worldviewId !== oldWorldviewId) {
                         void saveWorldviewToMvu(getWorldviewMvuLabel(worldviewId), true);
                     }
-                    if (isAmberWorldview.value || isJiuzhouWorldview.value || isDragonWorldview.value) {
+                    if (isVielsaenWorldview.value || isJiuzhouWorldview.value || isModernWorldview.value) {
                         if (isJiuzhouWorldview.value) {
                             void loadJiuzhouSectNodesFromNetwork();
                         }
                         selectedLevelMode.value = 'custom';
                         if (isJiuzhouWorldview.value) {
                             selectedCustomLevel.value = Math.max(1, Math.min(JIUZHOU_MAX_START_LEVEL, Number(selectedCustomLevel.value) || 1));
-                        } else if (isDragonWorldview.value) {
-                            selectedCustomLevel.value = Math.max(1, Math.min(DRAGON_MAX_START_LEVEL, Number(selectedCustomLevel.value) || 1));
+                        } else if (isModernWorldview.value) {
+                            selectedCustomLevel.value = Math.max(1, Math.min(MODERN_MAX_START_LEVEL, Number(selectedCustomLevel.value) || 1));
                         } else if (!selectedCustomLevel.value) {
                             selectedCustomLevel.value = 1;
                         }
@@ -14549,8 +14549,8 @@
                 watch(() => character.race, (raceName) => {
                     if (!raceName || customRace.enabled) return;
                     const normalizedRaceName = String(raceName).trim();
-                    if (selectedWorldview.value !== WORLDVIEW_DRAGON_ID && dragonRaceNameSet.has(normalizedRaceName)) {
-                        selectedWorldview.value = WORLDVIEW_DRAGON_ID;
+                    if (selectedWorldview.value !== WORLDVIEW_MODERN_ID && dragonRaceNameSet.has(normalizedRaceName)) {
+                        selectedWorldview.value = WORLDVIEW_MODERN_ID;
                         return;
                     }
                     if (selectedWorldview.value === WORLDVIEW_JIUZHOU_ID) return;
@@ -14576,7 +14576,7 @@
                 }, { immediate: true });
 
                 const amberUnifiedStartLevels = computed(() => {
-                    if (!isAmberWorldview.value) return [];
+                    if (!isVielsaenWorldview.value) return [];
                     const levels = new Set([1]);
                     availableRaces.value.forEach(race => {
                         if (race && !race.disabled) levels.add(Math.max(1, Number(race.startLevel) || 1));
@@ -14625,20 +14625,20 @@
                     }
                     return availableRaces.value.find(r => r.name === character.race);
                 });
-                const isAmberTwilightCamp = computed(() => {
-                    if (!isAmberWorldview.value) return false;
+                const isVielsaenSpecialCamp = computed(() => {
+                    if (!isVielsaenWorldview.value) return false;
                     const campName = String(currentRace.value?.camp || '').trim();
                     return campName.includes('黄昏');
                 });
-                const isBondSelectionDisabled = computed(() => isAmberTwilightCamp.value);
-                const AMBER_HUMAN_RACE_NAME = '人类';
-                const AMBER_HUMAN_FATE_CARD_NAME = '灰烬中的火种';
+                const isBondSelectionDisabled = computed(() => isVielsaenSpecialCamp.value);
+                const VIELSAEN_HUMAN_RACE_NAME = '人类';
+                const VIELSAEN_HUMAN_FATE_CARD_NAME = '灰烬中的火种';
                 const isAmberHumanRaceSelected = computed(() => {
-                    if (!isAmberWorldview.value) return false;
+                    if (!isVielsaenWorldview.value) return false;
                     if (character.race === '__custom__' && customRace.enabled) return false;
-                    return currentRace.value?.name === AMBER_HUMAN_RACE_NAME;
+                    return currentRace.value?.name === VIELSAEN_HUMAN_RACE_NAME;
                 });
-                const AMBER_HUMAN_FATE_CARD_HINT = '额外获得一张命运卡牌「灰烬中的火种」';
+                const VIELSAEN_HUMAN_FATE_CARD_HINT = '额外获得一张命运卡牌「灰烬中的火种」';
                 const buildAmberHumanFateCard = () => ({
                     品质: '卓越',
                     类型: '反应',
@@ -14759,14 +14759,14 @@
                     }
                 };
                 // 龙族世界观中，下列卡面特质只负责说明开局注册结果，不再重复写入人物状态效果。
-                const DRAGON_SELECTION_ONLY_BUFF_NAMES = new Set([
+                const MODERN_SELECTION_ONLY_BUFF_NAMES = new Set([
                     '次元公寓',
                     '私人渔岛',
                     '妖怪便利店',
                     '高中锁情咒特殊开局'
                 ]);
-                const DRAGON_OPENING_ASSET_NAMES = Object.freeze(['次元公寓', '黄金渔岛', '零点便利店']);
-                const DRAGON_LOCK_SKILL_NAME = '锁情咒';
+                const MODERN_OPENING_ASSET_NAMES = Object.freeze(['次元公寓', '黄金渔岛', '零点便利店']);
+                const MODERN_LOCK_SKILL_NAME = '锁情咒';
 
                 const buildDragonLockSkill = () => ({
                     "品质": "传说",
@@ -14857,7 +14857,7 @@
                     const nextAssets = (statData.核心资产 && typeof statData.核心资产 === 'object')
                         ? { ...statData.核心资产 }
                         : {};
-                    DRAGON_OPENING_ASSET_NAMES.forEach(assetName => delete nextAssets[assetName]);
+                    MODERN_OPENING_ASSET_NAMES.forEach(assetName => delete nextAssets[assetName]);
                     const registration = buildDragonOpeningAsset(originName, spawn, playerName);
                     if (registration) {
                         nextAssets[registration.name] = registration.value;
@@ -14930,14 +14930,14 @@
                         const detail = String(buff.detail || '').trim();
                         return {
                             ...buff,
-                            summary: summary ? `${summary}；${AMBER_HUMAN_FATE_CARD_HINT}` : AMBER_HUMAN_FATE_CARD_HINT,
-                            detail: detail ? `${detail}；${AMBER_HUMAN_FATE_CARD_HINT}` : AMBER_HUMAN_FATE_CARD_HINT
+                            summary: summary ? `${summary}；${VIELSAEN_HUMAN_FATE_CARD_HINT}` : VIELSAEN_HUMAN_FATE_CARD_HINT,
+                            detail: detail ? `${detail}；${VIELSAEN_HUMAN_FATE_CARD_HINT}` : VIELSAEN_HUMAN_FATE_CARD_HINT
                         };
                     });
                 });
                 // 获取可选的出生等级列表（低于当前种族初始等级的其他种族初始等级，阶梯式）
                 const availableStartLevels = computed(() => {
-                    if (isAmberWorldview.value || isJiuzhouWorldview.value || isDragonWorldview.value) return [];
+                    if (isVielsaenWorldview.value || isJiuzhouWorldview.value || isModernWorldview.value) return [];
                     const race = currentRace.value;
                     if (!race) return [];
                     const nativeLevel = race.startLevel;
@@ -14967,11 +14967,11 @@
                     if (isJiuzhouWorldview.value) {
                         return Math.max(1, Math.min(JIUZHOU_MAX_START_LEVEL, Number(selectedCustomLevel.value) || 1));
                     }
-                    if (isAmberWorldview.value) {
+                    if (isVielsaenWorldview.value) {
                         return Math.max(1, Number(selectedCustomLevel.value) || 1);
                     }
-                    if (isDragonWorldview.value) {
-                        return Math.max(1, Math.min(DRAGON_MAX_START_LEVEL, Number(selectedCustomLevel.value) || 1));
+                    if (isModernWorldview.value) {
+                        return Math.max(1, Math.min(MODERN_MAX_START_LEVEL, Number(selectedCustomLevel.value) || 1));
                     }
                     if (selectedLevelMode.value === 'native' || !currentRace.value) {
                         return currentRace.value?.startLevel || 1;
@@ -14981,7 +14981,7 @@
 
                 // Lv.1出生的RP奖励
                 const levelBonusRP = computed(() => {
-                    if (isAmberWorldview.value || isJiuzhouWorldview.value || isDragonWorldview.value) {
+                    if (isVielsaenWorldview.value || isJiuzhouWorldview.value || isModernWorldview.value) {
                         return actualStartLevel.value === 1 ? 20 : 0;
                     }
                     const race = currentRace.value;
@@ -14993,9 +14993,9 @@
 
                 // 当前等级对应的出生点列表（根据实际出生等级匹配种族出生点）
                 const currentSpawnPoints = computed(() => {
-                    if (isAmberWorldview.value) return [];
+                    if (isVielsaenWorldview.value) return [];
                     if (isJiuzhouWorldview.value) return [];
-                    if (isDragonWorldview.value) return [];
+                    if (isModernWorldview.value) return [];
                     // 找到与实际出生等级匹配的种族出生点
                     const level = actualStartLevel.value;
                     // 找到初始等级等于当前出生等级的种族
@@ -15006,7 +15006,7 @@
 
                 // 当出生点列表变化或进入角色创建时，自动选中推荐出生点
                 watch([currentSpawnPoints, presetMode], ([points]) => {
-                    if (isAmberWorldview.value || isDragonWorldview.value) return;
+                    if (isVielsaenWorldview.value || isModernWorldview.value) return;
                     if (points && points.length > 0 && !selectedSpawnPoint.value) {
                         const recommended = points.find(sp => sp.type === '推荐出生点');
                         selectedSpawnPoint.value = recommended ? recommended.name : points[0].name;
@@ -15015,53 +15015,53 @@
 
                 // 出生点列表内容变化时强制重选
                 watch(currentSpawnPoints, (points) => {
-                    if (isAmberWorldview.value || isDragonWorldview.value) return;
+                    if (isVielsaenWorldview.value || isModernWorldview.value) return;
                     if (points && points.length > 0) {
                         const recommended = points.find(sp => sp.type === '推荐出生点');
                         selectedSpawnPoint.value = recommended ? recommended.name : points[0].name;
                     }
                 });
 
-                watch(isAmberWorldview, (isAmber) => {
+                watch(isVielsaenWorldview, (isAmber) => {
                     if (isAmber) {
-                        if (selectedAmberSpawn.value?.名称) {
-                            selectedSpawnPoint.value = selectedAmberSpawn.value.名称;
-                        } else if (!trySetAmberSpawnSelection(DEFAULT_AMBER_SPAWN, { silent: true, source: '默认出生点' })) {
+                        if (selectedVielsaenSpawn.value?.名称) {
+                            selectedSpawnPoint.value = selectedVielsaenSpawn.value.名称;
+                        } else if (!trySetVielsaenSpawnSelection(DEFAULT_VIELSAEN_SPAWN, { silent: true, source: '默认出生点' })) {
                             selectedSpawnPoint.value = null;
                         }
                         setTimeout(() => {
-                            postAmberSpawnFocusToMap();
+                            postVielsaenSpawnFocusToMap();
                         }, 0);
                         return;
                     }
-                    selectedAmberSpawn.value = null;
+                    selectedVielsaenSpawn.value = null;
                 }, { immediate: true });
 
-                watch(selectedAmberSpawn, (spawn) => {
-                    if (isAmberWorldview.value) {
+                watch(selectedVielsaenSpawn, (spawn) => {
+                    if (isVielsaenWorldview.value) {
                         selectedSpawnPoint.value = spawn?.名称 || null;
                     }
                 }, { deep: true });
 
-                watch(isDragonWorldview, (isDragon) => {
+                watch(isModernWorldview, (isDragon) => {
                     if (isDragon) {
-                        if (isDragonHighSchoolOrigin.value) {
-                            trySetDragonSpawnSelection(DRAGON_SHILAN_SPAWN, { silent: true, source: '仕兰高中特殊开局' });
-                        } else if (selectedDragonSpawn.value?.名称) {
-                            selectedSpawnPoint.value = selectedDragonSpawn.value.名称;
+                        if (isModernSpecialOrigin.value) {
+                            trySetModernSpawnSelection(MODERN_SHILAN_SPAWN, { silent: true, source: '仕兰高中特殊开局' });
+                        } else if (selectedModernSpawn.value?.名称) {
+                            selectedSpawnPoint.value = selectedModernSpawn.value.名称;
                         } else {
-                            trySetDragonSpawnSelection(DEFAULT_DRAGON_SPAWN, { silent: true, source: '默认出生点' });
+                            trySetModernSpawnSelection(DEFAULT_MODERN_SPAWN, { silent: true, source: '默认出生点' });
                         }
                         setTimeout(() => {
-                            postDragonSpawnFocusToMap();
+                            postModernSpawnFocusToMap();
                         }, 0);
                         return;
                     }
-                    selectedDragonSpawn.value = null;
+                    selectedModernSpawn.value = null;
                 }, { immediate: true });
 
-                watch(selectedDragonSpawn, (spawn) => {
-                    if (isDragonWorldview.value) {
+                watch(selectedModernSpawn, (spawn) => {
+                    if (isModernWorldview.value) {
                         selectedSpawnPoint.value = spawn?.名称 || null;
                     }
                 }, { deep: true });
@@ -15123,7 +15123,7 @@
                     return 0; // 购点法不使用等级加成
                 });
                 const baseRP = computed(() => {
-                    if (isAmberWorldview.value || isJiuzhouWorldview.value || isDragonWorldview.value) return 50;
+                    if (isVielsaenWorldview.value || isJiuzhouWorldview.value || isModernWorldview.value) return 50;
                     return 100;
                 });
 
@@ -15138,7 +15138,7 @@
                     rp += levelBonusRP.value;
 
                     // 种族消耗
-                    if (!isAmberWorldview.value) {
+                    if (!isVielsaenWorldview.value) {
                         const r = availableRaces.value.find(x => x.name === character.race);
                         if (r) rp -= Number(r.cost) || 0;
                     }
@@ -15287,12 +15287,12 @@
                         character.identity = list[0].name;
                     }
                     // 重置出生等级 - 默认Lv.1出发
-                    if (isAmberWorldview.value || isJiuzhouWorldview.value || isDragonWorldview.value) {
+                    if (isVielsaenWorldview.value || isJiuzhouWorldview.value || isModernWorldview.value) {
                         selectedLevelMode.value = 'custom';
                         if (isJiuzhouWorldview.value) {
                             selectedCustomLevel.value = Math.max(1, Math.min(JIUZHOU_MAX_START_LEVEL, Number(selectedCustomLevel.value) || 1));
-                        } else if (isDragonWorldview.value) {
-                            selectedCustomLevel.value = Math.max(1, Math.min(DRAGON_MAX_START_LEVEL, Number(selectedCustomLevel.value) || 1));
+                        } else if (isModernWorldview.value) {
+                            selectedCustomLevel.value = Math.max(1, Math.min(MODERN_MAX_START_LEVEL, Number(selectedCustomLevel.value) || 1));
                         } else if (!selectedCustomLevel.value) {
                             selectedCustomLevel.value = 1;
                         }
@@ -15427,7 +15427,7 @@
                 const getPresetRaceDisplay = (presetData) => getDisplayRaceName(presetData?.race, presetData?.customRace);
                 const getPresetClassDisplay = (presetData) => getDisplayClassName(presetData?.class, presetData?.customClassName);
 
-                watch([isAmberWorldview, currentRace], ([isAmber, race]) => {
+                watch([isVielsaenWorldview, currentRace], ([isAmber, race]) => {
                     if (!isAmber || !race?.camp) return;
                     const normalizedCamp = getAmberCampByRace(race);
                     if (selectedAmberCamp.value !== normalizedCamp) {
@@ -15954,15 +15954,15 @@
                 function getRaceBuffs(name) {
                     const race = availableRaces.value.find(r => r.name === name);
                     const baseBuffs = Array.isArray(race?.buffs) ? race.buffs : [];
-                    if (isAmberWorldview.value && name === AMBER_HUMAN_RACE_NAME) {
+                    if (isVielsaenWorldview.value && name === VIELSAEN_HUMAN_RACE_NAME) {
                         return baseBuffs.map(buff => {
                             if (buff?.name !== '人类的可能性') return buff;
                             const summary = String(buff.summary || '').trim();
                             const detail = String(buff.detail || '').trim();
                             return {
                                 ...buff,
-                                summary: summary ? `${summary}；${AMBER_HUMAN_FATE_CARD_HINT}` : AMBER_HUMAN_FATE_CARD_HINT,
-                                detail: detail ? `${detail}；${AMBER_HUMAN_FATE_CARD_HINT}` : AMBER_HUMAN_FATE_CARD_HINT
+                                summary: summary ? `${summary}；${VIELSAEN_HUMAN_FATE_CARD_HINT}` : VIELSAEN_HUMAN_FATE_CARD_HINT,
+                                detail: detail ? `${detail}；${VIELSAEN_HUMAN_FATE_CARD_HINT}` : VIELSAEN_HUMAN_FATE_CARD_HINT
                             };
                         });
                     }
@@ -16424,7 +16424,7 @@
                     '诗乃',
                     '阿尔戈'
                 ]);
-                const AMBER_DIALOGUE_BEAUTIFY_NAMES = Object.freeze([
+                const VIELSAEN_DIALOGUE_BEAUTIFY_NAMES = Object.freeze([
                     '罗曼',
                     '芙蕾雅'
                 ]);
@@ -16453,11 +16453,11 @@
                         desc: '从第一层起始之镇开始，踏入一百层刀剑为主角的异世界。这回并非游戏，自然不是闹着玩的，等级与剑技是生存的唯一通货'
                     },
                     {
-                        id: WORLDVIEW_AMBER_ID,
-                        name: '琥珀之剑',
-                        subtitle: '秩序与黄昏',
+                        id: WORLDVIEW_VIELSAEN_ID,
+                        name: '维尔萨恩',
+                        subtitle: '六国争霸与魔力失衡',
                         iconPath: LEGENDARY_ENEMY_ICON_PATH,
-                        desc: '王国倾覆，大地承载苦难，生灵在这火中忍受煎熬。手握星辰与命运的卡牌，持剑披荆而行，在文明的余烬中，重燃秩序的火种'
+                        desc: '踏入艾沃兰大陆与瑟雷亚海，在六国对峙、代理战争与六大学派之间选择自己的道路；玩家不会被默认设为勇者'
                     },
                     {
                         id: WORLDVIEW_JIUZHOU_ID,
@@ -16467,11 +16467,11 @@
                         desc: '嘉靖盛世，灯市如昼，画舫笙歌；红尘繁华之下却暗流汹涌——西苑修玄、严党当国，九边尸患被压于风雪之外，万业尸仙正自因果深处诞生'
                     },
                     {
-                        id: WORLDVIEW_DRAGON_ID,
-                        name: '屠龙与都市日常',
-                        subtitle: '惊悚乐园 x 龙族',
-                        icon: 'fa-solid fa-cloud-showers-heavy',
-                        desc: '霓虹灯牌在暴雨中闪烁，繁华都会下藏着少年的悸动与古老血脉。推开午夜便利店的门，荒诞剧本悄然开局。这座都市游乐场，正向你展露戏谑的真实'
+                        id: WORLDVIEW_MODERN_ID,
+                        name: '现代都市',
+                        subtitle: '2026平行地球',
+                        icon: 'fa-solid fa-city',
+                        desc: '在公开异能社会中生活、工作与调查低频裂隙灾害；异能、物种和社会身份彼此独立'
                     }
                 ]);
                 const currentWorldviewInfo = computed(() =>
@@ -16480,9 +16480,9 @@
                 const currentWorldviewLabel = computed(() => currentWorldviewInfo.value?.name || '未选择');
                 const getWorldviewMvuLabel = (worldviewId) => {
                     if (worldviewId === WORLDVIEW_SAO_ID) return '刀剑神域';
-                    if (worldviewId === WORLDVIEW_AMBER_ID) return '琥珀之剑';
+                    if (worldviewId === WORLDVIEW_VIELSAEN_ID) return '维尔萨恩';
                     if (worldviewId === WORLDVIEW_JIUZHOU_ID) return '大明志异';
-                    if (worldviewId === WORLDVIEW_DRAGON_ID) return '屠龙与都市日常';
+                    if (worldviewId === WORLDVIEW_MODERN_ID) return '现代都市';
                     return '创世回廊';
                 };
                 const currentWorldviewMvuLabel = computed(() => getWorldviewMvuLabel(selectedWorldview.value));
@@ -16519,44 +16519,26 @@
                     { id: 'custom', worldviewId: WORLDVIEW_CORRIDOR_ID, name: '自定义开局', icon: 'ri-quill-pen-line', desc: '书写属于你自己的传奇序章', isCustom: true },
                     { id: SAO_INITIAL_OPENING_ID, worldviewId: WORLDVIEW_SAO_ID, name: '初始城镇', icon: 'ri-sword-line', desc: '梦醒后置身起始之镇，直接接入 SAO 原著开场', isCustom: false }
                 ];
-                const amberOpeningOptions = computed(() => {
-                    if (isAmberTwilightCamp.value) {
-                        return [
-                            { id: 'amber_monster_wandering', worldviewId: WORLDVIEW_AMBER_ID, name: '游荡魔物', icon: 'ri-skull-line', desc: '以独行或离群的黄昏个体身份开始', isCustom: false },
-                            { id: 'amber_monster_pack', worldviewId: WORLDVIEW_AMBER_ID, name: '部族/巢群', icon: 'ri-group-line', desc: '从黄昏一侧的组织、部族或巢群中开始', isCustom: false },
-                            { id: 'amber_monster_custom', worldviewId: WORLDVIEW_AMBER_ID, name: '自定义魔物开局', icon: 'ri-quill-pen-line', desc: '按黄昏阵营视角编写你的专属序章', isCustom: true }
-                        ];
-                    }
-                    return [
-                        { id: 'amber_arrival', worldviewId: WORLDVIEW_AMBER_ID, name: '血与火的序章', icon: 'ri-map-pin-line', desc: '在埃鲁因王国的边陲小镇布契醒来，本应又是村里平凡的一天，直到亡灵踏来\n(出生点固定为布契)', isCustom: false },
-                        { id: 'amber_native_story', worldviewId: WORLDVIEW_AMBER_ID, name: '命运的开端', icon: 'ri-book-open-line', desc: '基于出生地与出身背景展开一段自然剧情，作为接入沃恩德世界的冒险序章', isCustom: false },
-                        { id: 'amber_nightmare', worldviewId: WORLDVIEW_AMBER_ID, name: '明焰与梦魇', icon: 'ri-ghost-line', desc: '受东境领主之托，前往白马城调查其幼子的崩坏，一步步走进这个骑士家族的深渊，见证两位骑士的终末\n(出生点固定为白马城外·马蹄镇，并开启梦魇任务链)', isCustom: false },
-                        { id: 'amber_small_lord', worldviewId: WORLDVIEW_AMBER_ID, name: '边境领主', icon: 'ri-government-line', desc: '从出生地附近的一小片封地开始，轻松日轻西幻风格的小领主，一边骚扰女仆和幕僚小姐一边经营领土吧', isCustom: false },
-                        { id: 'amber_custom', worldviewId: WORLDVIEW_AMBER_ID, name: '自定义开局', icon: 'ri-quill-pen-line', desc: '按琥珀之剑世界观编写你的专属序章', isCustom: true }
-                    ];
-                });
+                const vielsaenOpeningOptions = [
+                    { id: 'vielsaen_border', worldviewId: WORLDVIEW_VIELSAEN_ID, name: '河谷边境', icon: 'ri-map-pin-line', desc: '从格兰维尔河谷的中立商路驿站开始，卷入六国代理战争', isCustom: false },
+                    { id: 'vielsaen_academy', worldviewId: WORLDVIEW_VIELSAEN_ID, name: '学邦来信', icon: 'ri-book-open-line', desc: '从奥瑟兰学邦的魔力观测与公共医疗委托开始', isCustom: false },
+                    { id: 'vielsaen_custom', worldviewId: WORLDVIEW_VIELSAEN_ID, name: '自定义开局', icon: 'ri-quill-pen-line', desc: '按维尔萨恩世界观编写原创序章', isCustom: true }
+                ];
                 const jiuzhouOpeningOptions = [
                     { id: 'jiuzhou_native_story', worldviewId: WORLDVIEW_JIUZHOU_ID, name: '志异序章', icon: 'ri-book-open-line', desc: '基于出生地与出身背景，自然展开一段融入两京九州的开场', isCustom: false },
                     { id: JIUZHOU_YUAN_MARRIAGE_OPENING_ID, worldviewId: WORLDVIEW_JIUZHOU_ID, name: '袁府姻缘', icon: 'ri-map-pin-line', desc: '一纸泛黄婚书敲开袁府朱门，礼部尚书表面奉你为上宾，暗地里却想用体面的冷暴力逼你知难而退；而那位满腹机锋的袁家千金，正准备把一场拙劣到离谱的破庙阳谋，变成你与洛京权门纠缠的第一道风暴\n（选择后出生点固定为洛京）', isCustom: false },
                     { id: JIUZHOU_FU_INLAW_OPENING_ID, worldviewId: WORLDVIEW_JIUZHOU_ID, name: '傅府赘婿', icon: 'ri-home-heart-line', desc: '你入赘江宁傅府已满一月，红烛罗帐夜夜温存，清晨枕畔却永远冰冷如新；当一册牵扯三房利益的烂账被塞进你怀里，这座深宅里第一缕真正向你递来的暖意，也许正来自最不该信的人\n（选择后出生点固定为江宁府）', isCustom: false },
                     { id: 'jiuzhou_custom', worldviewId: WORLDVIEW_JIUZHOU_ID, name: '自定义开局', icon: 'ri-quill-pen-line', desc: '按大明志异世界观编写你的专属序章', isCustom: true }
                 ];
-                const dragonOpeningOptions = computed(() => {
-                    if (isDragonHighSchoolOrigin.value) {
-                        return [
-                            { id: DRAGON_HIGH_SCHOOL_OPENING_ID, worldviewId: WORLDVIEW_DRAGON_ID, name: '仕兰高中·锁情咒', icon: 'ri-school-line', desc: '以18岁的高三学生身份从南京仕兰高中开始；出生点与资源技能【锁情咒】由代码固定注册', isCustom: false }
-                        ];
-                    }
-                    return [
-                        { id: DRAGON_NATIVE_OPENING_ID, worldviewId: WORLDVIEW_DRAGON_ID, name: '都市日常', icon: 'ri-building-line', desc: '从地图所选的现实地点开始，在能力者登记、龙血暗流与惊悚乐园热潮之间展开属于你的日常', isCustom: false },
-                        { id: DRAGON_CUSTOM_OPENING_ID, worldviewId: WORLDVIEW_DRAGON_ID, name: '自定义开局', icon: 'ri-quill-pen-line', desc: '按屠龙与都市日常世界观编写你的专属序章', isCustom: true }
-                    ];
-                });
+                const modernOpeningOptions = [
+                    { id: MODERN_NATIVE_OPENING_ID, worldviewId: WORLDVIEW_MODERN_ID, name: '都市日常', icon: 'ri-building-line', desc: '从地图所选城市开始，在公开异能社会中生活并接触低频裂隙事件', isCustom: false },
+                    { id: MODERN_CUSTOM_OPENING_ID, worldviewId: WORLDVIEW_MODERN_ID, name: '自定义开局', icon: 'ri-quill-pen-line', desc: '按现代都市世界观编写原创序章', isCustom: true }
+                ];
                 const openingOptions = computed(() => [
                     ...baseOpeningOptions,
-                    ...amberOpeningOptions.value,
+                    ...vielsaenOpeningOptions,
                     ...jiuzhouOpeningOptions,
-                    ...dragonOpeningOptions.value
+                    ...modernOpeningOptions
                 ]);
                 const openingOptionsForWorldview = computed(() => {
                     if (!selectedWorldview.value) return [];
@@ -16565,35 +16547,11 @@
                 const selectedOpeningInfo = computed(() => openingOptions.value.find(opt => opt.id === selectedOpening.value) || null);
                 const isCustomOpeningSelected = computed(() => !!selectedOpeningInfo.value?.isCustom);
 
-                // 仕兰高中特殊出身约束：固定成年高三身份、特殊开局与出生点。
-                watch([isDragonWorldview, () => character.race], ([isDragon, raceName]) => {
-                    if (!isDragon) return;
-                    if (raceName === '青春期男高') {
-                        character.gender = '男性';
-                        character.age = 18;
-                        selectedOpening.value = DRAGON_HIGH_SCHOOL_OPENING_ID;
-                        trySetDragonSpawnSelection(DRAGON_SHILAN_SPAWN, { silent: true, source: '仕兰高中特殊开局' });
-                        return;
-                    }
-                    if (selectedOpening.value === DRAGON_HIGH_SCHOOL_OPENING_ID) {
-                        selectedOpening.value = DRAGON_NATIVE_OPENING_ID;
-                    }
-                    if (selectedDragonSpawn.value?.节点ID === DRAGON_SHILAN_SPAWN.节点ID) {
-                        trySetDragonSpawnSelection(DEFAULT_DRAGON_SPAWN, { silent: true, source: '默认出生点' });
-                    }
-                }, { immediate: true });
-
                 const normalizeOpeningForWorldview = (worldviewId, openingId) => {
                     if (!worldviewId) return '';
-                    if (worldviewId === WORLDVIEW_AMBER_ID && openingId === 'amber_monster_arrival') {
-                        openingId = 'amber_monster_wandering';
-                    }
                     const options = openingOptions.value.filter(opt => opt.worldviewId === worldviewId);
                     if (options.length === 0) return '';
                     if (options.some(opt => opt.id === openingId)) return openingId;
-                    if (worldviewId === WORLDVIEW_AMBER_ID && options.some(opt => opt.id === 'amber_native_story')) {
-                        return 'amber_native_story';
-                    }
                     return options[0].id;
                 };
                 watch([selectedWorldview, selectedOpening], ([worldviewId, openingId]) => {
@@ -16601,11 +16559,11 @@
                     if (normalizedOpening !== openingId) {
                         selectedOpening.value = normalizedOpening;
                     }
-                    if (worldviewId === WORLDVIEW_AMBER_ID && normalizedOpening === 'amber_arrival') {
-                        trySetAmberSpawnSelection(DEFAULT_AMBER_SPAWN, { silent: true, source: '血与火的序章' });
+                    if (worldviewId === WORLDVIEW_VIELSAEN_ID && !selectedVielsaenSpawn.value) {
+                        trySetVielsaenSpawnSelection(DEFAULT_VIELSAEN_SPAWN, { silent: true, source: '维尔萨恩默认出生点' });
                     }
-                    if (worldviewId === WORLDVIEW_AMBER_ID && normalizedOpening === 'amber_nightmare') {
-                        trySetAmberSpawnSelection(DEFAULT_AMBER_BAIMA_SPAWN, { silent: true, source: '梦魇' });
+                    if (worldviewId === WORLDVIEW_MODERN_ID && !selectedModernSpawn.value) {
+                        trySetModernSpawnSelection(DEFAULT_MODERN_SPAWN, { silent: true, source: '现代都市默认出生点' });
                     }
                     if (worldviewId === WORLDVIEW_JIUZHOU_ID && normalizedOpening === JIUZHOU_YUAN_MARRIAGE_OPENING_ID) {
                         trySetJiuzhouSpawnSelection(DEFAULT_JIUZHOU_LUOJING_SPAWN, { silent: true, source: '袁府姻缘开局' });
@@ -16918,17 +16876,17 @@
                 });
                 const summarySpawnName = computed(() => {
                     if (isSaoOpeningSelected.value) return SAO_INITIAL_SPAWN_INFO.名称;
-                    if (isAmberWorldview.value) return getEffectiveAmberSpawn()?.名称 || '未选择';
+                    if (isVielsaenWorldview.value) return getEffectiveVielsaenSpawn()?.名称 || '未选择';
                     if (isJiuzhouWorldview.value) return getEffectiveJiuzhouSpawn()?.名称 || '未选择';
-                    if (isDragonWorldview.value) return getEffectiveDragonSpawn()?.名称 || '未选择';
+                    if (isModernWorldview.value) return getEffectiveModernSpawn()?.名称 || '未选择';
                     return selectedSpawnPoint.value || '未选择';
                 });
                 const summarySpawnMeta = computed(() => {
                     if (isSaoOpeningSelected.value) {
                         return `${SAO_INITIAL_SPAWN_INFO.层级} · ${SAO_INITIAL_SPAWN_INFO.地区等级}`;
                     }
-                    if (isAmberWorldview.value) {
-                        const spawn = getEffectiveAmberSpawn();
+                    if (isVielsaenWorldview.value) {
+                        const spawn = getEffectiveVielsaenSpawn();
                         if (!spawn) return '';
                         const metaParts = [spawn.大陆, spawn.层级 || spawn.区域];
                         if (spawn.地区等级) metaParts.push(`Lv.${spawn.地区等级}`);
@@ -16941,8 +16899,8 @@
                         if (spawn.危险等级) metaParts.push(`危险 ${spawn.危险等级}`);
                         return metaParts.filter(Boolean).join(' · ');
                     }
-                    if (isDragonWorldview.value) {
-                        const spawn = getEffectiveDragonSpawn();
+                    if (isModernWorldview.value) {
+                        const spawn = getEffectiveModernSpawn();
                         if (!spawn) return '';
                         const metaParts = [spawn.大陆, spawn.层级 || spawn.区域];
                         if (spawn.危险等级 || spawn.地区等级) metaParts.push(spawn.危险等级 || spawn.地区等级);
@@ -17065,15 +17023,19 @@
                         if (!mvuData.stat_data.系统配置) mvuData.stat_data.系统配置 = {};
                         if (!mvuData.stat_data.世界信息) mvuData.stat_data.世界信息 = {};
                         mvuData.stat_data.系统配置.世界观 = worldviewLabel || '创世回廊';
-                        if (worldviewLabel === '琥珀之剑') {
-                            mvuData.stat_data.世界信息.世界剧情 = '布契之夜';
+                        if (!mvuData.stat_data.世界状态) mvuData.stat_data.世界状态 = {};
+                        const selectedWorldId = normalizeWorldviewId(selectedWorldview.value);
+                        mvuData.stat_data.世界状态.当前世界 = selectedWorldId;
+                        if (worldviewLabel === '维尔萨恩') {
+                            mvuData.stat_data.世界信息.年历 = 'V2026年1月1日';
+                            mvuData.stat_data.世界信息.世界剧情 = '六国争霸';
                         }
                         if (worldviewLabel === '大明志异') {
-                            mvuData.stat_data.世界信息.年历 = '1560年3月1日';
+                            mvuData.stat_data.世界信息.年历 = 'J1560年3月1日';
                         }
-                        if (worldviewLabel === '屠龙与都市日常') {
-                            mvuData.stat_data.世界信息.年历 = '2026年3月1日';
-                            mvuData.stat_data.世界信息.世界剧情 = '屠龙与都市日常';
+                        if (worldviewLabel === '现代都市') {
+                            mvuData.stat_data.世界信息.年历 = 'U2026年1月1日';
+                            mvuData.stat_data.世界信息.世界剧情 = '现代都市';
                         }
 
                         await mvu.replaceMvuData(mvuData, { type: 'message', message_id: 'latest' });
@@ -17434,19 +17396,19 @@
                         const backgroundSettingText = effectiveBackgroundDesc.value || (isSaoOpeningSelected.value ? '' : (character.backstory || ''));
                         const growthRewards = getStartingGrowthRewards(startLevel, actualRaceName);
                         const expSnapshot = getStartingExpSnapshot(startLevel);
-                        const shouldGrantAmberHumanFateCard = isAmberWorldview.value && !isCustomRace && actualRaceName === AMBER_HUMAN_RACE_NAME;
+                        const shouldGrantAmberHumanFateCard = isVielsaenWorldview.value && !isCustomRace && actualRaceName === VIELSAEN_HUMAN_RACE_NAME;
                         const existingResourceSkills = (mvuData.stat_data.人物 && mvuData.stat_data.人物.资源技能 && typeof mvuData.stat_data.人物.资源技能 === 'object')
                             ? mvuData.stat_data.人物.资源技能
                             : {};
                         const nextResourceSkills = applyOpeningModeEffectsToResourceSkills(cloneOpeningValue(existingResourceSkills) || {}, openingCombatValueMode);
-                        delete nextResourceSkills[AMBER_HUMAN_FATE_CARD_NAME];
+                        delete nextResourceSkills[VIELSAEN_HUMAN_FATE_CARD_NAME];
                         if (shouldGrantAmberHumanFateCard) {
-                            nextResourceSkills[AMBER_HUMAN_FATE_CARD_NAME] = applyOpeningModeEffectToSkill(buildAmberHumanFateCard(), openingCombatValueMode);
+                            nextResourceSkills[VIELSAEN_HUMAN_FATE_CARD_NAME] = applyOpeningModeEffectToSkill(buildAmberHumanFateCard(), openingCombatValueMode);
                         }
 
-                        delete nextResourceSkills[DRAGON_LOCK_SKILL_NAME];
-                        if (isDragonWorldview.value && actualRaceName === '青春期男高') {
-                            nextResourceSkills[DRAGON_LOCK_SKILL_NAME] = applyOpeningModeEffectToSkill(buildDragonLockSkill(), openingCombatValueMode);
+                        delete nextResourceSkills[MODERN_LOCK_SKILL_NAME];
+                        if (isModernWorldview.value && actualRaceName === '青春期男高') {
+                            nextResourceSkills[MODERN_LOCK_SKILL_NAME] = applyOpeningModeEffectToSkill(buildDragonLockSkill(), openingCombatValueMode);
                         }
 
                         // 4. 计算最终属性 (基础属性 + 种族加成)
@@ -17499,7 +17461,7 @@
                         }
                         if (race?.buffs) {
                             for (const buff of race.buffs) {
-                                if (isDragonWorldview.value && DRAGON_SELECTION_ONLY_BUFF_NAMES.has(buff.name)) continue;
+                                if (isModernWorldview.value && MODERN_SELECTION_ONLY_BUFF_NAMES.has(buff.name)) continue;
                                 const buffKey = `[种族·${buff.name}]`;
                                 raceBuffs[buffKey] = buildRaceBuffData(buff);
                             }
@@ -17598,12 +17560,12 @@
 
                         // 8. 初始化其他必要字段
                         // 根据选中的出生点设置位置
-                        const spawnPt = isAmberWorldview.value
-                            ? getEffectiveAmberSpawn()
+                        const spawnPt = isVielsaenWorldview.value
+                            ? getEffectiveVielsaenSpawn()
                             : isJiuzhouWorldview.value
                                 ? getEffectiveJiuzhouSpawn()
-                                : isDragonWorldview.value
-                                    ? getEffectiveDragonSpawn()
+                                : isModernWorldview.value
+                                    ? getEffectiveModernSpawn()
                                     : currentSpawnPoints.value.find(sp => sp.name === selectedSpawnPoint.value);
                         const openingLocation = isSaoOpeningSelected.value
                             ? SAO_INITIAL_LOCATION
@@ -17613,7 +17575,7 @@
                                 场所: spawnPt?.场所 || ''
                             };
 
-                        if (isDragonWorldview.value) {
+                        if (isModernWorldview.value) {
                             applyDragonOpeningAssetRegistration(
                                 mvuData.stat_data,
                                 actualRaceName,
@@ -17625,18 +17587,18 @@
                         if (!mvuData.stat_data.世界信息) {
                             mvuData.stat_data.世界信息 = {};
                         }
-                        const resolvedWorldStory = isAmberWorldview.value
+                        const resolvedWorldStory = isVielsaenWorldview.value
                             ? '布契之夜'
                             : (isJiuzhouWorldview.value && selectedOpening.value === JIUZHOU_YUAN_MARRIAGE_OPENING_ID)
                                 ? '袁府姻缘'
                                 : (isJiuzhouWorldview.value && selectedOpening.value === JIUZHOU_FU_INLAW_OPENING_ID)
                                     ? '傅府赘婿'
-                                    : isDragonWorldview.value
-                                        ? (selectedOpening.value === DRAGON_HIGH_SCHOOL_OPENING_ID ? '仕兰高中·锁情咒' : '屠龙与都市日常')
+                                    : isModernWorldview.value
+                                        ? (selectedOpening.value === MODERN_HIGH_SCHOOL_OPENING_ID ? '仕兰高中·锁情咒' : '屠龙与都市日常')
                                         : (mvuData.stat_data.世界信息.世界剧情 || '');
                         mvuData.stat_data.世界信息 = {
                             ...mvuData.stat_data.世界信息,
-                            年历: isDragonWorldview.value ? '2026年3月1日' : (mvuData.stat_data.世界信息.年历 || '阿拉德历990年3月1日'),
+                            年历: isModernWorldview.value ? '2026年3月1日' : (mvuData.stat_data.世界信息.年历 || '阿拉德历990年3月1日'),
                             时间: mvuData.stat_data.世界信息.时间 || '清晨',
                             世界剧情: resolvedWorldStory,
                             世界观: currentWorldviewMvuLabel.value,
@@ -17662,10 +17624,10 @@
                                 ...existingDialogueBeautify,
                                 ...SAO_DIALOGUE_BEAUTIFY_NAMES
                             ]));
-                        } else if (isAmberWorldview.value) {
+                        } else if (isVielsaenWorldview.value) {
                             mvuData.stat_data.系统配置.对白美化 = Array.from(new Set([
                                 ...existingDialogueBeautify,
-                                ...AMBER_DIALOGUE_BEAUTIFY_NAMES
+                                ...VIELSAEN_DIALOGUE_BEAUTIFY_NAMES
                             ]));
                         } else if (!Array.isArray(mvuData.stat_data.系统配置.对白美化)) {
                             mvuData.stat_data.系统配置.对白美化 = existingDialogueBeautify;
@@ -17773,14 +17735,14 @@
                         if (isJiuzhouWorldview.value) {
                             applyJiuzhouOriginMvuBonuses(mvuData.stat_data.人物, actualRaceName, openingCombatValueMode);
                         }
-                        if (isDragonWorldview.value) {
+                        if (isModernWorldview.value) {
                             applyDragonOriginMvuBonuses(mvuData.stat_data.人物, actualRaceName);
                         }
                         if (!mvuData.stat_data.任务列表) {
                             mvuData.stat_data.任务列表 = {};
                         }
                         // 梦魇开局：注册激活剧本的固定任务
-                        if (isAmberWorldview.value && selectedOpening.value === 'amber_nightmare') {
+                        if (isVielsaenWorldview.value && selectedOpening.value === 'amber_nightmare') {
                             mvuData.stat_data.任务列表['明焰与梦魇'] = {
                                 委托方: '白马城领主 康拉德·阿什福德',
                                 标题: '明焰与梦魇',
@@ -18738,13 +18700,13 @@
                             alert('还有 ' + remainingPoints.value + ' 点属性点未分配，请在「属性分配」步骤分配完毕。');
                             return;
                         }
-                        const effectiveAmberSpawn = getEffectiveAmberSpawn();
-                        if (isAmberWorldview.value && !effectiveAmberSpawn) {
+                        const effectiveVielsaenSpawn = getEffectiveVielsaenSpawn();
+                        if (isVielsaenWorldview.value && !effectiveVielsaenSpawn) {
                             alert('请先在地图中选择琥珀之剑的出生点。');
                             return;
                         }
-                        if (isAmberWorldview.value) {
-                            const blockedReason = getAmberSpawnBlockedReason(effectiveAmberSpawn);
+                        if (isVielsaenWorldview.value) {
+                            const blockedReason = getVielsaenSpawnBlockedReason(effectiveVielsaenSpawn);
                             if (blockedReason) {
                                 alert(blockedReason);
                                 return;
@@ -18762,19 +18724,19 @@
                                 return;
                             }
                         }
-                        const effectiveDragonSpawn = getEffectiveDragonSpawn();
-                        if (isDragonWorldview.value && !effectiveDragonSpawn) {
+                        const effectiveModernSpawn = getEffectiveModernSpawn();
+                        if (isModernWorldview.value && !effectiveModernSpawn) {
                             alert('请先在地图中选择屠龙与都市日常的出生点。');
                             return;
                         }
-                        if (isDragonWorldview.value) {
-                            const blockedReason = getDragonSpawnBlockedReason(effectiveDragonSpawn);
+                        if (isModernWorldview.value) {
+                            const blockedReason = getModernSpawnBlockedReason(effectiveModernSpawn);
                             if (blockedReason) {
                                 alert(blockedReason);
                                 return;
                             }
                         }
-                        if (!isAmberWorldview.value && !isJiuzhouWorldview.value && !isDragonWorldview.value && !isSaoOpeningSelected.value && !selectedSpawnPoint.value) {
+                        if (!isVielsaenWorldview.value && !isJiuzhouWorldview.value && !isModernWorldview.value && !isSaoOpeningSelected.value && !selectedSpawnPoint.value) {
                             alert('请先选择出生点。');
                             return;
                         }
@@ -18824,7 +18786,7 @@
                         selectedLevelMode.value = 'native';
                         selectedCustomLevel.value = 1;
                         selectedSpawnPoint.value = null;
-                        selectedAmberSpawn.value = null;
+                        selectedVielsaenSpawn.value = null;
                         selectedJiuzhouSpawn.value = null;
                         selectedWorldview.value = WORLDVIEW_CORRIDOR_ID;
                         selectedOpening.value = '';
@@ -18896,17 +18858,17 @@
                     const NIGHTMARE_ENTRY_NAME = '任务链 - 明焰与梦魇【琥珀】';
                     const worldview = selectedWorldview.value || WORLDVIEW_CORRIDOR_ID;
                     const isCorridorOpening = worldview === WORLDVIEW_CORRIDOR_ID;
-                    const isNightmareOpening = worldview === WORLDVIEW_AMBER_ID && selectedOpening.value === 'amber_nightmare';
+                    const isNightmareOpening = worldview === WORLDVIEW_VIELSAEN_ID && selectedOpening.value === 'amber_nightmare';
                     const mapWorldbookTarget = isCorridorOpening ? !!enableMapWorldbook.value : false;
                     let openTokens;
                     let closeTokens;
-                    if (worldview === WORLDVIEW_AMBER_ID) {
+                    if (worldview === WORLDVIEW_VIELSAEN_ID) {
                         openTokens = [TOKEN_AMBER, TOKEN_WESTERN_FANTASY];
                         closeTokens = [TOKEN_CORRIDOR, TOKEN_SAO, TOKEN_DNF, TOKEN_NGNL, TOKEN_JIUZHOU, ...TOKEN_DRAGON];
                     } else if (worldview === WORLDVIEW_JIUZHOU_ID) {
                         openTokens = [TOKEN_JIUZHOU];
                         closeTokens = [TOKEN_CORRIDOR, TOKEN_SAO, TOKEN_AMBER, TOKEN_DNF, TOKEN_NGNL, TOKEN_WESTERN_FANTASY, ...TOKEN_DRAGON];
-                    } else if (worldview === WORLDVIEW_DRAGON_ID) {
+                    } else if (worldview === WORLDVIEW_MODERN_ID) {
                         openTokens = [...TOKEN_DRAGON];
                         closeTokens = [TOKEN_CORRIDOR, TOKEN_SAO, TOKEN_AMBER, TOKEN_JIUZHOU, TOKEN_DNF, TOKEN_NGNL, TOKEN_WESTERN_FANTASY];
                     } else if (worldview === WORLDVIEW_SAO_ID) {
@@ -19034,17 +18996,17 @@
                     const worldview = selectedWorldview.value || WORLDVIEW_CORRIDOR_ID;
                     const opening = selectedOpening.value;
                     const isSaoOpening = worldview === WORLDVIEW_SAO_ID;
-                    const isAmberWorld = worldview === WORLDVIEW_AMBER_ID;
+                    const isVielsaenWorld = worldview === WORLDVIEW_VIELSAEN_ID;
                     const isJiuzhouWorld = worldview === WORLDVIEW_JIUZHOU_ID;
-                    const isDragonWorld = worldview === WORLDVIEW_DRAGON_ID;
+                    const isModernWorld = worldview === WORLDVIEW_MODERN_ID;
 
                     // 获取当前选中的出生点完整对象
-                    const spawnObj = isAmberWorld
-                        ? getEffectiveAmberSpawn()
+                    const spawnObj = isVielsaenWorld
+                        ? getEffectiveVielsaenSpawn()
                         : isJiuzhouWorld
                             ? getEffectiveJiuzhouSpawn()
-                            : isDragonWorld
-                                ? getEffectiveDragonSpawn()
+                            : isModernWorld
+                                ? getEffectiveModernSpawn()
                                 : currentSpawnPoints.value.find(sp => sp.name === selectedSpawnPoint.value);
                     const goldNum = effectiveStartingGoldAmount.value;
                     const equipDesc = getIdentityEquipment(effectiveIdentityItems.value);
@@ -19057,7 +19019,7 @@
                             年龄: character.age,
                             世界观: currentWorldviewLabel.value,
                             种族: actualRaceNameMsg,
-                            种族序位: (isCustomRaceMsg || isAmberWorld || isDragonWorld) ? '不使用' : `第${race?.rank}位`,
+                            种族序位: (isCustomRaceMsg || isVielsaenWorld || isModernWorld) ? '不使用' : `第${race?.rank}位`,
                             种族描述: isCustomRaceMsg ? (race?.lore || `自定义种族。特性：${customRace.trait1.name || '无'}、${customRace.trait2.name || '无'}`) : (race?.lore || '')
                         },
                         初始道具: {
@@ -19065,13 +19027,13 @@
                             金钱: goldNum
                         }
                     };
-                    if (isDragonWorld) {
+                    if (isModernWorld) {
                         config.角色信息.出身 = actualRaceNameMsg;
                         config.代码已注册 = {
                             核心资产: ['次元房东', '黄金渔岛', '妖怪便利店夜班员'].includes(actualRaceNameMsg)
                                 ? ({ 次元房东: '次元公寓', 黄金渔岛: '黄金渔岛', 妖怪便利店夜班员: '零点便利店' })[actualRaceNameMsg]
                                 : '无',
-                            资源技能: actualRaceNameMsg === '青春期男高' ? DRAGON_LOCK_SKILL_NAME : '无',
+                            资源技能: actualRaceNameMsg === '青春期男高' ? MODERN_LOCK_SKILL_NAME : '无',
                             熟练度: actualRaceNameMsg === '我于万物之中'
                                 ? '生活熟练度【克苏鲁神话·学徒】'
                                 : (actualRaceNameMsg === '卡塞尔执行员' ? '战斗熟练度【屠龙术·学徒】' : '无'),
@@ -19183,8 +19145,8 @@
                         }
                     } else {
                         // 根据开局选择生成不同的开局描述
-                        if (isAmberWorld) {
-                            const isTwilightMonsterOpening = isAmberTwilightCamp.value;
+                        if (isVielsaenWorld) {
+                            const isTwilightMonsterOpening = isVielsaenSpecialCamp.value;
                             const twilightOpeningHint = opening === 'amber_monster_pack'
                                 ? '当前选择的是“部族/巢群”开局，请默认角色处于黄昏一侧某个组织、部族、巢群、军团或先锋队内部，有明确的上下级、同伴、任务或共同利益。'
                                 : (opening === 'amber_monster_wandering'
@@ -19210,7 +19172,7 @@
                                         : `生成一个有沉浸感的开局，世界观为《琥珀之剑》。以下是开局场景设定：\n${sceneText}\n将<user>投放至${spawnName}。正文不少于1500字。`
                                 );
                             }
-                        } else if (isDragonWorld) {
+                        } else if (isModernWorld) {
                             const assetOpeningHint = ({
                                 次元房东: '核心资产【次元公寓】已注册在出生点附近城区。请自然交代玩家如何得知产权与公寓位置，但不要重复创建资产。',
                                 黄金渔岛: '核心资产【黄金渔岛】已注册在出生点最近的可通航海域。请自然交代岛屿产权、码头与首次前往线索，但不要重复创建资产。',
@@ -19219,7 +19181,7 @@
                             if (isCustomOpeningSelected.value) {
                                 const customText = customOpeningText.value.trim();
                                 message = initPrefix + `生成一个有沉浸感的2026年现代都市开局。以下是玩家自定义场景：${customText || '（未填写，请根据出生点、出身与世界观自由生成一段有明确事件钩子的开场）'}。将<user>投放至${spawnName}。${assetOpeningHint} 人们只知道公开新闻、能力者登记与《惊悚乐园》的流行现象，不得直接揭露宏观真相。正文不少于1500字。`;
-                            } else if (opening === DRAGON_HIGH_SCHOOL_OPENING_ID) {
+                            } else if (opening === MODERN_HIGH_SCHOOL_OPENING_ID) {
                                 message = initPrefix + `生成“仕兰高中·锁情咒”特殊开局。玩家固定为18岁的高三男生，出生点固定为南京仕兰高中，资源技能【锁情咒】无需重复注册。以普通校园日常切入，user是仕兰高中的一名学生，平凡普通，性欲旺盛，但今天突然获得了雪凡的小说《锁情咒》中的同款能力，可以通过让女性喝下自己精液后以那名女性自己的方式爱上自己，注意并不是强行扭曲精神，而是逐渐放大爱意，那名女性仍保持清醒，就算察觉到哪里不对，也会无可救药的爱上User。这种爱是自然保留那名女性自己性格的，即如果原本性格非常腼腆不主动，中了锁情咒之后也不会变痴女，可能还是以自己腼腆和偷偷关注的方式，不自觉的爱上user。user是从一个路边的老头手里拿到锁情咒的秘籍的，他并不清楚的知道效果，也不确定是否能够生效。跟路明非、陈雯雯、苏晓樯、柳淼淼、赵孟华等人是同学。时间节点还远在龙族一整篇剧情开始之前，重点放在校园青春氛围上，主要看点是跟以上等人，尤其是女生的日常青春校园交集互动正文不少于1500字。`;
                             } else {
                                 message = initPrefix + `生成一个有沉浸感的2026年现代都市开局。请依据玩家出身与地图出生点，从上班上学、能力者登记、城市新闻、《惊悚乐园》即将开服公测或一次局部异常中选择合适切口，让日常与危险自然交叠。${assetOpeningHint} 将<user>投放至${spawnName}，给出当前需要处理的问题或社交情节，推进到需要玩家回复为止。正文不少于1500字。`;
@@ -21176,11 +21138,11 @@ ${JSON.stringify(sourcePayload, null, 2)}`;
                     currentIdentities, currentIdentityObj,
                     customIdentity, currentCustomIdentityTier, toggleCustomIdentity, toggleSaoCustomIdentityText,
                     // 出生等级 & 出生点
-                    spawnPointData, selectedLevelMode, selectedCustomLevel, selectedSpawnPoint, selectedAmberSpawn, selectedJiuzhouSpawn, selectedDragonSpawn, selectedJiuzhouSect,
+                    spawnPointData, selectedLevelMode, selectedCustomLevel, selectedSpawnPoint, selectedVielsaenSpawn, selectedJiuzhouSpawn, selectedModernSpawn, selectedJiuzhouSect,
                     availableStartLevels, actualStartLevel, levelBonusRP, currentSpawnPoints, setStartLevelMode, setCustomStartLevel,
-                    JIUZHOU_MAX_START_LEVEL, jiuzhouQuickLevels, DRAGON_MAX_START_LEVEL, dragonQuickLevels,
-                    amberSpawnMapFrame, amberMapEmbedLoading, amberMapEmbedUrl, amberMapEmbedSrcdoc, amberMapFrameSrc, handleAmberSpawnMapFrameLoad,
-                    dragonSpawnMapFrame, dragonMapEmbedLoading, dragonMapEmbedUrl, dragonMapEmbedSrcdoc, dragonMapFrameSrc, handleDragonSpawnMapFrameLoad,
+                    JIUZHOU_MAX_START_LEVEL, jiuzhouQuickLevels, MODERN_MAX_START_LEVEL, modernQuickLevels,
+                    amberSpawnMapFrame, amberMapEmbedLoading, amberMapEmbedUrl, amberMapEmbedSrcdoc, amberMapFrameSrc, handleVielsaenSpawnMapFrameLoad,
+                    dragonSpawnMapFrame, dragonMapEmbedLoading, dragonMapEmbedUrl, dragonMapEmbedSrcdoc, dragonMapFrameSrc, handleModernSpawnMapFrameLoad,
                     jiuzhouSpawnMapFrame, jiuzhouMapEmbedLoading, jiuzhouMapEmbedUrl, jiuzhouMapEmbedSrcdoc, jiuzhouMapFrameSrc, handleJiuzhouSpawnMapFrameLoad, jiuzhouSectLoadState,
                     jiuzhouSectOptions, nearbyJiuzhouSectOptions, selectedJiuzhouSectInfo,
                     // Class Selection
@@ -21241,7 +21203,7 @@ ${JSON.stringify(sourcePayload, null, 2)}`;
                     currentOpeningCombatValueModeLabel, currentOpeningCombatValueModeDescription,
                     difficultyOptionsForCurrentMode, currentDifficultyModeDescription, effectiveDifficultyKey,
                     setOpeningCombatValueMode, setOpeningDifficulty,
-                    isSaoOpeningSelected, isAmberWorldview, isJiuzhouWorldview, isDragonWorldview, isDragonHighSchoolOrigin, isBondSelectionDisabled, amberUnifiedStartLevels, amberCampTabs, amberRaceCampGroups, selectedAmberCamp, activeAmberCampGroup, saoLockedIdentityName, effectiveDifficultyLabel, effectiveIdentityCost, effectiveIdentityItems,
+                    isSaoOpeningSelected, isVielsaenWorldview, isJiuzhouWorldview, isModernWorldview, isModernSpecialOrigin, isBondSelectionDisabled, amberUnifiedStartLevels, amberCampTabs, amberRaceCampGroups, selectedAmberCamp, activeAmberCampGroup, saoLockedIdentityName, effectiveDifficultyLabel, effectiveIdentityCost, effectiveIdentityItems,
                     effectiveStartingGoldAmount, effectiveStartingGoldLabel,
                     effectiveBackgroundName, effectiveBackgroundDesc, hasEffectiveBackgroundText,
                     starterShopState, starterShopAvailable, starterShopSelection, starterShopSelectedItems,
