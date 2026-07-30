@@ -28,19 +28,21 @@ export async function loadJson(path) {
  */
 export async function loadDualWorldData(rootUrl) {
   const dataDir = rootUrl || DATA_DIR;
-  const [species, vielsaenMap, modernMap, levels, vielsaenRoles, modernRoles] = await Promise.all([
+  const [species, vielsaenMap, modernMap, levels, vielsaenRoles, modernRoles, approvals] = await Promise.all([
     loadJson(join(dataDir, 'species.json')),
     loadJson(join(dataDir, 'vielsaen-map.json')),
     loadJson(join(dataDir, 'modern-map.json')),
     loadJson(join(dataDir, 'opening-levels.json')),
     loadJson(join(dataDir, 'companions-vielsaen.roles.json')),
     loadJson(join(dataDir, 'companions-modern.roles.json')),
+    loadJson(join(dataDir, 'companion-species-approval.json')),
   ]);
   return {
     species,
     maps: { vielsaen: vielsaenMap, modern: modernMap },
     levels,
     roles: { vielsaen: vielsaenRoles, modern: modernRoles },
+    approvals,
   };
 }
 
@@ -165,7 +167,39 @@ function validateRoleGate(roles) {
  */
 function validateFinalCompanions(data) {
   const issues = [];
-  // Will be populated after Gate B
+  const validSexes = new Set(['雌性', '雄性', '双性', '无性', '可变']);
+  const validCapabilities = new Set(['可妊娠', '可授精', '双向', '无']);
+  const choices = data.approvals?.choices;
+  if (!Array.isArray(choices)) {
+    issues.push(issue('approvals.choices', 'approval_choices_array', '同伴审批条目必须是数组'));
+    return issues;
+  }
+
+  const allRoles = [...(data.roles?.vielsaen || []), ...(data.roles?.modern || [])];
+  const roleIds = new Set(allRoles.map(role => role.id));
+  const choiceByRole = new Map();
+  for (const [index, choice] of choices.entries()) {
+    const path = `approvals.choices[${index}]`;
+    if (!roleIds.has(choice.roleId)) {
+      issues.push(issue(`${path}.roleId`, 'unknown_approved_role', `审批角色不存在: ${choice.roleId}`));
+    }
+    if (choiceByRole.has(choice.roleId)) {
+      issues.push(issue(`${path}.roleId`, 'duplicate_approved_role', `审批角色重复: ${choice.roleId}`));
+    }
+    choiceByRole.set(choice.roleId, choice);
+    if (!validSexes.has(choice.sex)) {
+      issues.push(issue(`${path}.sex`, 'invalid_companion_sex', `生理性别无效: ${choice.sex}`));
+    }
+    if (!validCapabilities.has(choice.capability)) {
+      issues.push(issue(`${path}.capability`, 'invalid_companion_capability', `生殖能力无效: ${choice.capability}`));
+    }
+  }
+
+  for (const role of allRoles) {
+    if (!choiceByRole.has(role.id)) {
+      issues.push(issue(`approvals.${role.id}`, 'missing_companion_approval', `缺少角色审批: ${role.id}`));
+    }
+  }
   return issues;
 }
 
@@ -301,6 +335,6 @@ export function analyzeGraph(map) {
 /** @typedef {{ schemaVersion: number }} SpeciesData */
 /** @typedef {{ worldId: string, title?: string, layers: any[], regions: any[], nodes: any[], edges: any[] }} MapData */
 /** @typedef {{ schemaVersion: number, quickLevels: number[], bands: any[] }} LevelsData */
-/** @typedef {{ species: SpeciesData, maps: {vielsaen: MapData, modern: MapData}, levels: LevelsData, roles: {vielsaen: any[], modern: any[]} }} DualWorldData */
+/** @typedef {{ species: SpeciesData, maps: {vielsaen: MapData, modern: MapData}, levels: LevelsData, roles: {vielsaen: any[], modern: any[]}, approvals: {choices: any[]} }} DualWorldData */
 /** @typedef {{ path: string, rule: string, message: string }} ValidationIssue */
 /** @typedef {{ isolatedNodeIds: string[], unknownEdgeNodeIds: string[], cycleCount: number, stateControlledEdgeIds: string[], externalRouteCountByRegion: {region:string, count:number}[], alternativeIntercontinentalRouteCount: number }} GraphReport */
