@@ -296,7 +296,34 @@ def build_high_density_worldbook(dnf_root=None, worldbook_root=None):
             }
             new_entries[str(uid)] = entry
 
-    # 5. 合并
+    # 5. 魔物融入者传说条目
+    try:
+        monster_lore = load_json(root / "data" / "dual-world" / "modern-monster-integration.json")
+        monster_uid_base = 32900  # Modern special lore UID range
+        for i, entry_data in enumerate(monster_lore.get("entries", [])):
+            uid = str(monster_uid_base + i)
+            entry = {
+                "uid": int(uid),
+                "content": entry_data["content"],
+                "extensions": {
+                    "worldbook_meta": {
+                        "id": entry_data["id"],
+                        "name": entry_data["title"],
+                        "world": "modern",
+                        "type": "lore",
+                        "category": "魔物融入",
+                    }
+                },
+                "enabled": True,
+            }
+            # Add trigger keywords if present
+            if entry_data.get("triggerKeywords"):
+                entry["extensions"]["worldbook_meta"]["keywords"] = entry_data["triggerKeywords"]
+            new_entries[uid] = entry
+    except Exception:
+        pass
+
+    # 6. 合并
     for uid, entry in new_entries.items():
         entries[uid] = entry
 
