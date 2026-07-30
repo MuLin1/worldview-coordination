@@ -1,4 +1,838 @@
 {
   "schemaVersion": 1,
-  "entries": []
+  "entries": [
+    {
+      "id": "G-S01",
+      "name": "犬科",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "犬科兽人拥有敏锐的嗅觉与听觉，是优秀的追踪者与忠诚的伙伴。适应群体协作，在边境巡逻、执法追踪和救援任务中表现出色。",
+      "bonuses": {"strength": 1, "dexterity": 0, "constitution": 1, "intelligence": 0, "wisdom": 0, "charisma": 1},
+      "buffs": [
+        {"name": "敏锐嗅觉", "effect": "追踪相关检定时获得 +2 加值，可识别个体气味差异。"},
+        {"name": "群体协作", "effect": "与至少一名队友共同行动时，攻击检定获得 +1 加值。"}
+      ],
+      "prototypeTraits": [
+        {"name": "牧羊犬血统", "effect": "警戒范围扩大，先攻检定 +1。"},
+        {"name": "猎犬血统", "effect": "追击目标时移动速度 +10%。"},
+        {"name": "雪橇犬血统", "effect": "寒冷环境无移动惩罚，负重上限 +15%。"}
+      ],
+      "limitations": [
+        {"name": "强烈嗅觉依赖", "effect": "在强烈异味环境中感知相关检定承受 -2 减值。"}
+      ],
+      "reproduction": {
+        "cycleDays": [21, 35],
+        "activeDays": [5, 9],
+        "seasonal": "弱季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [58, 72],
+        "birthMode": "胎生",
+        "offspringCount": [1, 5],
+        "adjustments": ["医疗抑制", "周期调节"]
+      }
+    },
+    {
+      "id": "G-S02",
+      "name": "猫科",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "猫科兽人以敏捷的身手和敏锐的夜视能力著称，是天生的斥候与暗杀者。独立性强，但在信任的伙伴面前展现出令人意外的忠诚。",
+      "bonuses": {"strength": 0, "dexterity": 2, "constitution": 0, "intelligence": 0, "wisdom": 1, "charisma": 0},
+      "buffs": [
+        {"name": "夜视", "effect": "微光环境下视觉不受减值，黑暗中仍可辨识轮廓。"},
+        {"name": "高处着陆", "effect": "从高处坠落时伤害减半，落地时敏捷检定 +2。"}
+      ],
+      "prototypeTraits": [
+        {"name": "大型猫科血统", "effect": "力量 +1（可突破上限），体型增大一级。"},
+        {"name": "小型猫科血统", "effect": "隐匿检定时获得 +2 加值，可通过狭窄空间。"},
+        {"name": "猎豹血统", "effect": "爆发冲刺：每场战斗一次，第一回合移动速度翻倍。"}
+      ],
+      "limitations": [
+        {"name": "昼间倦怠", "effect": "白天强光环境下先攻 -1，长时间警觉检定承受 -2 减值。"}
+      ],
+      "reproduction": {
+        "cycleDays": [18, 30],
+        "activeDays": [4, 8],
+        "seasonal": "季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [60, 70],
+        "birthMode": "胎生",
+        "offspringCount": [1, 5],
+        "adjustments": ["医疗抑制", "光照调节"]
+      }
+    },
+    {
+      "id": "G-S03",
+      "name": "熊科",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "熊科兽人拥有惊人的力量和耐久力，是天生的前线战士与重装守卫。尽管外表粗犷，但领地意识与保护本能使其成为可靠的守护者。",
+      "bonuses": {"strength": 2, "dexterity": -1, "constitution": 1, "intelligence": 0, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "坚韧体魄", "effect": "生命值上限 +15%，自然恢复速度 +20%。"},
+        {"name": "越冬储备", "effect": "可在食物充足时存储额外体能，每日一次可消耗储备恢复生命值。"}
+      ],
+      "prototypeTraits": [
+        {"name": "棕熊血统", "effect": "力量相关检定 +1，威吓检定 +2。"},
+        {"name": "黑熊血统", "effect": "攀爬速度不减，树上隐匿 +2。"},
+        {"name": "北极熊血统", "effect": "寒冷环境无减值，游泳时体能消耗减半。"}
+      ],
+      "limitations": [
+        {"name": "大体型劣势", "effect": "隐匿检定承受 -2 减值，需定制护甲与装备（费用 +20%）。"}
+      ],
+      "reproduction": {
+        "cycleDays": [28, 42],
+        "activeDays": [5, 9],
+        "seasonal": "季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [180, 240],
+        "birthMode": "胎生",
+        "offspringCount": [1, 3],
+        "adjustments": ["医疗抑制", "季节调节"]
+      }
+    },
+    {
+      "id": "G-S04",
+      "name": "鼬科",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "鼬科兽人体型纤细灵活，是天生的渗透者与陷阱专家。好奇心旺盛，擅长发现隐藏的机关和秘密通道。",
+      "bonuses": {"strength": 0, "dexterity": 2, "constitution": 0, "intelligence": 1, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "灵活钻入", "effect": "可通过狭窄缝隙和管道，逃脱束缚检定时获得 +2 加值。"},
+        {"name": "腺体防御", "effect": "每场战斗一次，释放刺激性气味使近身敌人攻击检定 -1 持续两回合。"}
+      ],
+      "prototypeTraits": [
+        {"name": "水獭血统", "effect": "游泳速度 +30%，水中憋气时间翻倍。"},
+        {"name": "貂类血统", "effect": "攀爬与跳跃检定 +2，可在树冠间快速移动。"},
+        {"name": "獾类血统", "effect": "挖掘速度 +50%，地下定向无误。"}
+      ],
+      "limitations": [
+        {"name": "体型限制", "effect": "力量相关负重上限 -20%，重型武器使用受限。"}
+      ],
+      "reproduction": {
+        "cycleDays": [18, 30],
+        "activeDays": [4, 8],
+        "seasonal": "季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [35, 50],
+        "birthMode": "胎生",
+        "offspringCount": [1, 6],
+        "adjustments": ["医疗抑制", "光照调节"]
+      }
+    },
+    {
+      "id": "G-S05",
+      "name": "小型啮齿与兔形类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "小型啮齿与兔形类兽人以超凡的繁殖力、敏锐的听觉和快速的移动著称。体型虽小，但在侦查、情报传递与后勤支援方面不可替代。",
+      "bonuses": {"strength": -1, "dexterity": 2, "constitution": 0, "intelligence": 0, "wisdom": 1, "charisma": 0},
+      "buffs": [
+        {"name": "危险感知", "effect": "察觉检定 +2，伏击和突袭无法使该角色遭受先攻减值。"},
+        {"name": "快速恢复", "effect": "短休恢复效果翻倍，轻伤可在休息后完全愈合。"}
+      ],
+      "prototypeTraits": [
+        {"name": "兔形血统", "effect": "跳跃距离翻倍，移动速度 +15%。"},
+        {"name": "鼠类血统", "effect": "隐匿检定时获得 +2 加值，可通过极狭窄空间。"},
+        {"name": "松鼠血统", "effect": "攀爬速度不减，高处作业检定 +2。"}
+      ],
+      "limitations": [
+        {"name": "体型过小", "effect": "力量相关负重上限 -30%，无法使用大型武器，重型护甲不可装备。"}
+      ],
+      "reproduction": {
+        "cycleDays": [16, 28],
+        "activeDays": [3, 7],
+        "seasonal": "弱季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [28, 45],
+        "birthMode": "胎生",
+        "offspringCount": [1, 6],
+        "adjustments": ["医疗抑制", "周期调节"]
+      }
+    },
+    {
+      "id": "G-S06",
+      "name": "马科",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "马科兽人以卓越的耐力、速度和忠诚闻名，是天生的骑兵、信使与运输者。在平原战场和长途旅行中无人能及。",
+      "bonuses": {"strength": 1, "dexterity": 1, "constitution": 1, "intelligence": 0, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "长途耐力", "effect": "长途移动时疲劳积累减半，强制行军检定 +2。"},
+        {"name": "踢击本能", "effect": "受到近身攻击时可进行反应踢击，伤害 = 力量修正 + 1d4。"}
+      ],
+      "prototypeTraits": [
+        {"name": "战马血统", "effect": "冲锋攻击伤害 +2，不会被恐惧效果影响。"},
+        {"name": "驮马血统", "effect": "负重上限 +50%，团队物资携带量 +30%。"},
+        {"name": "野马血统", "effect": "自由行动时移动速度 +20%，逃脱束缚检定 +2。"}
+      ],
+      "limitations": [
+        {"name": "狭窄空间不适", "effect": "在室内或狭窄地形中攻击检定 -1，先攻 -1。"}
+      ],
+      "reproduction": {
+        "cycleDays": [19, 25],
+        "activeDays": [4, 7],
+        "seasonal": "季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [320, 370],
+        "birthMode": "胎生",
+        "offspringCount": [1, 2],
+        "adjustments": ["医疗抑制", "光照调节"]
+      }
+    },
+    {
+      "id": "G-S07",
+      "name": "鹿科",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "鹿科兽人以优雅的姿态、敏锐的感知和与大自然的亲和力著称。是优秀的森林向导、草药师和自然守护者。",
+      "bonuses": {"strength": 0, "dexterity": 1, "constitution": 1, "intelligence": 0, "wisdom": 1, "charisma": 0},
+      "buffs": [
+        {"name": "森林亲和", "effect": "森林地形中移动速度 +10%，隐匿检定 +2。"},
+        {"name": "季节感应", "effect": "可感知天气变化和季节更替，自然相关检定 +1。"}
+      ],
+      "prototypeTraits": [
+        {"name": "巨鹿血统", "effect": "力量 +1，角击伤害 +1d4。"},
+        {"name": "麂鹿血统", "effect": "警觉范围扩大，逃脱检定 +2。"},
+        {"name": "驯鹿血统", "effect": "寒冷环境无移动惩罚，团队雪地移动时导航无误。"}
+      ],
+      "limitations": [
+        {"name": "角饰限制", "effect": "头部装备必须定制，标准头盔不可佩戴；角被束缚时精神检定 -2。"}
+      ],
+      "reproduction": {
+        "cycleDays": [24, 36],
+        "activeDays": [4, 8],
+        "seasonal": "强季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [190, 250],
+        "birthMode": "胎生",
+        "offspringCount": [1, 3],
+        "adjustments": ["医疗抑制", "季节调节"]
+      }
+    },
+    {
+      "id": "G-S08",
+      "name": "牛羊羚类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "牛羊羚类兽人性格沉稳，耐力出众，是坚韧的防御者和可靠的后勤保障。角与蹄赋予其独特的近战能力和山地适应性。",
+      "bonuses": {"strength": 1, "dexterity": 0, "constitution": 2, "intelligence": 0, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "山地行者", "effect": "山地和崎岖地形中移动速度不减，攀爬检定 +1。"},
+        {"name": "群体防御", "effect": "与队友相邻时，自身及相邻队友的防御检定 +1。"}
+      ],
+      "prototypeTraits": [
+        {"name": "牛类血统", "effect": "力量 +1（可突破上限），冲撞攻击伤害 +1d4。"},
+        {"name": "羊类血统", "effect": "峭壁攀爬速度不减，高处平衡检定 +2。"},
+        {"name": "羚羊血统", "effect": "移动速度 +15%，跳跃距离 +30%。"}
+      ],
+      "limitations": [
+        {"name": "角部管理", "effect": "角需要定期维护，否则社交检定 -1；狭窄转角通行困难。"}
+      ],
+      "reproduction": {
+        "cycleDays": [17, 25],
+        "activeDays": [3, 6],
+        "seasonal": "品种差异",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [145, 290],
+        "birthMode": "胎生",
+        "offspringCount": [1, 3],
+        "adjustments": ["医疗抑制", "周期调节"]
+      }
+    },
+    {
+      "id": "G-S09",
+      "name": "混血种",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "混血种是不同种族通婚的后代，父系特征显著表达。母系决定基础体态与生殖参数，父系贡献外貌、感官与局部能力。正面变异可达显著强度，但必定伴随对应的负面冲突。",
+      "bonuses": {"strength": 0, "dexterity": 0, "constitution": 0, "intelligence": 0, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "混合优势", "effect": "从母系和父系各继承一项正面生理特性。"},
+        {"name": "适应弹性", "effect": "对非极端环境的适应性检定 +1。"}
+      ],
+      "prototypeTraits": [
+        {"name": "外貌融合", "effect": "可选择显现父系外貌特征或母系外貌特征为主导。"},
+        {"name": "能力偏重", "effect": "可选择将一项父系正面变异提升一级，但对应负面冲突同样加剧。"}
+      ],
+      "limitations": [
+        {"name": "血脉冲突", "effect": "混血负面冲突必须明确记录，在相关场景中承受对应减值。"}
+      ],
+      "hybridRules": {
+        "maternalBaseRequired": true,
+        "paternalExpressionRequired": true,
+        "positiveSlots": 2,
+        "negativeSlots": 2,
+        "positiveAttributeRange": [3, 4],
+        "negativeAttributeRange": [-3, -2],
+        "forbiddenBaseIds": ["G-S09"],
+        "description": "母系基础可从 G-S01~G-S08、G-S10~G-S18 或 G-M01~G-M08 中选择（含神话）。父系显性来源同上。神话父系仅能显现局部特征或弱化能力，不可直接授予完整神话身份。"
+      },
+      "reproduction": {
+        "maternalDetermined": true,
+        "description": "混血种自身的生殖参数由母系基础分类决定。"
+      }
+    },
+    {
+      "id": "G-S10",
+      "name": "猛禽类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "猛禽类兽人拥有锐利的视力和强大的飞行能力，是天生的猎手、侦察兵和空中突击者。从高空俯瞰战场，精准打击要害。",
+      "bonuses": {"strength": 1, "dexterity": 1, "constitution": 0, "intelligence": 0, "wisdom": 1, "charisma": 0},
+      "buffs": [
+        {"name": "鹰眼视觉", "effect": "远程攻击距离 +20%，远距离侦察检定时获得 +3 加值。"},
+        {"name": "俯冲突袭", "effect": "从高处发起攻击时，第一击伤害 +1d6。"}
+      ],
+      "prototypeTraits": [
+        {"name": "鹰隼血统", "effect": "飞行速度 +20%，俯冲攻击检定 +1。"},
+        {"name": "鸮类血统", "effect": "完全黑暗视觉，无声飞行，隐匿检定 +2。"},
+        {"name": "鹫类血统", "effect": "对腐坏和毒素免疫，可食腐维持体能。"}
+      ],
+      "limitations": [
+        {"name": "翼展限制", "effect": "飞行需要至少3米翼展空间，密闭空间内无法飞行，敏捷检定 -2。"}
+      ],
+      "reproduction": {
+        "cycleDays": [24, 40],
+        "activeDays": [5, 10],
+        "seasonal": "强季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [28, 45],
+        "birthMode": "卵生",
+        "offspringCount": [1, 3],
+        "adjustments": ["医疗抑制", "光照调节"]
+      }
+    },
+    {
+      "id": "G-S11",
+      "name": "鸣禽鸦鹦类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "鸣禽鸦鹦类兽人以优美的嗓音、灵活的思维和社交天赋著称。是优秀的歌者、外交官、情报贩子和文化传播者。",
+      "bonuses": {"strength": 0, "dexterity": 1, "constitution": 0, "intelligence": 1, "wisdom": 0, "charisma": 1},
+      "buffs": [
+        {"name": "模仿天赋", "effect": "可完美模仿听到的声音、语言和语调，社交伪装检定时获得 +2 加值。"},
+        {"name": "飞行机动", "effect": "小体型飞行灵活，回避远程攻击时检定 +1。"}
+      ],
+      "prototypeTraits": [
+        {"name": "鸦类血统", "effect": "智力 +1（可突破上限），工具使用和谜题检定 +2。"},
+        {"name": "鹦鹉血统", "effect": "语言学习速度翻倍，可同时掌握多种语言且无口音。"},
+        {"name": "鸣禽血统", "effect": "歌声可产生微弱魔力共鸣，团队士气检定 +1。"}
+      ],
+      "limitations": [
+        {"name": "体型脆弱", "effect": "物理伤害承受 +1，近身战斗时防御检定 -1。"}
+      ],
+      "reproduction": {
+        "cycleDays": [20, 35],
+        "activeDays": [4, 9],
+        "seasonal": "季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [18, 32],
+        "birthMode": "卵生",
+        "offspringCount": [1, 5],
+        "adjustments": ["医疗抑制", "光照调节"]
+      }
+    },
+    {
+      "id": "G-S12",
+      "name": "水禽与海鸟类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "水禽与海鸟类兽人兼具飞行与水上活动能力，是优秀的航海者、渔猎者和海岸哨兵。在海洋、湖泊和湿地环境中游刃有余。",
+      "bonuses": {"strength": 0, "dexterity": 1, "constitution": 1, "intelligence": 0, "wisdom": 1, "charisma": 0},
+      "buffs": [
+        {"name": "水空两栖", "effect": "可在水面起降，游泳速度 +20%，潜水时间延长。"},
+        {"name": "耐寒羽毛", "effect": "寒冷潮湿环境无减值，防水羽层提供天然保温。"}
+      ],
+      "prototypeTraits": [
+        {"name": "海鸥血统", "effect": "海上导航无误，风暴中飞行检定 +2。"},
+        {"name": "企鹅血统", "effect": "潜水深度和时长翻倍，寒冷水域无减值，但飞行能力变更为游泳加速。"},
+        {"name": "鹈鹕血统", "effect": "喉囊可用于携带小型物品或队友，团队水中救援检定 +2。"}
+      ],
+      "limitations": [
+        {"name": "羽层维护", "effect": "每日需花费时间梳理羽毛，否则防水和保温效果减半。"}
+      ],
+      "reproduction": {
+        "cycleDays": [24, 42],
+        "activeDays": [5, 10],
+        "seasonal": "强季节性",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [25, 55],
+        "birthMode": "卵生",
+        "offspringCount": [1, 4],
+        "adjustments": ["医疗抑制", "光照调节"]
+      }
+    },
+    {
+      "id": "G-S13",
+      "name": "蜥蜴与蛇类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "蜥蜴与蛇类兽人是冷血而冷静的生存专家，拥有出色的隐匿能力、环境适应力和独特感知方式。在沙漠和热带环境中表现出色。",
+      "bonuses": {"strength": 0, "dexterity": 2, "constitution": 1, "intelligence": 0, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "热感感知", "effect": "可在完全黑暗中感知温血生物的位置，范围 10 米。"},
+        {"name": "鳞甲防护", "effect": "天生护甲 +1，割裂和穿刺伤害减少 1 点。"}
+      ],
+      "prototypeTraits": [
+        {"name": "蜥蜴血统", "effect": "断尾逃生：每场战斗一次，可牺牲尾部逃脱致命一击，尾部可在休息后再生。"},
+        {"name": "蛇类血统", "effect": "缠绕攻击：成功擒抱后每回合自动造成挤压伤害。"},
+        {"name": "变色血统", "effect": "可改变皮肤颜色融入环境，隐匿检定时获得 +3 加值。"}
+      ],
+      "limitations": [
+        {"name": "冷血代谢", "effect": "寒冷环境中行动速度 -15%，所有物理检定 -1。"}
+      ],
+      "reproduction": {
+        "cycleDays": [25, 50],
+        "activeDays": [5, 12],
+        "seasonal": "温度相关",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [45, 100],
+        "birthMode": "卵生",
+        "offspringCount": [1, 6],
+        "adjustments": ["医疗抑制", "温度调节"]
+      }
+    },
+    {
+      "id": "G-S14",
+      "name": "龟鳖类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "龟鳖类兽人以坚固的天然甲壳、惊人的寿命和沉稳的战斗风格著称。是优秀的防御者、历史记录者和长寿智慧持有者。",
+      "bonuses": {"strength": 1, "dexterity": -1, "constitution": 2, "intelligence": 0, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "天然甲壳", "effect": "天生护甲 +2，背部受到的伤害减半。"},
+        {"name": "缩壳防御", "effect": "每场战斗一次，可缩入壳中，该回合内所有伤害减少至 1/4。"}
+      ],
+      "prototypeTraits": [
+        {"name": "陆龟血统", "effect": "护甲额外 +1，但游泳速度减半。"},
+        {"name": "海龟血统", "effect": "游泳速度 +50%，潜水时间长达一小时。"},
+        {"name": "鳖类血统", "effect": "可在泥泞中快速行动，软泥地形无移动惩罚。"}
+      ],
+      "limitations": [
+        {"name": "行动迟缓", "effect": "基础移动速度 -20%，先攻检定 -2。"}
+      ],
+      "reproduction": {
+        "cycleDays": [35, 60],
+        "activeDays": [7, 14],
+        "seasonal": "温度相关",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [55, 120],
+        "birthMode": "卵生",
+        "offspringCount": [1, 6],
+        "adjustments": ["医疗抑制", "温度调节"]
+      }
+    },
+    {
+      "id": "G-S15",
+      "name": "鳄类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "鳄类兽人是水陆两栖的顶级掠食者，兼具强大的咬合力、重甲防护和水下潜伏能力。在沼泽、河流和海岸环境中是无可争议的霸主。",
+      "bonuses": {"strength": 2, "dexterity": 0, "constitution": 1, "intelligence": 0, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "死亡翻滚", "effect": "成功擒抱目标后可进行一次力量检定，造成额外 2d4 伤害并解除目标护甲。"},
+        {"name": "水下潜伏", "effect": "可在水下憋气长达 30 分钟，水中隐匿检定 +3。"}
+      ],
+      "prototypeTraits": [
+        {"name": "大型鳄血统", "effect": "体型增大一级，力量 +1（可突破上限），但移动速度 -10%。"},
+        {"name": "侏儒鳄血统", "effect": "在狭窄水域和洞穴中行动自如，隐匿检定 +2。"},
+        {"name": "咸水鳄血统", "effect": "可在海水和淡水中自由切换，耐盐碱环境。"}
+      ],
+      "limitations": [
+        {"name": "冷血依赖", "effect": "每日需至少一小时晒太阳维持体温，否则所有物理检定 -1。"}
+      ],
+      "reproduction": {
+        "cycleDays": [28, 50],
+        "activeDays": [6, 12],
+        "seasonal": "温度相关",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [65, 95],
+        "birthMode": "卵生",
+        "offspringCount": [1, 5],
+        "adjustments": ["医疗抑制", "温度调节"]
+      }
+    },
+    {
+      "id": "G-S16",
+      "name": "鲸豚类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "鲸豚类兽人拥有庞大的体型、惊人的智力和水下声呐感知。是深海探险者、水下通信专家和海洋生态的守护者。",
+      "bonuses": {"strength": 1, "dexterity": 0, "constitution": 1, "intelligence": 1, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "回声定位", "effect": "水中可无视黑暗和浑浊，感知范围 50 米，可识别物体形状和材质。"},
+        {"name": "深海耐受", "effect": "不受水压影响，可在任何深度活动，寒冷水域无减值。"}
+      ],
+      "prototypeTraits": [
+        {"name": "鲸类血统", "effect": "体型巨大，生命值 +20%，负重上限翻倍，但陆上移动速度 -30%。"},
+        {"name": "海豚血统", "effect": "社交检定 +2，团队协作时技能检定 +1。"},
+        {"name": "虎鲸血统", "effect": "狩猎本能：对受伤目标伤害 +1d4，团队狩猎时战术检定 +2。"}
+      ],
+      "limitations": [
+        {"name": "陆上笨拙", "effect": "陆地上移动速度 -20%，敏捷相关检定 -1。"}
+      ],
+      "reproduction": {
+        "cycleDays": [25, 40],
+        "activeDays": [5, 10],
+        "seasonal": "品种差异",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [300, 390],
+        "birthMode": "胎生",
+        "offspringCount": [1, 2],
+        "adjustments": ["医疗抑制", "周期调节"]
+      }
+    },
+    {
+      "id": "G-S17",
+      "name": "软骨鱼类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "软骨鱼类兽人拥有流线型的身躯、敏锐的电磁感知和永不停止的运动本能。是水下巡逻者、深海猎人和海洋资源采集专家。",
+      "bonuses": {"strength": 1, "dexterity": 1, "constitution": 1, "intelligence": 0, "wisdom": 0, "charisma": 0},
+      "buffs": [
+        {"name": "电磁感知", "effect": "可感知生物电场，水中探测范围 30 米，无视伪装和隐匿。"},
+        {"name": "流线型身躯", "effect": "水中移动速度 +30%，冲锋和突进距离翻倍。"}
+      ],
+      "prototypeTraits": [
+        {"name": "鲨鱼血统", "effect": "对血腥味极度敏感，追踪负伤目标时检定 +3。"},
+        {"name": "鳐类血统", "effect": "可埋入沙中隐匿，海底隐匿检定时获得 +4 加值。"},
+        {"name": "电鳐血统", "effect": "每场战斗一次，释放电击麻痹目标一回合。"}
+      ],
+      "limitations": [
+        {"name": "持续游动", "effect": "长时间静止时体能消耗 +50%，睡眠质量下降。"}
+      ],
+      "reproduction": {
+        "cycleDays": [30, 60],
+        "activeDays": [6, 14],
+        "seasonal": "品种差异",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [180, 390],
+        "birthMode": "卵生",
+        "offspringCount": [1, 4],
+        "adjustments": ["医疗抑制", "水温调节"]
+      }
+    },
+    {
+      "id": "G-S18",
+      "name": "硬骨鱼类",
+      "system": "普通",
+      "rpCost": 10,
+      "startLevel": 1,
+      "summary": "硬骨鱼类兽人种类最为繁多，适应力极强，遍布各类水域。是水下农夫、药材采集者、水域生态管理者和常规渔业操作者。",
+      "bonuses": {"strength": 0, "dexterity": 1, "constitution": 0, "intelligence": 1, "wisdom": 1, "charisma": 0},
+      "buffs": [
+        {"name": "水域适应", "effect": "任意水域环境（淡水、海水、温水、冷水）中无移动减值，潜水时间延长。"},
+        {"name": "侧线感知", "effect": "水中可感知振动和水流变化，规避水下陷阱检定时获得 +2 加值。"}
+      ],
+      "prototypeTraits": [
+        {"name": "大型掠食鱼血统", "effect": "水中攻击检定 +1，力量 +1。"},
+        {"name": "珊瑚礁鱼血统", "effect": "鲜艳色彩使社交检定 +1，并在珊瑚礁地形中隐匿 +2。"},
+        {"name": "深海鱼血统", "effect": "可在深海发光，黑暗水域中可见范围 15 米。"}
+      ],
+      "limitations": [
+        {"name": "水域依赖", "effect": "每 8 小时需至少浸水一次，否则皮肤干裂、体能恢复减半。"}
+      ],
+      "reproduction": {
+        "cycleDays": [20, 45],
+        "activeDays": [5, 12],
+        "seasonal": "品种差异",
+        "defaultOffsetDays": [-2, 2],
+        "gestationDays": [20, 90],
+        "birthMode": "卵生",
+        "offspringCount": [1, 6],
+        "adjustments": ["医疗抑制", "水温调节"]
+      }
+    },
+    {
+      "id": "G-M01",
+      "name": "巨龙",
+      "system": "神话",
+      "rpCost": 20,
+      "startLevel": 1,
+      "summary": "巨龙是神话时代的霸主，拥有压倒性的力量、飞行能力和元素吐息。纯血巨龙稀有而高傲，仅在最关键的战场现身。作为纯上位种族，无额外平衡惩罚。",
+      "bonuses": {"strength": 3, "dexterity": 1, "constitution": 2, "intelligence": 2, "wisdom": 1, "charisma": 2},
+      "buffs": [
+        {"name": "龙息", "effect": "每场战斗一次，对锥形区域造成（等级 × 2）点元素伤害，元素类型由龙种决定。"},
+        {"name": "龙威", "effect": "低等级敌人首次面对时需通过意志检定，失败则恐慌一轮。"},
+        {"name": "龙翼飞行", "effect": "可载人飞行，飞行速度为基础移速两倍。"},
+        {"name": "鳞甲防护", "effect": "天生护甲 +3，对非魔法武器伤害减免 2 点。"},
+        {"name": "超长寿命", "effect": "不受自然衰老影响，寿命以千年计。"}
+      ],
+      "prototypeTraits": [
+        {"name": "红龙血统", "effect": "龙息变为火焰，对火焰免疫。"},
+        {"name": "蓝龙血统", "effect": "龙息变为雷电，对雷电免疫。"},
+        {"name": "银龙血统", "effect": "龙息变为冰霜，对冰霜免疫，可变化为人形大小。"}
+      ],
+      "limitations": [
+        {"name": "庞大身躯", "effect": "标准人类建筑难以容纳，需定制装备（费用 ×3），隐秘行动不可行。"}
+      ],
+      "reproduction": {
+        "cycleDays": [90, 180],
+        "activeDays": [10, 21],
+        "seasonal": "魔力与个体状态相关",
+        "defaultOffsetDays": [-5, 5],
+        "gestationDays": [540, 900],
+        "birthMode": "卵生",
+        "offspringCount": [1, 2],
+        "adjustments": ["高阶医疗抑制", "魔力调节"]
+      }
+    },
+    {
+      "id": "G-M02",
+      "name": "凤凰",
+      "system": "神话",
+      "rpCost": 20,
+      "startLevel": 1,
+      "summary": "凤凰是永生不灭的神话种，掌握生命、火焰与重生的循环。凤凰的眼泪可治愈致命伤，其存在本身就是希望的象征。",
+      "bonuses": {"strength": 1, "dexterity": 2, "constitution": 2, "intelligence": 2, "wisdom": 3, "charisma": 3},
+      "buffs": [
+        {"name": "涅槃重生", "effect": "死亡后在最近的火焰中重生，每 30 天可触发一次。重生后生命值完全恢复。"},
+        {"name": "凤凰火焰", "effect": "攻击附带神圣火焰，对不死和暗影生物伤害翻倍。"},
+        {"name": "治愈之泪", "effect": "每日一次，可治愈自身或触及其者的重伤，恢复 50% 生命值。"},
+        {"name": "火焰亲和", "effect": "对火焰完全免疫，火焰环境中所有检定 +2。"},
+        {"name": "永恒生命", "effect": "不受自然衰老和疾病影响。"}
+      ],
+      "prototypeTraits": [
+        {"name": "金焰凤凰", "effect": "火焰带有净化效果，可驱散诅咒和黑暗附魔。"},
+        {"name": "冰焰凤凰", "effect": "火焰变为冰焰，同时免疫冰霜，火焰伤害转化为冰霜伤害。"},
+        {"name": "暗焰凤凰", "effect": "来自暗影位面的稀有变种，火焰带有腐蚀效果，对护甲造成额外破坏。"}
+      ],
+      "limitations": [
+        {"name": "魔力饥渴", "effect": "需定期吸收魔力或纯净火焰维持生命，魔力枯竭环境中属性减半。"}
+      ],
+      "reproduction": {
+        "cycleDays": [120, 240],
+        "activeDays": [12, 24],
+        "seasonal": "魔力与个体状态相关",
+        "defaultOffsetDays": [-5, 5],
+        "gestationDays": [360, 720],
+        "birthMode": "卵生",
+        "offspringCount": [1, 2],
+        "adjustments": ["高阶医疗抑制", "魔力调节"]
+      }
+    },
+    {
+      "id": "G-M03",
+      "name": "麒麟",
+      "system": "神话",
+      "rpCost": 20,
+      "startLevel": 1,
+      "summary": "麒麟是东方神话中祥瑞的化身，拥有神圣力量、自然亲和与辨别善恶的天赋。麒麟的出现预示着和平与繁荣。",
+      "bonuses": {"strength": 2, "dexterity": 1, "constitution": 2, "intelligence": 2, "wisdom": 3, "charisma": 3},
+      "buffs": [
+        {"name": "祥瑞光环", "effect": "周围队友的幸运检定 +1，负面事件概率降低。"},
+        {"name": "辨识善恶", "effect": "可感知目标的善良与邪恶本质，谎言和伪装无法欺骗。"},
+        {"name": "自然统御", "effect": "可与动植物交流，自然环境中移动速度 +20%，不会被野生动物主动攻击。"},
+        {"name": "神圣之触", "effect": "近战攻击附带神圣属性，对邪恶生物额外造成 1d8 伤害。"},
+        {"name": "草木生发", "effect": "走过的路径植物加速生长，可在贫瘠地区创造临时食物来源。"}
+      ],
+      "prototypeTraits": [
+        {"name": "火麒麟", "effect": "神圣火焰环绕，近身敌人每回合受到火焰伤害。"},
+        {"name": "水麒麟", "effect": "可操控雨水和河流，水域中全属性 +1。"},
+        {"name": "雷麒麟", "effect": "可召唤雷电，远程攻击距离翻倍。"}
+      ],
+      "limitations": [
+        {"name": "祥瑞约束", "effect": "不能主动对善良生物造成致命伤害，否则祥瑞光环失效 30 天。"}
+      ],
+      "reproduction": {
+        "cycleDays": [80, 160],
+        "activeDays": [9, 18],
+        "seasonal": "魔力与个体状态相关",
+        "defaultOffsetDays": [-5, 5],
+        "gestationDays": [420, 720],
+        "birthMode": "胎生",
+        "offspringCount": [1, 2],
+        "adjustments": ["高阶医疗抑制", "魔力调节"]
+      }
+    },
+    {
+      "id": "G-M04",
+      "name": "狮鹫",
+      "system": "神话",
+      "rpCost": 20,
+      "startLevel": 1,
+      "summary": "狮鹫是鹰与狮的完美结合体，拥有鹰的锐利视野与飞行能力、狮的力量与威严。是天生的空中骑士和宝库守卫者。",
+      "bonuses": {"strength": 3, "dexterity": 2, "constitution": 2, "intelligence": 1, "wisdom": 1, "charisma": 2},
+      "buffs": [
+        {"name": "空中霸主", "effect": "飞行速度为基础移速三倍，空中战斗时攻击和防御检定 +2。"},
+        {"name": "锐利鹰眼", "effect": "可在 1000 米高空辨识地面细节，远程攻击无视距离减值。"},
+        {"name": "狮鹫扑击", "effect": "俯冲攻击后仍可进行全回合行动，且第一击必定暴击（每日三次）。"},
+        {"name": "守护本能", "effect": "守护特定目标或地点时，所有检定 +1。"},
+        {"name": "猛禽利爪", "effect": "天生武器伤害 +1d6，无视护甲 2 点。"}
+      ],
+      "prototypeTraits": [
+        {"name": "皇家狮鹫", "effect": "狮鹫威仪使社交检定 +2，可指挥低阶飞行生物。"},
+        {"name": "风暴狮鹫", "effect": "可呼唤风暴，飞行时不受天气影响，风暴中攻击力 +1d4。"},
+        {"name": "暮光狮鹫", "effect": "黄昏与黎明时力量 +2，暗影视觉范围翻倍。"}
+      ],
+      "limitations": [
+        {"name": "食量巨大", "effect": "每日需消耗双倍食物，否则体能检定 -2。"}
+      ],
+      "reproduction": {
+        "cycleDays": [60, 120],
+        "activeDays": [8, 16],
+        "seasonal": "魔力与个体状态相关",
+        "defaultOffsetDays": [-5, 5],
+        "gestationDays": [270, 420],
+        "birthMode": "卵生",
+        "offspringCount": [1, 3],
+        "adjustments": ["高阶医疗抑制", "魔力调节"]
+      }
+    },
+    {
+      "id": "G-M05",
+      "name": "深海巨兽",
+      "system": "神话",
+      "rpCost": 20,
+      "startLevel": 1,
+      "summary": "深海巨兽是海洋深渊的统治者，体型巨大无比，掌控着深海的力量与古老的秘密。利维坦、克拉肯等传说皆源于此。",
+      "bonuses": {"strength": 3, "dexterity": 0, "constitution": 3, "intelligence": 2, "wisdom": 1, "charisma": 1},
+      "buffs": [
+        {"name": "深渊巨力", "effect": "力量相关检定 +3，可搬运或摧毁大型船只和建筑。"},
+        {"name": "深海之主", "effect": "水中战斗时所有检定 +2，可操控周围 100 米的海流。"},
+        {"name": "触手或尾击", "effect": "可同时攻击最多三个目标，每击伤害独立计算。"},
+        {"name": "深海威压", "effect": "水下敌人需通过意志检定，否则恐慌并移动速度减半。"},
+        {"name": "远古知识", "effect": "拥有深海沉睡期间的古老记忆，海洋相关知识和历史检定 +3。"}
+      ],
+      "prototypeTraits": [
+        {"name": "利维坦血统", "effect": "身体可产生生物电能，放电攻击可麻痹大型目标。"},
+        {"name": "克拉肯血统", "effect": "多触手每回合可额外进行一次擒抱，触手再生速度极快。"},
+        {"name": "深渊鲸祖", "effect": "歌声可在水下传播 100 公里，呼唤海洋生物协助。"}
+      ],
+      "limitations": [
+        {"name": "陆上受限", "effect": "离开水体超过 1 小时后所有属性 -2，无法在陆上进行快速移动。"}
+      ],
+      "reproduction": {
+        "cycleDays": [120, 240],
+        "activeDays": [14, 28],
+        "seasonal": "魔力与个体状态相关",
+        "defaultOffsetDays": [-5, 5],
+        "gestationDays": [600, 1080],
+        "birthMode": "胎生",
+        "offspringCount": [1, 2],
+        "adjustments": ["高阶医疗抑制", "魔力调节"]
+      }
+    },
+    {
+      "id": "G-M06",
+      "name": "独角兽",
+      "system": "神话",
+      "rpCost": 20,
+      "startLevel": 1,
+      "summary": "独角兽是纯洁与治愈的象征，拥有净化一切污秽的神圣力量和超越凡俗的速度。仅亲近心灵纯净的生命。",
+      "bonuses": {"strength": 1, "dexterity": 3, "constitution": 1, "intelligence": 2, "wisdom": 2, "charisma": 3},
+      "buffs": [
+        {"name": "净化之角", "effect": "可驱散毒素、疾病和诅咒，触碰即可治愈轻伤，每日三次。"},
+        {"name": "神圣疾驰", "effect": "移动速度为基础移速三倍，奔跑时不受地形减值。"},
+        {"name": "纯洁光环", "effect": "周围 10 米内队友免疫恐惧和魅惑效果。"},
+        {"name": "森林庇护", "effect": "进入森林后自动被自然之力保护，敌人发现检定 -3。"},
+        {"name": "心灵纯净", "effect": "免疫心灵控制和精神攻击。"}
+      ],
+      "prototypeTraits": [
+        {"name": "月光独角兽", "effect": "月光下治愈能力翻倍，可隐形于月光之中。"},
+        {"name": "星辰独角兽", "effect": "可预知短期未来（1 小时内），预知范围随等级提升。"},
+        {"name": "烈焰独角兽", "effect": "蹄生烈焰，冲锋路径遗留火焰，对邪恶生物伤害翻倍。"}
+      ],
+      "limitations": [
+        {"name": "纯洁约束", "effect": "接触邪恶之物时力量减半，需净化后方可恢复。"}
+      ],
+      "reproduction": {
+        "cycleDays": [70, 140],
+        "activeDays": [8, 16],
+        "seasonal": "魔力与个体状态相关",
+        "defaultOffsetDays": [-5, 5],
+        "gestationDays": [360, 600],
+        "birthMode": "胎生",
+        "offspringCount": [1, 2],
+        "adjustments": ["高阶医疗抑制", "魔力调节"]
+      }
+    },
+    {
+      "id": "G-M07",
+      "name": "雷鸟",
+      "system": "神话",
+      "rpCost": 20,
+      "startLevel": 1,
+      "summary": "雷鸟是风暴与雷霆的化身，振翅即生雷暴，鸣叫即唤闪电。是天空中最令人敬畏的存在之一。",
+      "bonuses": {"strength": 2, "dexterity": 3, "constitution": 2, "intelligence": 1, "wisdom": 2, "charisma": 1},
+      "buffs": [
+        {"name": "雷霆之翼", "effect": "飞行速度为基础移速三倍，飞行时周围产生雷暴云，对靠近的敌人造成伤害。"},
+        {"name": "闪电召唤", "effect": "每日三次，从天空召雷打击单个目标，伤害 = 等级 × 3 雷电伤害。"},
+        {"name": "风暴驾驭", "effect": "可在风暴中自由飞行，无视强风和大雨影响，并可改变局部天气。"},
+        {"name": "雷电磁场", "effect": "对雷电完全免疫，金属武器攻击自身时攻击者有概率被电击。"},
+        {"name": "静电感知", "effect": "感知范围内所有生物的生物电场，无法被隐形或伪装欺骗。"}
+      ],
+      "prototypeTraits": [
+        {"name": "金羽雷鸟", "effect": "雷电附带神圣属性，可净化被击中的邪恶生物。"},
+        {"name": "暴风雷鸟", "effect": "可制造龙卷风，范围攻击能力大幅提升。"},
+        {"name": "霜羽雷鸟", "effect": "雷电附带冰霜效果，可冻结水面创造临时路径。"}
+      ],
+      "limitations": [
+        {"name": "静电失控", "effect": "情绪激动时可能意外放电，社交场合需通过自制检定。"}
+      ],
+      "reproduction": {
+        "cycleDays": [80, 160],
+        "activeDays": [9, 18],
+        "seasonal": "魔力与个体状态相关",
+        "defaultOffsetDays": [-5, 5],
+        "gestationDays": [300, 480],
+        "birthMode": "卵生",
+        "offspringCount": [1, 3],
+        "adjustments": ["高阶医疗抑制", "魔力调节"]
+      }
+    },
+    {
+      "id": "G-M08",
+      "name": "多首巨蛇",
+      "system": "神话",
+      "rpCost": 20,
+      "startLevel": 1,
+      "summary": "多首巨蛇是远古神话中的恐怖存在，拥有多个具备独立意识的头颅和惊人的再生能力。每颗头均可独立思考和行动，使其成为极端危险的战斗单位。",
+      "bonuses": {"strength": 3, "dexterity": 1, "constitution": 3, "intelligence": 2, "wisdom": 1, "charisma": 0},
+      "buffs": [
+        {"name": "多头攻击", "effect": "每回合可使用每个头独立攻击不同目标，最多（等级/10+1）个头。"},
+        {"name": "超速再生", "effect": "每回合自动恢复生命值（等级点），被斩断的头可在 1d4 轮内再生。"},
+        {"name": "毒液喷吐", "effect": "每个头可喷吐不同类型的毒液（麻痹、腐蚀、神经或坏死），每日各一次。"},
+        {"name": "巨蛇缠绕", "effect": "擒抱检定 +4，被缠绕的目标每回合受到挤压伤害。"},
+        {"name": "远古韧性", "effect": "对毒液、疾病和元素伤害天然抗性 50%。"}
+      ],
+      "prototypeTraits": [
+        {"name": "九头蛇血统", "effect": "每断一头再生两头（最多 9 头），再生速度翻倍。"},
+        {"name": "羽蛇血统", "effect": "获得飞行能力，毒液变为神圣属性，对邪恶生物伤害翻倍。"},
+        {"name": "海蛇血统", "effect": "身体变为水生形态，水中速度 +100%，可制造漩涡。"}
+      ],
+      "limitations": [
+        {"name": "多头分歧", "effect": "当各头意见不一时，需通过意志检定否则该回合只能执行一个行动。"}
+      ],
+      "reproduction": {
+        "cycleDays": [100, 200],
+        "activeDays": [12, 24],
+        "seasonal": "魔力与个体状态相关",
+        "defaultOffsetDays": [-5, 5],
+        "gestationDays": [420, 720],
+        "birthMode": "卵生",
+        "offspringCount": [1, 4],
+        "adjustments": ["高阶医疗抑制", "魔力调节"]
+      }
+    }
+  ]
 }

@@ -1,3 +1,18 @@
+// 从生成模块导入完整种族数据（含属性、特性、限制等）
+import {
+  NORMAL_SPECIES as _NORMAL_SPECIES_FULL,
+  MYTHIC_SPECIES as _MYTHIC_SPECIES_FULL,
+  SPECIES_LIST,
+  getSpeciesById,
+} from './generated/species-config.js';
+
+export {
+  _NORMAL_SPECIES_FULL as SPECIES_FULL,
+  _MYTHIC_SPECIES_FULL as MYTHIC_SPECIES_FULL,
+  SPECIES_LIST,
+  getSpeciesById,
+};
+
 const freezeEntries = entries => Object.freeze(Object.fromEntries(
   entries.map(([id, value]) => [id, Object.freeze(value)]),
 ));
@@ -37,7 +52,7 @@ export const NORMAL_SPECIES = freezeEntries([
   ['G-S06', normal('马科', [19, 25], [4, 7], '季节性', [320, 370], '胎生', [1, 2], ['医疗抑制', '光照调节'])],
   ['G-S07', normal('鹿科', [24, 36], [4, 8], '强季节性', [190, 250], '胎生', [1, 3], ['医疗抑制', '季节调节'])],
   ['G-S08', normal('牛羊羚类', [17, 25], [3, 6], '品种差异', [145, 290], '胎生', [1, 3], ['医疗抑制', '周期调节'])],
-  ['G-S09', normal('猪科', [18, 24], [3, 6], '弱季节性', [108, 122], '胎生', [1, 6], ['医疗抑制', '周期调节'])],
+  ['G-S09', normal('混血种', [18, 24], [3, 6], '弱季节性', [108, 122], '胎生', [1, 6], ['医疗抑制', '周期调节'])],
   ['G-S10', normal('猛禽类', [24, 40], [5, 10], '强季节性', [28, 45], '卵生', [1, 3], ['医疗抑制', '光照调节'])],
   ['G-S11', normal('鸣禽鸦鹦类', [20, 35], [4, 9], '季节性', [18, 32], '卵生', [1, 5], ['医疗抑制', '光照调节'])],
   ['G-S12', normal('水禽与海鸟类', [24, 42], [5, 10], '强季节性', [25, 55], '卵生', [1, 4], ['医疗抑制', '光照调节'])],
