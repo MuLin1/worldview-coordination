@@ -83,7 +83,6 @@ test('All skills are explainable without species dependence', async () => {
   const vielsaen = await load('companions-vielsaen.roles.json');
   const modern = await load('companions-modern.roles.json');
   const all = [...vielsaen, ...modern];
-  // Every skill desc should reference profession, school, training, or equipment — not anatomy
   const anatomyWords = ['爪', '翼', '鳞', '尾', '牙', '喙', '鳍', '触手', '毒腺', '角'];
   for (const role of all) {
     for (const skill of [...role.activeSkills, ...role.passiveSkills]) {
@@ -91,6 +90,86 @@ test('All skills are explainable without species dependence', async () => {
       for (const word of anatomyWords) {
         assert.ok(!desc.includes(word),
           `${role.id} skill "${skill.name}" references anatomy word "${word}"`);
+      }
+    }
+  }
+});
+
+// ─── Gate B: Species Candidates ──────────────────────────────
+
+test('species candidates cover all roles without becoming final choices', async () => {
+  const packet = await load('companion-species-candidates.json');
+  const roles = [
+    ...await load('companions-vielsaen.roles.json'),
+    ...await load('companions-modern.roles.json'),
+  ];
+  assert.equal(packet.length, 24);
+  assert.deepEqual(new Set(packet.map(x => x.roleId)), new Set(roles.map(x => x.id)));
+  const allKinds = new Set(packet.flatMap(x => x.candidates.map(y => y.kind)));
+  assert.deepEqual(allKinds, new Set(['ordinary','hybrid','mythic']));
+  for (const item of packet) {
+    assert.ok(item.candidates.length >= 2 && item.candidates.length <= 3);
+    assert.equal('selectedSpeciesId' in item, false);
+  }
+});
+
+test('Modern ability roles are never offered mythic candidates', async () => {
+  const roles = await load('companions-modern.roles.json');
+  const packet = await load('companion-species-candidates.json');
+  for (const role of roles.filter(x => x.professionOrAbility.kind === 'ability')) {
+    const item = packet.find(x => x.roleId === role.id);
+    assert.ok(item, `no candidates for ${role.id}`);
+    assert.equal(item.candidates.some(x => x.kind === 'mythic'), false,
+      `${role.id} has ability, should not get mythic candidates`);
+  }
+});
+
+test('each world has at least one hybrid candidate', async () => {
+  const packet = await load('companion-species-candidates.json');
+  const vielsaenIds = (await load('companions-vielsaen.roles.json')).map(r => r.id);
+  const modernIds = (await load('companions-modern.roles.json')).map(r => r.id);
+  const vielsaenHasHybrid = packet.some(x =>
+    vielsaenIds.includes(x.roleId) && x.candidates.some(c => c.kind === 'hybrid'));
+  const modernHasHybrid = packet.some(x =>
+    modernIds.includes(x.roleId) && x.candidates.some(c => c.kind === 'hybrid'));
+  assert.ok(vielsaenHasHybrid, 'Vielsaen needs at least one hybrid candidate');
+  assert.ok(modernHasHybrid, 'Modern needs at least one hybrid candidate');
+});
+
+test('hybrid proposals are complete and non-recursive', async () => {
+  const packet = await load('companion-species-candidates.json');
+  for (const item of packet) {
+    for (const candidate of item.candidates) {
+      if (candidate.kind !== 'hybrid') continue;
+      const hp = candidate.hybridProposal;
+      assert.ok(hp, `hybrid candidate missing hybridProposal for ${item.roleId}`);
+      assert.notEqual(hp.maternalBaseId, 'G-S09', 'hybrid cannot use G-S09 as maternal base');
+      assert.notEqual(hp.paternalExpressionId, 'G-S09', 'hybrid cannot use G-S09 as paternal');
+      assert.equal(hp.positiveTraits.length, 2);
+      assert.equal(hp.negativeTraits.length, 2);
+      assert.ok(hp.maternalBaseId);
+      assert.ok(hp.paternalExpressionId);
+      assert.ok(hp.maternalBaseId !== hp.paternalExpressionId,
+        `hybrid maternal and paternal must differ for ${item.roleId}`);
+    }
+  }
+});
+
+test('all candidate species IDs reference existing species', async () => {
+  const packet = await load('companion-species-candidates.json');
+  const validIds = new Set([
+    'G-S01','G-S02','G-S03','G-S04','G-S05','G-S06','G-S07','G-S08','G-S09',
+    'G-S10','G-S11','G-S12','G-S13','G-S14','G-S15','G-S16','G-S17','G-S18',
+    'G-M01','G-M02','G-M03','G-M04','G-M05','G-M06','G-M07','G-M08',
+  ]);
+  for (const item of packet) {
+    for (const candidate of item.candidates) {
+      assert.ok(validIds.has(candidate.speciesId),
+        `${item.roleId} candidate ${candidate.speciesId} is not a valid species ID`);
+      if (candidate.kind === 'hybrid') {
+        const hp = candidate.hybridProposal;
+        assert.ok(validIds.has(hp.maternalBaseId));
+        assert.ok(validIds.has(hp.paternalExpressionId));
       }
     }
   }
