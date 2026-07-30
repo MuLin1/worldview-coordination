@@ -2,9 +2,12 @@ import {
   WORLD_REGISTRY,
   NORMAL_SPECIES,
   MYTHIC_SPECIES,
+  SPECIES_LIST,
+  getSpeciesById,
   VIELSAEN_CONFIG,
   MODERN_CONFIG,
   REPLACEMENT_BONDS,
+  COMPANION_ID_ALIASES,
 } from './five-world-config.js';
 
 const DAY_MS = 86_400_000;
@@ -629,6 +632,57 @@ export const DNFFiveWorld = Object.freeze({
   advanceModernState,
   validateAdultTrigger,
   renderPhysiologySummary,
+
+  // 高密度扩充：混合种与同伴
+  validateHybridProfile,
+  resolveReproductionConfig,
+  resolveCompanionId,
 });
+
+/**
+ * 验证 G-S09 混血种配置文件的完整性。
+ * @param {{种族分类:string, 母系基础分类?:string, 父系显性来源?:string, 正面变异?:string[], 负面冲突?:string[]}} profile
+ * @returns {string[]} 错误信息数组，为空表示验证通过
+ */
+export function validateHybridProfile(profile) {
+  const errors = [];
+  if (profile.种族分类 !== 'G-S09') {
+    errors.push('混血种验证仅适用于 G-S09');
+    return errors;
+  }
+  if (!profile.母系基础分类) errors.push('缺少母系基础分类');
+  if (!profile.父系显性来源) errors.push('缺少父系显性来源');
+  if (profile.母系基础分类 === 'G-S09' || profile.父系显性来源 === 'G-S09') {
+    errors.push('混血种不能以 G-S09 为母系或父系');
+  }
+  if (profile.母系基础分类 === profile.父系显性来源) {
+    errors.push('母系和父系不能是同一物种');
+  }
+  if (!profile.正面变异 || profile.正面变异.length < 2) errors.push('需要至少两项正面变异');
+  if (!profile.负面冲突 || profile.负面冲突.length < 2) errors.push('需要至少两项负面冲突');
+  return errors;
+}
+
+/**
+ * 根据混血种配置文件解析母系生殖参数。
+ * @param {{种族分类:string, 母系基础分类?:string}} profile
+ * @returns {object|null} 母系的物种配置
+ */
+export function resolveReproductionConfig(profile) {
+  if (profile.种族分类 !== 'G-S09') return null;
+  const maternalId = profile.母系基础分类;
+  if (!maternalId) return null;
+  const species = getSpeciesById(maternalId);
+  return species?.reproduction || null;
+}
+
+/**
+ * 将旧版运行时 ID 解析为规范同伴 ID。
+ * @param {string} id
+ * @returns {string} 规范同伴 ID 或原值
+ */
+export function resolveCompanionId(id) {
+  return COMPANION_ID_ALIASES[id] || id;
+}
 
 if (typeof globalThis !== 'undefined') globalThis.DNFFiveWorld = DNFFiveWorld;
