@@ -23,6 +23,10 @@ UID_START = {
 }
 
 REPLACED_SPECIES = {f"G-S{i:02d}" for i in range(1, 19)} | {f"G-M{i:02d}" for i in range(1, 9)}
+WORLD_LABELS = {
+    "vielsaen": "维尔萨恩",
+    "modern": "现代都市",
+}
 
 
 def load_json(path):
@@ -45,6 +49,90 @@ def sha256_file(path):
                 break
             h.update(chunk)
     return h.hexdigest()
+
+
+def unique_keywords(*values):
+    """按输入顺序生成非空、去重的世界书触发词。"""
+    result = []
+    seen = set()
+    for value in values:
+        if isinstance(value, (list, tuple)):
+            candidates = value
+        else:
+            candidates = [value]
+        for candidate in candidates:
+            text = str(candidate or "").strip()
+            if text and text not in seen:
+                seen.add(text)
+                result.append(text)
+    return result
+
+
+def make_worldbook_entry(template, uid, entry_id, name, content, world_id, entry_type,
+                         keywords, source, display_index, extra_meta=None):
+    """从已验证的基础条目复制 SillyTavern 完整字段，并覆盖本条目数据。"""
+    world_label = WORLD_LABELS[world_id]
+    entry = copy.deepcopy(template)
+    primary_keys = unique_keywords(name, entry_id, keywords)
+    secondary_keys = [f"[世界:{world_label}]"]
+
+    entry.update({
+        "uid": uid,
+        "key": primary_keys,
+        "keysecondary": secondary_keys,
+        "comment": f"[{entry_id}] {name}",
+        "content": content,
+        "constant": False,
+        "selective": True,
+        "order": uid,
+        "disable": False,
+        "displayIndex": display_index,
+        "group": world_label,
+    })
+    entry.pop("enabled", None)
+
+    extensions = entry.setdefault("extensions", {})
+    extensions.update({
+        "display_index": display_index,
+        "group": world_label,
+    })
+    metadata = {
+        "id": entry_id,
+        "name": name,
+        "keywords": primary_keys,
+        "load": "keyword",
+        "position": "after_char",
+        "order": uid,
+        "world": world_label,
+        "type": entry_type,
+        "dependencies": [],
+        "adult_conditions": [],
+        "state_conditions": [],
+        "enabled": True,
+        "source": source,
+    }
+    if extra_meta:
+        metadata.update(extra_meta)
+    extensions["worldbook_meta"] = metadata
+    return entry
+
+
+def make_original_entry(entry):
+    """将 entries 结构镜像为 SillyTavern originalData.entries 结构。"""
+    return {
+        "id": entry["uid"],
+        "keys": copy.deepcopy(entry["key"]),
+        "secondary_keys": copy.deepcopy(entry["keysecondary"]),
+        "comment": entry["comment"],
+        "content": entry["content"],
+        "constant": entry["constant"],
+        "selective": entry["selective"],
+        "insertion_order": entry["order"],
+        "enabled": not entry["disable"],
+        "position": "after_char",
+        "use_regex": False,
+        "extensions": copy.deepcopy(entry["extensions"]),
+    }
 
 
 def render_species_entry(species_data):
@@ -195,6 +283,10 @@ def build_high_density_worldbook(dnf_root=None, worldbook_root=None):
     # 1. 加载基础世界书
     base = load_json(base_book_path)
     entries = copy.deepcopy(base["entries"])  # dict keyed by UID
+    entry_template = next(
+        entry for entry in entries.values()
+        if not entry.get("constant", False) and entry.get("key")
+    )
 
     # 2. 加载物种数据
     species_data = load_json(root / "data" / "dual-world" / "species.json")
@@ -213,11 +305,12 @@ def build_high_density_worldbook(dnf_root=None, worldbook_root=None):
                 meta["system"] = species.get("system", "")
                 if "originalData" in base and "entries" in base["originalData"]:
                     for orig in base["originalData"]["entries"]:
-                        if orig.get("uid") == entry.get("uid"):
+                        if orig.get("id") == entry.get("uid"):
                             orig["content"] = new_content
 
     # 4. 生成新条目
     new_entries = {}
+    next_display_index = len(entries)
 
     # 地图节点
     for world_id in ["vielsaen", "modern"]:
@@ -228,19 +321,18 @@ def build_high_density_worldbook(dnf_root=None, worldbook_root=None):
             node_num = int(node["id"].split("-")[-1][1:])
             uid = uid_base + (node_num - 100)
             content = render_map_node_entry(node, world_id)
-            entry = {
-                "uid": uid,
-                "content": content,
-                "extensions": {
-                    "worldbook_meta": {
-                        "id": node["id"],
-                        "name": node["name"],
-                        "world": world_id,
-                        "type": node["type"],
-                    }
-                },
-                "enabled": True,
-            }
+            entry = make_worldbook_entry(
+                entry_template,
+                uid,
+                node["id"],
+                node["name"],
+                content,
+                world_id,
+                node["type"],
+                [node.get("slug")],
+                f"dnf/data/dual-world/{world_id}-map.json",
+                next_display_index + len(new_entries),
+            )
             new_entries[str(uid)] = entry
 
     # 同伴（从角色 + 审批 + 物种数据合并）
@@ -281,19 +373,18 @@ def build_high_density_worldbook(dnf_root=None, worldbook_root=None):
             comp_num = int(comp["id"].split("-")[-1][1:])
             uid = uid_base + (comp_num - 100)
             content = render_companion_entry(comp)
-            entry = {
-                "uid": uid,
-                "content": content,
-                "extensions": {
-                    "worldbook_meta": {
-                        "id": comp["id"],
-                        "name": comp["name"],
-                        "world": world_id,
-                        "type": "companion",
-                    }
-                },
-                "enabled": True,
-            }
+            entry = make_worldbook_entry(
+                entry_template,
+                uid,
+                comp["id"],
+                comp["name"],
+                content,
+                world_id,
+                "companion",
+                [],
+                f"dnf/data/dual-world/companions-{world_id}.roles.json",
+                next_display_index + len(new_entries),
+            )
             new_entries[str(uid)] = entry
 
     # 5. 魔物融入者传说条目
@@ -302,23 +393,19 @@ def build_high_density_worldbook(dnf_root=None, worldbook_root=None):
         monster_uid_base = 32900  # Modern special lore UID range
         for i, entry_data in enumerate(monster_lore.get("entries", [])):
             uid = str(monster_uid_base + i)
-            entry = {
-                "uid": int(uid),
-                "content": entry_data["content"],
-                "extensions": {
-                    "worldbook_meta": {
-                        "id": entry_data["id"],
-                        "name": entry_data["title"],
-                        "world": "modern",
-                        "type": "lore",
-                        "category": "魔物融入",
-                    }
-                },
-                "enabled": True,
-            }
-            # Add trigger keywords if present
-            if entry_data.get("triggerKeywords"):
-                entry["extensions"]["worldbook_meta"]["keywords"] = entry_data["triggerKeywords"]
+            entry = make_worldbook_entry(
+                entry_template,
+                int(uid),
+                entry_data["id"],
+                entry_data["title"],
+                entry_data["content"],
+                "modern",
+                "lore",
+                entry_data.get("triggerKeywords", []),
+                "dnf/data/dual-world/modern-monster-integration.json",
+                next_display_index + len(new_entries),
+                {"category": "魔物融入"},
+            )
             new_entries[uid] = entry
     except Exception:
         pass
@@ -329,6 +416,9 @@ def build_high_density_worldbook(dnf_root=None, worldbook_root=None):
 
     result = copy.deepcopy(base)
     result["entries"] = entries
+    result["originalData"]["entries"].extend(
+        make_original_entry(entry) for entry in new_entries.values()
+    )
     result["extensions"] = result.get("extensions", {})
     result["extensions"]["high_density"] = {
         "version": 1,

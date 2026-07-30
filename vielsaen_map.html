@@ -4,14 +4,89 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>维尔萨恩地图</title>
 <style>
-body{margin:0;background:#13211d;color:#f3ead3;font:14px system-ui}header{padding:14px 18px;background:#1d332b}main{position:relative;min-height:620px;background:radial-gradient(circle,#315847,#162820)}
-.node{position:absolute;transform:translate(-50%,-50%);border:1px solid #d2b36b;border-radius:8px;background:#203a30;padding:7px 10px;cursor:pointer;color:inherit}.node[data-event]{box-shadow:0 0 12px #d2b36b}.region{font-weight:700}#detail{padding:12px 18px;background:#1d332b}
+*{box-sizing:border-box}body{margin:0;background:#13211d;color:#f3ead3;font:14px system-ui}header{padding:12px 16px;background:#1d332b;border-bottom:1px solid #385c4d}.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:9px}.toolbar label{display:flex;align-items:center;gap:5px}.toolbar select,.toolbar button{border:1px solid #7b986d;border-radius:6px;background:#203a30;color:#f3ead3;padding:5px 8px}.toolbar select{max-width:180px}#map{height:620px;min-height:420px;background:radial-gradient(circle,#315847,#162820);color:#f3ead3}#map .node-label{display:none}#map .node-capital .node-label,#map .node-city .node-label,#map .node-port .node-label,#map .node-hub .node-label,#map .map-node:hover .node-label{display:block}#detail{padding:12px 18px;background:#1d332b;line-height:1.65;min-height:84px}.legend{display:flex;flex-wrap:wrap;gap:10px;margin-left:auto;font-size:12px;color:#d5ddc8}.legend span{white-space:nowrap}@media(max-width:720px){#map{height:520px}.legend{width:100%;margin-left:0}.toolbar select{max-width:130px}}
 </style>
-<header><strong id="title"></strong></header><main id="map"></main><aside id="detail">选择地点查看信息。地图仅显示当前状态，不推进剧情。</aside>
+<header>
+  <strong id="title"></strong>
+  <div class="toolbar">
+    <label>起点 <select id="route-from"></select></label>
+    <label>终点 <select id="route-to"></select></label>
+    <label>优化
+      <select id="criterion">
+        <option value="time">时间</option>
+        <option value="cost">费用</option>
+        <option value="risk">风险</option>
+      </select>
+    </label>
+    <label><input id="show-hidden" type="checkbox">显示隐藏地点</label>
+    <button id="zoom-in" type="button">放大</button>
+    <button id="zoom-out" type="button">缩小</button>
+    <button id="reset-view" type="button">复位</button>
+    <div id="legend" class="legend"></div>
+  </div>
+</header>
+<main id="map"></main>
+<aside id="detail">彩色细线为道路拓扑，橙线为当前规划路线。选择地点可查看详细信息。</aside>
 <script type="module">
 import { VIELSAEN_MAP as data } from './vielsaen_mapdata.js';
-title.textContent=data.title;
-for(const node of data.nodes){const button=document.createElement('button');button.className=`node ${node.type==='capital'?'region':''}`;button.style.left=`${node.x}%`;button.style.top=`${node.y}%`;button.textContent=node.name;button.dataset.event=node.eventKey||'';button.onclick=()=>{const state=parent?.DNFFiveWorldState?.世界状态?.维尔萨恩;const value=node.eventKey?node.eventKey.split('.').slice(1).reduce((v,k)=>v?.[k],state):null;detail.textContent=`${node.name}${node.regionId?` · ${node.regionId}`:''}${node.eventKey?` · 当前状态：${JSON.stringify(value??'未记录')}`:''}`;parent.postMessage({channel:'vielsaen-spawn-map',type:'vielsaen_spawn_selected',spawn:{id:node.id,名称:node.name}},'*')};map.append(button)}
-parent.postMessage({channel:'vielsaen-spawn-map',type:'map_ready'},'*');
+import { getNodeIcon, mountWorldMap } from './dist/V20260728/world-map-core.js';
+
+const mapElement = document.getElementById('map');
+const detailElement = document.getElementById('detail');
+const fromSelect = document.getElementById('route-from');
+const toSelect = document.getElementById('route-to');
+document.getElementById('title').textContent = data.title;
+
+const routeNodes = data.nodes.filter(node => node.layerId !== 'hidden');
+for (const node of routeNodes) {
+  for (const select of [fromSelect, toSelect]) {
+    const option = document.createElement('option');
+    option.value = node.id;
+    option.textContent = `${getNodeIcon(node.type)} ${node.name}`;
+    select.append(option);
+  }
+}
+toSelect.selectedIndex = Math.min(1, routeNodes.length - 1);
+
+const readWorldState = () => {
+  try {
+    return parent?.DNFFiveWorldState?.世界状态?.维尔萨恩 || {};
+  } catch {
+    return {};
+  }
+};
+const controller = mountWorldMap({
+  container: mapElement,
+  detail: detailElement,
+  map: data,
+  getState: readWorldState,
+  onSpawnSelected(nodeId) {
+    const node = data.nodes.find(item => item.id === nodeId);
+    parent.postMessage({
+      channel: 'vielsaen-spawn-map',
+      type: 'vielsaen_spawn_selected',
+      spawn: { id: node.id, 名称: node.name }
+    }, '*');
+  }
+});
+
+const updateRoute = () => controller.setRoute(fromSelect.value, toSelect.value);
+fromSelect.addEventListener('change', updateRoute);
+toSelect.addEventListener('change', updateRoute);
+document.getElementById('criterion').addEventListener('change', event => {
+  controller.setCriterion(event.target.value);
+  updateRoute();
+});
+document.getElementById('show-hidden').addEventListener('change', event => controller.toggleHidden(event.target.checked));
+document.getElementById('zoom-in').addEventListener('click', () => controller.zoomIn());
+document.getElementById('zoom-out').addEventListener('click', () => controller.zoomOut());
+document.getElementById('reset-view').addEventListener('click', () => controller.resetView());
+
+const legendTypes = [...new Set(data.nodes.map(node => node.type))];
+document.getElementById('legend').innerHTML = legendTypes
+  .map(type => `<span>${getNodeIcon(type)} ${type}</span>`)
+  .join('');
+updateRoute();
+parent.postMessage({ channel: 'vielsaen-spawn-map', type: 'map_ready' }, '*');
 </script>
 </html>

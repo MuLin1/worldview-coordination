@@ -32,6 +32,39 @@ class OpeningRuntimeTests(unittest.TestCase):
         self.assertIn("Object.values(NORMAL_SPECIES)", self.build)
         self.assertIn("Object.values(MYTHIC_SPECIES)", self.build)
 
+    def test_vielsaen_opening_exposes_level_1_through_60(self):
+        self.assertIn("QUICK_START_LEVELS", self.build)
+        self.assertIn('type="range" min="1" :max="VIELSAEN_MAX_START_LEVEL"', self.build)
+        self.assertIn("Math.min(VIELSAEN_MAX_START_LEVEL", self.build)
+        self.assertNotIn("levels.add(Math.max(1, Number(race.startLevel)", self.build)
+
+    def test_vielsaen_species_cost_is_deducted_from_rp(self):
+        self.assertIn("const selectedRaceForCost = availableRaces.value.find", self.build)
+        self.assertIn("rp -= Number(selectedRaceForCost.cost) || 0", self.build)
+        self.assertNotIn(
+            "if (!isVielsaenWorldview.value) {\n"
+            "                        const r = availableRaces.value.find",
+            self.build,
+        )
+
+    def test_build_uses_tested_species_adapter_and_numeric_state_effects(self):
+        self.assertIn(
+            "import { NORMAL_SPECIES, MYTHIC_SPECIES } from './generated/species-config.js';",
+            self.build,
+        )
+        self.assertNotIn(
+            "import { NORMAL_SPECIES, MYTHIC_SPECIES, REPLACEMENT_BONDS } from './five-world-config.js';",
+            self.build,
+        )
+        self.assertIn("adaptSpeciesForOpening", self.build)
+        self.assertIn("buildSpeciesAttributeTendencyEffect", self.build)
+        self.assertIn("buildSpeciesTraitStateEffect", self.build)
+        self.assertNotIn(
+            "bonuses: { strength: 0, dexterity: 0, constitution: 0, intelligence: 0, wisdom: 0, charisma: 0 },\n"
+            "                        buffs: [],",
+            self.build,
+        )
+
     def test_local_startup_resources_resolve_to_existing_files(self):
         self.assertNotIn("url('bg.png')", self.build)
         relative_path = "../../start_equipment_shop.json"

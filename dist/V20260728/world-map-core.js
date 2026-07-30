@@ -282,6 +282,8 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
         line.setAttribute('stroke', `hsl(${hue}, 60%, ${lightness}%)`);
       }
       line.setAttribute('stroke-width', '0.8');
+      line.setAttribute('stroke-opacity', '0.82');
+      line.setAttribute('vector-effect', 'non-scaling-stroke');
       if (!edge.bidirectional) {
         line.setAttribute('marker-end', 'url(#arrow)');
       }
@@ -321,9 +323,8 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
       if (node.spawnable) g.classList.add('node-spawnable');
       if (state.currentNodeId === node.id) g.classList.add('node-current');
 
-      // 节点形状
-      const shape = nodeShape(node.type);
-      const el = document.createElementNS(NS, shape);
+      // 节点底板
+      const el = document.createElementNS(NS, 'circle');
       el.setAttribute('cx', node.x);
       el.setAttribute('cy', node.y);
       el.setAttribute('r', nodeRadius(node.type));
@@ -332,13 +333,30 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
       el.setAttribute('stroke-width', '0.5');
       g.appendChild(el);
 
+      // 类型图标
+      const icon = document.createElementNS(NS, 'text');
+      icon.setAttribute('x', node.x);
+      icon.setAttribute('y', node.y);
+      icon.setAttribute('text-anchor', 'middle');
+      icon.setAttribute('dominant-baseline', 'central');
+      icon.setAttribute('font-size', Math.max(2.2, nodeRadius(node.type) * 1.15));
+      icon.setAttribute('fill', '#fff');
+      icon.setAttribute('class', 'node-icon');
+      icon.setAttribute('pointer-events', 'none');
+      icon.textContent = getNodeIcon(node.type);
+      g.appendChild(icon);
+
       // 标签
       const text = document.createElementNS(NS, 'text');
       text.setAttribute('x', node.x);
       text.setAttribute('y', node.y + nodeRadius(node.type) + 3);
       text.setAttribute('text-anchor', 'middle');
       text.setAttribute('font-size', '2.5');
-      text.setAttribute('fill', '#222');
+      text.setAttribute('fill', 'currentColor');
+      text.setAttribute('paint-order', 'stroke');
+      text.setAttribute('stroke', 'rgba(0,0,0,0.75)');
+      text.setAttribute('stroke-width', '0.35');
+      text.setAttribute('class', 'node-label');
       text.textContent = node.name;
       g.appendChild(text);
 
@@ -379,6 +397,7 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
           line.setAttribute('stroke', '#ff6600');
           line.setAttribute('stroke-width', '2');
           line.setAttribute('stroke-linecap', 'round');
+          line.setAttribute('vector-effect', 'non-scaling-stroke');
           gRoute.appendChild(line);
         }
       }
@@ -455,14 +474,6 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
 
 // ─── 辅助函数 ──────────────────────────────────────────────
 
-function nodeShape(type) {
-  switch (type) {
-    case 'capital': return 'rect';
-    case 'hidden': return 'polygon';
-    default: return 'circle';
-  }
-}
-
 function nodeRadius(type) {
   switch (type) {
     case 'capital': return 3;
@@ -470,6 +481,23 @@ function nodeRadius(type) {
     case 'hidden': case 'dungeon': return 2;
     default: return 1.5;
   }
+}
+
+export function getNodeIcon(type) {
+  const icons = {
+    capital: '♜',
+    city: '◆',
+    port: '⚓',
+    settlement: '⌂',
+    gate: '⬡',
+    wilderness: '♠',
+    dungeon: '☠',
+    hub: '◎',
+    hidden: '✦',
+    'local-daily': '⌂',
+    'local-anomaly': '⚠',
+  };
+  return icons[type] || '•';
 }
 
 function nodeColor(type, spawnable) {

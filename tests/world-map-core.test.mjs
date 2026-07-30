@@ -5,7 +5,9 @@ import {
   getReachableNodeIds,
   isEdgeOpen,
   normalizeGraph,
+  getNodeIcon,
 } from '../dist/V20260728/world-map-core.js';
+import { readFile } from 'node:fs/promises';
 
 const map = {
   nodes: [{id:'a'}, {id:'b'}, {id:'c'}, {id:'d'}],
@@ -57,4 +59,25 @@ test('normalizeGraph produces index maps and adjacency lists', () => {
   assert.ok(g.adjacency instanceof Map);
   assert.equal(g.nodeIndex.size, 4);
   assert.equal(g.adjacency.size, 4);
+});
+
+test('every supported node type has a visible icon', () => {
+  const types = [
+    'capital', 'city', 'port', 'settlement', 'gate', 'wilderness',
+    'dungeon', 'hub', 'hidden', 'local-daily', 'local-anomaly',
+  ];
+  for (const type of types) {
+    assert.notEqual(getNodeIcon(type), getNodeIcon('unknown'), type);
+  }
+});
+
+test('both shipped map pages mount the SVG topology core and expose route controls', async () => {
+  for (const page of ['vielsaen_map.html', 'modern_map.html']) {
+    const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
+    assert.match(html, /mountWorldMap/);
+    assert.match(html, /controller\.setRoute/);
+    assert.match(html, /route-from/);
+    assert.match(html, /route-to/);
+    assert.doesNotMatch(html, /for\s*\(const node of data\.nodes\).*createElement\('button'\)/s);
+  }
 });
