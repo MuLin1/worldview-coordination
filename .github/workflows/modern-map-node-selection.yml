@@ -1,0 +1,22 @@
+name: Modern map node selection
+
+on:
+  pull_request:
+    paths:
+      - modern_map.html
+      - dist/V20260728/world-map-core.js
+      - tests/world-map-core.test.mjs
+      - .github/workflows/modern-map-node-selection.yml
+
+permissions:
+  contents: read
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/world-map-core.test.mjs
