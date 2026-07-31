@@ -58,6 +58,8 @@ const controller = mountWorldMap({
   detail: detailElement,
   map: data,
   getState: readWorldState,
+  // 现代地图由开始页统一校验禁用地点；普通城市和城区都应能提交为候选出生点。
+  isSpawnSelectable: () => true,
   onSpawnSelected(nodeId) {
     const node = data.nodes.find(item => item.id === nodeId);
     if (!node) return;
