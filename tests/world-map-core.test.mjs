@@ -5,6 +5,7 @@ import {
   findRoute,
   getReachableNodeIds,
   isEdgeOpen,
+  isNodeSpawnSelectable,
   normalizeGraph,
   getNodeIcon,
   panViewport,
@@ -83,6 +84,12 @@ test('viewport pan and zoom helpers preserve interaction geometry', () => {
   assert.deepEqual(zoomed, { zoom: 2, panX: -25, panY: -40 });
 });
 
+test('spawn selection defaults to node metadata but supports a page-level override', () => {
+  const ordinaryNode = { id: 'ordinary-city', spawnable: false };
+  assert.equal(isNodeSpawnSelectable(ordinaryNode), false);
+  assert.equal(isNodeSpawnSelectable(ordinaryNode, () => true), true);
+});
+
 test('every supported node type has a visible icon', () => {
   const types = [
     'capital', 'city', 'port', 'settlement', 'gate', 'wilderness',
@@ -102,6 +109,17 @@ test('both shipped map pages mount the SVG topology core and expose route contro
     assert.match(html, /route-to/);
     assert.doesNotMatch(html, /for\s*\(const node of data\.nodes\).*createElement\('button'\)/s);
   }
+});
+
+test('modern map forwards ordinary node clicks to the parent spawn validator', async () => {
+  const html = await readFile(new URL('../modern_map.html', import.meta.url), 'utf8');
+  assert.match(html, /isSpawnSelectable:\s*\(\)\s*=>\s*true/);
+});
+
+test('modern map route start selection also updates the chosen spawn', async () => {
+  const html = await readFile(new URL('../modern_map.html', import.meta.url), 'utf8');
+  assert.match(html, /onSpawnSelected\(nodeId\)\s*\{\s*selectSpawnNode\(nodeId\);\s*\}/s);
+  assert.match(html, /fromSelect\.addEventListener\('change',\s*\(\)\s*=>\s*\{\s*selectSpawnNode\(fromSelect\.value\);\s*updateRoute\(\);\s*\}\);/s);
 });
 
 test('map core binds pointer, wheel, and touch-safe interaction handlers', async () => {

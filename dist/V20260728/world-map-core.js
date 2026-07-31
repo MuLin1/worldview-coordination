@@ -215,12 +215,19 @@ export function zoomViewportAtPoint(viewport, nextZoom, pointX, pointY) {
   };
 }
 
+export function isNodeSpawnSelectable(node, isSpawnSelectable) {
+  if (typeof isSpawnSelectable === 'function') {
+    return Boolean(isSpawnSelectable(node));
+  }
+  return Boolean(node?.spawnable);
+}
+
 /**
  * 在指定容器中挂载交互式世界地图。
- * @param {{container: HTMLElement, detail: HTMLElement, map: object, getState?: ()=>object, onSpawnSelected?: (nodeId:string)=>void}} opts
+ * @param {{container: HTMLElement, detail: HTMLElement, map: object, getState?: ()=>object, isSpawnSelectable?: (node:object)=>boolean, onSpawnSelected?: (nodeId:string)=>void}} opts
  * @returns {MapController}
  */
-export function mountWorldMap({ container, detail, map, getState = (() => ({})), onSpawnSelected = (() => {}) }) {
+export function mountWorldMap({ container, detail, map, getState = (() => ({})), isSpawnSelectable, onSpawnSelected = (() => {}) }) {
   const state = {
     currentNodeId: null,
     criterion: 'time',
@@ -351,11 +358,12 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
       // 类型过滤
       if (state.typeFilter.size > 0 && !state.typeFilter.has(node.type)) continue;
 
+      const spawnSelectable = isNodeSpawnSelectable(node, isSpawnSelectable);
       const g = document.createElementNS(NS, 'g');
       g.setAttribute('data-node-id', node.id);
       g.classList.add('map-node');
       g.classList.add(`node-${node.type}`);
-      if (node.spawnable) g.classList.add('node-spawnable');
+      if (spawnSelectable) g.classList.add('node-spawnable');
       if (state.currentNodeId === node.id) g.classList.add('node-current');
 
       // 节点底板
@@ -401,7 +409,7 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
       g.appendChild(title);
 
       // 点击事件
-      g.style.cursor = node.spawnable ? 'pointer' : 'default';
+      g.style.cursor = spawnSelectable ? 'pointer' : 'default';
       g.addEventListener('click', (event) => {
         if (state.suppressClick) {
           event.preventDefault();
@@ -411,7 +419,7 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
         if (detail) {
           detail.innerHTML = renderNodeDetail(node);
         }
-        if (node.spawnable && onSpawnSelected) {
+        if (spawnSelectable && onSpawnSelected) {
           onSpawnSelected(node.id);
         }
       });
