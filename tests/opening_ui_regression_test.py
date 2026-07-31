@@ -1,3 +1,4 @@
+import re
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
@@ -47,6 +48,30 @@ class OpeningUiRegressionTest(unittest.TestCase):
     def test_invalid_companion_physiology_cannot_abort_player_save(self):
         self.assertIn('[RPG开局] 同伴生理配置无效', self.build)
         self.assertIn('const companionPhysiology =', self.build)
+
+    def test_modern_map_selection_overrides_shanghai_default(self):
+        effective_match = re.search(
+            r"function getEffectiveModernSpawn\(\) \{(?P<body>.*?)\n\s*\}",
+            self.build,
+            re.S,
+        )
+        self.assertIsNotNone(effective_match)
+        effective_body = effective_match.group('body')
+        selected_index = effective_body.find('normalizeModernSpawnSelection(selectedModernSpawn.value)')
+        forced_index = effective_body.find('isModernSpecialOrigin.value')
+        self.assertGreaterEqual(selected_index, 0)
+        self.assertGreater(forced_index, selected_index)
+        self.assertIn('if (selectedSpawn) return selectedSpawn;', effective_body)
+
+        apply_match = re.search(
+            r"function applyModernSpawnSelection\(rawSpawn\) \{(?P<body>.*?)\n\s*\}",
+            self.build,
+            re.S,
+        )
+        self.assertIsNotNone(apply_match)
+        apply_body = apply_match.group('body')
+        self.assertIn("return trySetModernSpawnSelection(rawSpawn, { source: '地图' });", apply_body)
+        self.assertNotIn('MODERN_SHILAN_SPAWN', apply_body)
 
 
 if __name__ == "__main__":
