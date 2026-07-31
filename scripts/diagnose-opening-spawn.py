@@ -13,6 +13,7 @@ TERMS = [
 ]
 
 lines = BUILD.read_text(encoding='utf-8').splitlines()
+print(f'build_lines={len(lines)}')
 for term in TERMS:
     print(f'\n===== {term} =====')
     hits = [index for index, line in enumerate(lines) if term in line]
