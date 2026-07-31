@@ -13634,16 +13634,15 @@
 
                 function getEffectiveModernSpawn() {
                     if (!isModernWorldview.value) return null;
+                    const selectedSpawn = normalizeModernSpawnSelection(selectedModernSpawn.value);
+                    if (selectedSpawn) return selectedSpawn;
                     if (isModernSpecialOrigin.value || selectedOpening.value === MODERN_HIGH_SCHOOL_OPENING_ID) {
                         return normalizeModernSpawnSelection(MODERN_SHILAN_SPAWN);
                     }
-                    return normalizeModernSpawnSelection(selectedModernSpawn.value);
+                    return null;
                 }
 
                 function applyModernSpawnSelection(rawSpawn) {
-                    if (isModernSpecialOrigin.value || selectedOpening.value === MODERN_HIGH_SCHOOL_OPENING_ID) {
-                        return trySetModernSpawnSelection(MODERN_SHILAN_SPAWN, { silent: true, source: '城市公立学校特殊开局' });
-                    }
                     return trySetModernSpawnSelection(rawSpawn, { source: '地图' });
                 }
 
