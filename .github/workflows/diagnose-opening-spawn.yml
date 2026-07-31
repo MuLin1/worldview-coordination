@@ -1,0 +1,30 @@
+name: Diagnose opening spawn selection
+
+on:
+  push:
+    branches:
+      - fix/opening-spawn-selection-20260731
+    paths:
+      - .github/workflows/diagnose-opening-spawn.yml
+      - scripts/diagnose-opening-spawn.py
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out diagnostic branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/opening-spawn-selection-20260731
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Print spawn selection data flow
+        run: python scripts/diagnose-opening-spawn.py
