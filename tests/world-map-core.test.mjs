@@ -116,6 +116,12 @@ test('modern map forwards ordinary node clicks to the parent spawn validator', a
   assert.match(html, /isSpawnSelectable:\s*\(\)\s*=>\s*true/);
 });
 
+test('modern map route start selection also updates the chosen spawn', async () => {
+  const html = await readFile(new URL('../modern_map.html', import.meta.url), 'utf8');
+  assert.match(html, /onSpawnSelected\(nodeId\)\s*\{\s*selectSpawnNode\(nodeId\);\s*\}/s);
+  assert.match(html, /fromSelect\.addEventListener\('change',\s*\(\)\s*=>\s*\{\s*selectSpawnNode\(fromSelect\.value\);\s*updateRoute\(\);\s*\}\);/s);
+});
+
 test('map core binds pointer, wheel, and touch-safe interaction handlers', async () => {
   const source = await readFile(new URL('../dist/V20260728/world-map-core.js', import.meta.url), 'utf8');
   assert.match(source, /touchAction\s*=\s*['"]none['"]/);
