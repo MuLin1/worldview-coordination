@@ -13522,8 +13522,8 @@
                     return {
                         名称: name,
                         大陆: String(rawSpawn.大陆 || '').trim(),
-                        区域: name,
-                        场所: name,
+                        区域: String(rawSpawn.区域 || name).trim(),
+                        场所: String(rawSpawn.场所 || name).trim(),
                         层级: tier,
                         地区等级: String(rawSpawn.地区等级 || rawSpawn.危险等级 || '').trim(),
                         危险等级: String(rawSpawn.危险等级 || rawSpawn.地区等级 || '').trim(),
@@ -13531,7 +13531,7 @@
                         聚落描述: String(rawSpawn.聚落描述 || '').trim(),
                         周边威胁: String(rawSpawn.周边威胁 || '').trim(),
                         地点类型: String(rawSpawn.地点类型 || '').trim(),
-                        节点ID: String(rawSpawn.节点ID || '').trim(),
+                        节点ID: String(rawSpawn.节点ID || rawSpawn.id || '').trim(),
                         地图层级: Number.isFinite(parsedLayer) ? parsedLayer : 0
                     };
                 }
@@ -13539,7 +13539,7 @@
                 function getVielsaenSpawnBlockedReason(rawSpawn) {
                     const normalized = normalizeVielsaenSpawnSelection(rawSpawn) || normalizeCommonSpawnSelection(rawSpawn);
                     if (!normalized) return '';
-                    const nodeId = String(normalized.节点ID || rawSpawn?.节点ID || '').trim();
+                    const nodeId = String(normalized.节点ID || rawSpawn?.节点ID || rawSpawn?.id || '').trim();
                     if (nodeId && VIELSAEN_BLOCKED_SPAWN_IDS.has(nodeId)) {
                         return '海姆冥界附近过于危险，不能作为初始出生点。';
                     }
@@ -13574,7 +13574,7 @@
                     return {
                         名称: name,
                         大陆: String(rawSpawn.大陆 || '').trim(),
-                        区域: String(rawSpawn.区域 || '').trim(),
+                        区域: String(rawSpawn.区域 || name).trim(),
                         场所: String(rawSpawn.场所 || name).trim(),
                         层级: String(rawSpawn.层级 || rawSpawn.tier || '').trim(),
                         地区等级: typeof levelRange === 'number' ? levelRange : String(levelRange).trim(),
@@ -13583,7 +13583,7 @@
                         聚落描述: String(rawSpawn.聚落描述 || rawSpawn.desc || '').trim(),
                         周边威胁: String(rawSpawn.周边威胁 || '').trim(),
                         地点类型: String(rawSpawn.type || rawSpawn.地点类型 || '').trim(),
-                        节点ID: String(rawSpawn.节点ID || '').trim(),
+                        节点ID: String(rawSpawn.节点ID || rawSpawn.id || '').trim(),
                         地图层级: Number.isFinite(Number(rawSpawn.地图层级)) ? Number(rawSpawn.地图层级) : null
                     };
                 }
@@ -14453,10 +14453,14 @@
                     }
                 }, { immediate: true });
 
-                // 出生点列表内容变化时强制重选
-                watch(currentSpawnPoints, (points) => {
+                // 出生点列表内容变化时自动重选（仅在用户尚未手动选择时生效）
+                watch(currentSpawnPoints, (points, oldPoints) => {
                     if (isVielsaenWorldview.value || isModernWorldview.value) return;
                     if (points && points.length > 0) {
+                        // 如果用户已手动选择了一个存在于新列表中的出生点，保留用户选择
+                        const currentSelection = selectedSpawnPoint.value;
+                        if (currentSelection && points.some(sp => sp.name === currentSelection)) return;
+                        // 只有当列表真正变化（非初始化）且用户未选择时，才自动选推荐
                         const recommended = points.find(sp => sp.type === '推荐出生点');
                         selectedSpawnPoint.value = recommended ? recommended.name : points[0].name;
                     }

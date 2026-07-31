@@ -9370,9 +9370,12 @@
                     }
                 }, { immediate: true });
 
-                // 出生点列表内容变化时强制重选
+                // 出生点列表内容变化时自动重选（仅在用户尚未手动选择时生效）
                 watch(currentSpawnPoints, (points) => {
                     if (points && points.length > 0) {
+                        // 如果用户已手动选择了一个存在于新列表中的出生点，保留用户选择
+                        const currentSelection = selectedSpawnPoint.value;
+                        if (currentSelection && points.some(sp => sp.name === currentSelection)) return;
                         const recommended = points.find(sp => sp.type === '推荐出生点');
                         selectedSpawnPoint.value = recommended ? recommended.name : points[0].name;
                     }

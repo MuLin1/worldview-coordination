@@ -60,10 +60,27 @@ const controller = mountWorldMap({
   getState: readWorldState,
   onSpawnSelected(nodeId) {
     const node = data.nodes.find(item => item.id === nodeId);
+    if (!node) return;
     parent.postMessage({
       channel: 'modern-spawn-map',
       type: 'modern_spawn_selected',
-      spawn: { id: node.id, 名称: node.name }
+      spawn: {
+        id: node.id,
+        节点ID: node.id,
+        名称: node.name,
+        大陆: node.大陆 || '',
+        层级: node.层级 || '',
+        区域: node.区域 || node.name,
+        场所: node.场所 || node.name,
+        地区等级: node.地区等级 || '',
+        危险等级: node.危险等级 || '',
+        地貌特征: node.地貌特征 || '',
+        聚落描述: node.聚落描述 || node.summary || '',
+        周边威胁: node.周边威胁 || '',
+        地点类型: node.地点类型 || node.type || '',
+        地图层级: typeof node.地图层级 === 'number' ? node.地图层级 : 0,
+        type: node.type || ''
+      }
     }, '*');
   }
 });
