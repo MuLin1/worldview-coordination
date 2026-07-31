@@ -6659,17 +6659,24 @@
                                             :class="{'locked-input': isPresetChar}" :readonly="isPresetChar">
                                     </div>
 
-                                    <!-- 性别 -->
-                                    <div style="width:80px; flex-shrink:0;" :class="{'field-locked': isPresetChar}">
+                                    <!-- 身份性别 -->
+                                    <div style="width:120px; flex-shrink:0;" :class="{'field-locked': isPresetChar}">
                                         <label class="form-label"
-                                            style="font-size:0.75rem; margin-bottom:4px;">性别</label>
+                                            style="font-size:0.75rem; margin-bottom:4px;">身份性别</label>
                                         <select v-model="character.gender" class="form-select"
                                             style="padding:10px 8px; font-size:0.9rem;"
                                             :class="{'locked-input': isPresetChar}" :disabled="isPresetChar">
                                             <option>男性</option>
                                             <option>女性</option>
+                                            <option>非二元</option>
+                                            <option>无性别</option>
                                             <option>无</option>
+                                            <option>自定义</option>
                                         </select>
+                                        <input v-if="character.gender === '自定义'" v-model="character.customGender"
+                                            class="form-input" maxlength="30" placeholder="输入性别描述..."
+                                            style="margin-top:6px; padding:8px; font-size:0.8rem;"
+                                            :class="{'locked-input': isPresetChar}" :readonly="isPresetChar">
                                     </div>
 
                                     <!-- 年龄 -->
@@ -6680,6 +6687,34 @@
                                             style="text-align:center; padding:10px 8px; font-size:0.9rem;"
                                             :class="{'locked-input': isPresetChar}" :readonly="isPresetChar">
                                     </div>
+
+                                    <template v-if="isVielsaenWorldview || isModernWorldview">
+                                        <div style="width:100px; flex-shrink:0;" :class="{'field-locked': isPresetChar}">
+                                            <label class="form-label"
+                                                style="font-size:0.75rem; margin-bottom:4px;">生理性别</label>
+                                            <select v-model="character.biologicalSex" class="form-select"
+                                                style="padding:10px 8px; font-size:0.85rem;"
+                                                :class="{'locked-input': isPresetChar}" :disabled="isPresetChar">
+                                                <option>雄性</option>
+                                                <option>雌性</option>
+                                                <option>双性</option>
+                                                <option>无性</option>
+                                                <option>可变</option>
+                                            </select>
+                                        </div>
+                                        <div style="width:105px; flex-shrink:0;" :class="{'field-locked': isPresetChar}">
+                                            <label class="form-label"
+                                                style="font-size:0.75rem; margin-bottom:4px;">生殖能力</label>
+                                            <select v-model="character.reproductiveCapability" class="form-select"
+                                                style="padding:10px 8px; font-size:0.85rem;"
+                                                :class="{'locked-input': isPresetChar}" :disabled="isPresetChar">
+                                                <option>可授精</option>
+                                                <option>可妊娠</option>
+                                                <option>双向</option>
+                                                <option>无</option>
+                                            </select>
+                                        </div>
+                                    </template>
                                 </div>
                             </div>
                         </div>
@@ -11602,6 +11637,9 @@
                 const character = reactive({
                     name: '',
                     gender: '男性',
+                    customGender: '',
+                    biologicalSex: '雄性',
+                    reproductiveCapability: '可授精',
                     age: 18,
                     race: '人类种',
                     identity: '__custom__',
@@ -11616,6 +11654,20 @@
                     teammates: [],
                     selectedTraits: []
                 });
+
+                const PHYSIOLOGY_DEFAULTS_BY_IDENTITY = Object.freeze({
+                    男性: Object.freeze({ sex: '雄性', capability: '可授精' }),
+                    女性: Object.freeze({ sex: '雌性', capability: '可妊娠' }),
+                    非二元: Object.freeze({ sex: '双性', capability: '双向' }),
+                    无性别: Object.freeze({ sex: '无性', capability: '无' }),
+                    无: Object.freeze({ sex: '无性', capability: '无' })
+                });
+                watch(() => character.gender, (gender) => {
+                    const defaults = PHYSIOLOGY_DEFAULTS_BY_IDENTITY[gender];
+                    if (!defaults) return;
+                    character.biologicalSex = defaults.sex;
+                    character.reproductiveCapability = defaults.capability;
+                }, { immediate: true });
 
                 const TEAMMATE_IMAGE_TIMEOUT_STEPS = [12000, 18000, 26000, 36000, 50000];
                 const TEAMMATE_IMAGE_RETRY_DELAYS = [0, 1000, 2500, 5000, 9000];
@@ -16852,9 +16904,13 @@
                         }
 
                         // 7. 构建人物数据
+                        const resolvedGenderIdentity = character.gender === '自定义'
+                            ? (String(character.customGender || '').trim() || '未指定')
+                            : (String(character.gender || '').trim() || '未指定');
                         mvuData.stat_data.人物 = {
                             ...(mvuData.stat_data.人物 || {}),
                             名称: character.name || '冒险者',
+                            性别: resolvedGenderIdentity,
                             种族: actualRaceName,
                             职业: character.class,
                             背景设定: backgroundSettingText,
@@ -16892,21 +16948,11 @@
                         };
                         if (isVielsaenWorldview.value || isModernWorldview.value) {
                             const selectedSpecies = availableRaces.value.find(item => item.name === actualRaceName);
-                            const normalizedSex = String(character.gender || '').includes('男')
-                                ? '雄性'
-                                : String(character.gender || '').includes('女')
-                                    ? '雌性'
-                                    : '双性';
-                            const capability = normalizedSex === '雄性'
-                                ? '可授精'
-                                : normalizedSex === '雌性'
-                                    ? '可妊娠'
-                                    : '双向';
                             const worldPrefix = isVielsaenWorldview.value ? 'V' : 'U';
                             mvuData.stat_data.人物.生理档案 = createPhysiologyProfile({
                                 adult: Number(character.age) >= 18,
-                                sex: normalizedSex,
-                                capability,
+                                sex: character.biologicalSex,
+                                capability: character.reproductiveCapability,
                                 system: selectedSpecies?.system || '普通',
                                 classificationId: selectedSpecies?.classificationId || 'G-S01',
                                 species: actualRaceName,
@@ -17998,10 +18044,29 @@
                                 const mapped = replacementAttributeMap[key];
                                 if (mapped) attributes[mapped] = value;
                             }
+                            const physiology = characterConfig.physiology || {};
+                            const hasValidPhysiology = ['雌性', '雄性', '双性', '无性', '可变'].includes(physiology.sex)
+                                && ['可妊娠', '可授精', '双向', '无'].includes(physiology.capability);
+                            const companionPhysiology = hasValidPhysiology
+                                ? createPhysiologyProfile({
+                                    adult: physiology.adult,
+                                    sex: physiology.sex,
+                                    capability: physiology.capability,
+                                    system: physiology.system,
+                                    classificationId: physiology.classificationId,
+                                    species: characterConfig.species,
+                                    heritableTraits: characterConfig.heritableTraits || [],
+                                    cycleEnabled: true,
+                                    cycleStartDate: ''
+                                })
+                                : null;
+                            if (!hasValidPhysiology) {
+                                console.error('[RPG开局] 同伴生理配置无效，已跳过生理档案:', characterConfig.id, physiology);
+                            }
                             teammateFullData[characterConfig.name] = {
                                 角色ID: characterConfig.id,
                                 世界归属: characterConfig.worldId,
-                                性别: characterConfig.physiology.sex,
+                                性别: physiology.sex || '未知',
                                 附近: true,
                                 种族: characterConfig.species,
                                 等级: characterConfig.level,
@@ -18022,17 +18087,7 @@
                                 好感度: 20,
                                 同行誓约: false,
                                 连携奥义: {},
-                                生理档案: createPhysiologyProfile({
-                                    adult: characterConfig.physiology.adult,
-                                    sex: characterConfig.physiology.sex,
-                                    capability: characterConfig.physiology.capability,
-                                    system: characterConfig.physiology.system,
-                                    classificationId: characterConfig.physiology.classificationId,
-                                    species: characterConfig.species,
-                                    heritableTraits: characterConfig.heritableTraits,
-                                    cycleEnabled: true,
-                                    cycleStartDate: ''
-                                }),
+                                生理档案: companionPhysiology,
                                 魔力档案: characterConfig.worldId === 'vielsaen' ? {} : undefined,
                                 异能档案: characterConfig.worldId === 'modern' && characterConfig.ability
                                     ? {
@@ -18485,7 +18540,9 @@
                     const config = {
                         角色信息: {
                             姓名: character.name || '无名冒险者',
-                            性别: character.gender,
+                            性别: character.gender === '自定义'
+                                ? (String(character.customGender || '').trim() || '未指定')
+                                : (String(character.gender || '').trim() || '未指定'),
                             年龄: character.age,
                             世界观: currentWorldviewLabel.value,
                             种族: actualRaceNameMsg,

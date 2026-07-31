@@ -3,29 +3,225 @@
   "approvedAt": "2026-07-30T13:00:00.000Z",
   "authority": "用户确认",
   "choices": [
-    {"roleId":"V-C100","speciesId":"G-S09","hybrid":{"maternalBaseId":"G-S01","maternalLabel":"犬科","paternalExpressionId":"G-S07","paternalLabel":"鹿科","positiveTraits":[{"name":"复合追踪","desc":"融合犬科嗅觉与鹿科环境感知，野外追踪检定+3"},{"name":"耐力奔跑","desc":"继承犬科耐力与鹿科敏捷，长途追击不减耐力"}],"negativeTraits":[{"name":"角耳冲突","desc":"鹿角与犬耳的空间竞争导致听觉定位不准，声音来源判定-2"},{"name":"杂食代谢","desc":"犬科肉食需求与鹿科植食消化系统冲突，需特殊饮食"}],"description":"犬科母系提供基础体态和嗅觉，鹿科父系赋予鹿角外形和森林亲和力。外观呈现为狼型身躯配鹿角、毛色褐灰相间的混血furry。"}},
-    {"roleId":"V-C101","speciesId":"G-M06","hybrid":null},
-    {"roleId":"V-C102","speciesId":"G-S11","hybrid":null},
-    {"roleId":"V-C103","speciesId":"G-S03","hybrid":null},
-    {"roleId":"V-C104","speciesId":"G-S07","hybrid":null},
-    {"roleId":"V-C105","speciesId":"G-S16","hybrid":null},
-    {"roleId":"V-C106","speciesId":"G-S12","hybrid":null},
-    {"roleId":"V-C107","speciesId":"G-S13","hybrid":null},
-    {"roleId":"V-C108","speciesId":"G-S03","hybrid":null},
-    {"roleId":"V-C109","speciesId":"G-S17","hybrid":null},
-    {"roleId":"V-C110","speciesId":"G-S02","hybrid":null},
-    {"roleId":"V-C111","speciesId":"G-S13","hybrid":null},
-    {"roleId":"U-C100","speciesId":"G-S09","hybrid":{"maternalBaseId":"G-S02","maternalLabel":"猫科","paternalExpressionId":"G-S04","paternalLabel":"鼬科","positiveTraits":[{"name":"双重感知","desc":"融合猫科夜视与鼬科灵活钻入，城市侦查检定+3"},{"name":"适应都市","desc":"猫科敏捷+鼬科好奇心的完美结合，都市环境全检定+1"}],"negativeTraits":[{"name":"昼夜节律混乱","desc":"猫科夜行性与鼬科黄昏活动的叠加导致生物钟紊乱"},{"name":"双重维护","desc":"同时需要猫科皮毛梳理和鼬科腺体清洁，日常维护时间翻倍"}],"description":"猫科母系提供基础体态和敏捷，鼬科父系赋予修长身形和好奇心。外观呈现为猫型furry配鼬科长尾、毛色灰棕相间的混血姿态。"}},
-    {"roleId":"U-C101","speciesId":"G-S04","hybrid":null},
-    {"roleId":"U-C102","speciesId":"G-M07","hybrid":null},
-    {"roleId":"U-C103","speciesId":"G-S02","hybrid":null},
-    {"roleId":"U-C104","speciesId":"G-S03","hybrid":null},
-    {"roleId":"U-C105","speciesId":"G-S02","hybrid":null},
-    {"roleId":"U-C106","speciesId":"G-S02","hybrid":null},
-    {"roleId":"U-C107","speciesId":"G-S02","hybrid":null},
-    {"roleId":"U-C108","speciesId":"G-S11","hybrid":null},
-    {"roleId":"U-C109","speciesId":"G-S04","hybrid":null},
-    {"roleId":"U-C110","speciesId":"G-S02","hybrid":null},
-    {"roleId":"U-C111","speciesId":"G-S02","hybrid":null}
+    {
+      "roleId": "V-C100",
+      "speciesId": "G-S09",
+      "hybrid": {
+        "maternalBaseId": "G-S01",
+        "maternalLabel": "犬科",
+        "paternalExpressionId": "G-S07",
+        "paternalLabel": "鹿科",
+        "positiveTraits": [
+          {
+            "name": "复合追踪",
+            "desc": "融合犬科嗅觉与鹿科环境感知，野外追踪检定+3"
+          },
+          {
+            "name": "耐力奔跑",
+            "desc": "继承犬科耐力与鹿科敏捷，长途追击不减耐力"
+          }
+        ],
+        "negativeTraits": [
+          {
+            "name": "角耳冲突",
+            "desc": "鹿角与犬耳的空间竞争导致听觉定位不准，声音来源判定-2"
+          },
+          {
+            "name": "杂食代谢",
+            "desc": "犬科肉食需求与鹿科植食消化系统冲突，需特殊饮食"
+          }
+        ],
+        "description": "犬科母系提供基础体态和嗅觉，鹿科父系赋予鹿角外形和森林亲和力。外观呈现为狼型身躯配鹿角、毛色褐灰相间的混血furry。"
+      },
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "V-C101",
+      "speciesId": "G-M06",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "V-C102",
+      "speciesId": "G-S11",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "V-C103",
+      "speciesId": "G-S03",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "V-C104",
+      "speciesId": "G-S07",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "V-C105",
+      "speciesId": "G-S16",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "V-C106",
+      "speciesId": "G-S12",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "V-C107",
+      "speciesId": "G-S13",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "V-C108",
+      "speciesId": "G-S03",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "V-C109",
+      "speciesId": "G-S17",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "V-C110",
+      "speciesId": "G-S02",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "V-C111",
+      "speciesId": "G-S13",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "U-C100",
+      "speciesId": "G-S09",
+      "hybrid": {
+        "maternalBaseId": "G-S02",
+        "maternalLabel": "猫科",
+        "paternalExpressionId": "G-S04",
+        "paternalLabel": "鼬科",
+        "positiveTraits": [
+          {
+            "name": "双重感知",
+            "desc": "融合猫科夜视与鼬科灵活钻入，城市侦查检定+3"
+          },
+          {
+            "name": "适应都市",
+            "desc": "猫科敏捷+鼬科好奇心的完美结合，都市环境全检定+1"
+          }
+        ],
+        "negativeTraits": [
+          {
+            "name": "昼夜节律混乱",
+            "desc": "猫科夜行性与鼬科黄昏活动的叠加导致生物钟紊乱"
+          },
+          {
+            "name": "双重维护",
+            "desc": "同时需要猫科皮毛梳理和鼬科腺体清洁，日常维护时间翻倍"
+          }
+        ],
+        "description": "猫科母系提供基础体态和敏捷，鼬科父系赋予修长身形和好奇心。外观呈现为猫型furry配鼬科长尾、毛色灰棕相间的混血姿态。"
+      },
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "U-C101",
+      "speciesId": "G-S04",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "U-C102",
+      "speciesId": "G-M07",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "U-C103",
+      "speciesId": "G-S02",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "U-C104",
+      "speciesId": "G-S03",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "U-C105",
+      "speciesId": "G-S02",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "U-C106",
+      "speciesId": "G-S02",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "U-C107",
+      "speciesId": "G-S02",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "U-C108",
+      "speciesId": "G-S11",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "U-C109",
+      "speciesId": "G-S04",
+      "hybrid": null,
+      "sex": "雄性",
+      "capability": "可授精"
+    },
+    {
+      "roleId": "U-C110",
+      "speciesId": "G-S02",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    },
+    {
+      "roleId": "U-C111",
+      "speciesId": "G-S02",
+      "hybrid": null,
+      "sex": "雌性",
+      "capability": "可妊娠"
+    }
   ]
 }

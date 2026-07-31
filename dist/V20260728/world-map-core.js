@@ -183,6 +183,37 @@ export function getReachableNodeIds(map, fromId, state = {}) {
 // ─── SVG 地图渲染 ──────────────────────────────────────────
 
 const NS = 'http://www.w3.org/2000/svg';
+const MIN_MAP_ZOOM = 0.4;
+const MAX_MAP_ZOOM = 6;
+
+const finiteNumber = (value, fallback = 0) => Number.isFinite(Number(value)) ? Number(value) : fallback;
+
+export function clampZoom(value) {
+  return Math.min(MAX_MAP_ZOOM, Math.max(MIN_MAP_ZOOM, finiteNumber(value, 1)));
+}
+
+export function panViewport(viewport, deltaX, deltaY) {
+  return {
+    zoom: clampZoom(viewport?.zoom),
+    panX: finiteNumber(viewport?.panX) + finiteNumber(deltaX),
+    panY: finiteNumber(viewport?.panY) + finiteNumber(deltaY),
+  };
+}
+
+export function zoomViewportAtPoint(viewport, nextZoom, pointX, pointY) {
+  const currentZoom = clampZoom(viewport?.zoom);
+  const zoom = clampZoom(nextZoom);
+  const panX = finiteNumber(viewport?.panX);
+  const panY = finiteNumber(viewport?.panY);
+  const x = finiteNumber(pointX);
+  const y = finiteNumber(pointY);
+  const ratio = zoom / currentZoom;
+  return {
+    zoom,
+    panX: x - (x - panX) * ratio,
+    panY: y - (y - panY) * ratio,
+  };
+}
 
 /**
  * 在指定容器中挂载交互式世界地图。
@@ -200,6 +231,7 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
     zoom: 1,
     panX: 0,
     panY: 0,
+    suppressClick: false,
   };
 
   // 创建 SVG 元素
@@ -208,6 +240,9 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
   svg.setAttribute('width', '100%');
   svg.setAttribute('height', '100%');
   svg.style.display = 'block';
+  svg.style.touchAction = 'none';
+  svg.style.userSelect = 'none';
+  svg.style.cursor = 'grab';
 
   const defs = document.createElementNS(NS, 'defs');
   svg.appendChild(defs);
@@ -367,7 +402,12 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
 
       // 点击事件
       g.style.cursor = node.spawnable ? 'pointer' : 'default';
-      g.addEventListener('click', (e) => {
+      g.addEventListener('click', (event) => {
+        if (state.suppressClick) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
         if (detail) {
           detail.innerHTML = renderNodeDetail(node);
         }
@@ -420,11 +460,152 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
     }
   }
 
+
+  // ── 鼠标与触摸视口交互 ────────────────────────────────────
+
+  const activePointers = new Map();
+  const DRAG_THRESHOLD = 5;
+  let gestureTravel = 0;
+  let lastPinchDistance = 0;
+  let lastPinchCenter = null;
+  let suppressClickTimer = 0;
+
+  function eventToMapPoint(event) {
+    const rect = svg.getBoundingClientRect();
+    const width = Math.max(1, rect.width);
+    const height = Math.max(1, rect.height);
+    return {
+      x: ((event.clientX - rect.left) / width) * 100,
+      y: ((event.clientY - rect.top) / height) * 100,
+    };
+  }
+
+  function applyViewport(viewport) {
+    state.zoom = viewport.zoom;
+    state.panX = viewport.panX;
+    state.panY = viewport.panY;
+  }
+
+  function markGestureTravel(deltaX, deltaY, extra = 0) {
+    gestureTravel += Math.hypot(deltaX, deltaY) + Math.abs(extra);
+    if (gestureTravel > DRAG_THRESHOLD) state.suppressClick = true;
+  }
+
+  function currentPinch() {
+    const points = [...activePointers.values()].slice(0, 2);
+    if (points.length < 2) return null;
+    return {
+      distance: Math.hypot(points[1].x - points[0].x, points[1].y - points[0].y),
+      center: {
+        x: (points[0].x + points[1].x) / 2,
+        y: (points[0].y + points[1].y) / 2,
+      },
+    };
+  }
+
+  function handlePointerDown(event) {
+    if (activePointers.size === 0) {
+      gestureTravel = 0;
+      state.suppressClick = false;
+      if (suppressClickTimer) clearTimeout(suppressClickTimer);
+    }
+    const point = eventToMapPoint(event);
+    activePointers.set(event.pointerId, point);
+    svg.style.cursor = 'grabbing';
+    try {
+      svg.setPointerCapture(event.pointerId);
+    } catch {
+      // Pointer capture is unavailable in a few embedded webviews.
+    }
+    const pinch = currentPinch();
+    lastPinchDistance = pinch?.distance || 0;
+    lastPinchCenter = pinch?.center || null;
+  }
+
+  function handlePointerMove(event) {
+    const previous = activePointers.get(event.pointerId);
+    if (!previous) return;
+    const point = eventToMapPoint(event);
+    activePointers.set(event.pointerId, point);
+
+    if (activePointers.size === 1) {
+      const deltaX = point.x - previous.x;
+      const deltaY = point.y - previous.y;
+      markGestureTravel(deltaX, deltaY);
+      applyViewport(panViewport(state, deltaX, deltaY));
+      refresh();
+      return;
+    }
+
+    const pinch = currentPinch();
+    if (!pinch) return;
+    if (lastPinchDistance > 0 && lastPinchCenter) {
+      const ratio = pinch.distance / lastPinchDistance;
+      let viewport = zoomViewportAtPoint(
+        state,
+        state.zoom * ratio,
+        lastPinchCenter.x,
+        lastPinchCenter.y,
+      );
+      const centerDeltaX = pinch.center.x - lastPinchCenter.x;
+      const centerDeltaY = pinch.center.y - lastPinchCenter.y;
+      viewport = panViewport(viewport, centerDeltaX, centerDeltaY);
+      markGestureTravel(centerDeltaX, centerDeltaY, pinch.distance - lastPinchDistance);
+      applyViewport(viewport);
+      refresh();
+    }
+    lastPinchDistance = pinch.distance;
+    lastPinchCenter = pinch.center;
+  }
+
+  function finishPointer(event) {
+    if (!activePointers.has(event.pointerId)) return;
+    activePointers.delete(event.pointerId);
+    try {
+      svg.releasePointerCapture(event.pointerId);
+    } catch {
+      // Ignore release errors from embedded webviews.
+    }
+    const pinch = currentPinch();
+    lastPinchDistance = pinch?.distance || 0;
+    lastPinchCenter = pinch?.center || null;
+    if (activePointers.size === 0) {
+      svg.style.cursor = 'grab';
+      if (state.suppressClick) {
+        suppressClickTimer = setTimeout(() => {
+          state.suppressClick = false;
+          suppressClickTimer = 0;
+        }, 0);
+      }
+    }
+  }
+
+  function handleWheel(event) {
+    event.preventDefault();
+    const point = eventToMapPoint(event);
+    const factor = Math.exp(-event.deltaY * 0.0015);
+    applyViewport(zoomViewportAtPoint(state, state.zoom * factor, point.x, point.y));
+    refresh();
+  }
+
+  svg.addEventListener('pointerdown', handlePointerDown);
+  svg.addEventListener('pointermove', handlePointerMove);
+  svg.addEventListener('pointerup', finishPointer);
+  svg.addEventListener('pointercancel', finishPointer);
+  svg.addEventListener('wheel', handleWheel, { passive: false });
+
   // ── 控制器 ───────────────────────────────────────────────
 
   const controller = {
     destroy() {
-      container.removeChild(svg);
+      svg.removeEventListener('pointerdown', handlePointerDown);
+      svg.removeEventListener('pointermove', handlePointerMove);
+      svg.removeEventListener('pointerup', finishPointer);
+      svg.removeEventListener('pointercancel', finishPointer);
+      svg.removeEventListener('wheel', handleWheel);
+      if (suppressClickTimer) clearTimeout(suppressClickTimer);
+      activePointers.clear();
+      if (svg.parentNode === container) container.removeChild(svg);
     },
     setCurrentNode(nodeId) {
       state.currentNodeId = nodeId;
@@ -451,11 +632,11 @@ export function mountWorldMap({ container, detail, map, getState = (() => ({})),
       refresh();
     },
     zoomIn() {
-      state.zoom = Math.min(state.zoom * 1.2, 4);
+      applyViewport(zoomViewportAtPoint(state, state.zoom * 1.2, 50, 50));
       refresh();
     },
     zoomOut() {
-      state.zoom = Math.max(state.zoom / 1.2, 0.25);
+      applyViewport(zoomViewportAtPoint(state, state.zoom / 1.2, 50, 50));
       refresh();
     },
     resetView() {

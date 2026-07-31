@@ -1,11 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  clampZoom,
   findRoute,
   getReachableNodeIds,
   isEdgeOpen,
   normalizeGraph,
   getNodeIcon,
+  panViewport,
+  zoomViewportAtPoint,
 } from '../dist/V20260728/world-map-core.js';
 import { readFile } from 'node:fs/promises';
 
@@ -61,6 +64,25 @@ test('normalizeGraph produces index maps and adjacency lists', () => {
   assert.equal(g.adjacency.size, 4);
 });
 
+test('viewport pan and zoom helpers preserve interaction geometry', () => {
+  assert.equal(clampZoom(0.1), 0.4);
+  assert.equal(clampZoom(9), 6);
+  assert.equal(clampZoom(2), 2);
+
+  assert.deepEqual(
+    panViewport({ zoom: 1, panX: 3, panY: 4 }, 2, -1),
+    { zoom: 1, panX: 5, panY: 3 },
+  );
+
+  const zoomed = zoomViewportAtPoint(
+    { zoom: 1, panX: 0, panY: 0 },
+    2,
+    25,
+    40,
+  );
+  assert.deepEqual(zoomed, { zoom: 2, panX: -25, panY: -40 });
+});
+
 test('every supported node type has a visible icon', () => {
   const types = [
     'capital', 'city', 'port', 'settlement', 'gate', 'wilderness',
@@ -80,4 +102,14 @@ test('both shipped map pages mount the SVG topology core and expose route contro
     assert.match(html, /route-to/);
     assert.doesNotMatch(html, /for\s*\(const node of data\.nodes\).*createElement\('button'\)/s);
   }
+});
+
+test('map core binds pointer, wheel, and touch-safe interaction handlers', async () => {
+  const source = await readFile(new URL('../dist/V20260728/world-map-core.js', import.meta.url), 'utf8');
+  assert.match(source, /touchAction\s*=\s*['"]none['"]/);
+  assert.match(source, /addEventListener\(['"]pointerdown['"]/);
+  assert.match(source, /addEventListener\(['"]pointermove['"]/);
+  assert.match(source, /addEventListener\(['"]pointerup['"]/);
+  assert.match(source, /addEventListener\(['"]wheel['"]/);
+  assert.match(source, /removeEventListener\(['"]wheel['"]/);
 });
